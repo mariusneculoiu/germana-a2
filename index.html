@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabular A2 - RO ↔ DE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 24px 30px;
+  }
+  header h1 { font-size: 24px; margin-bottom: 4px; }
+  header p { opacity: 0.85; font-size: 13px; }
+
+  .deck-bar {
+    background: #f5f5f7;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .deck-bar label { font-size: 13px; color: #555; font-weight: 600; }
+  .deck-bar select, .deck-bar button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .deck-bar button:hover { background: #f3f4f6; }
+  .deck-info {
+    margin-left: auto;
+    font-size: 13px;
+    color: #555;
+    background: #dbeafe;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+  }
+
+  nav {
+    display: flex;
+    background: #f5f5f7;
+    border-bottom: 1px solid #e0e0e0;
+    overflow-x: auto;
+  }
+  nav button {
+    flex: 1;
+    min-width: 110px;
+    padding: 14px 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  nav button:hover { background: #ebebed; }
+  nav button.active {
+    color: #2a5298;
+    border-bottom-color: #2a5298;
+    background: white;
+  }
+
+  .panel { padding: 24px 30px; min-height: 480px; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e8eef4;
+  }
+  .stat-value { font-size: 22px; font-weight: 700; color: #2a5298; }
+  .stat-label { font-size: 11px; color: #666; margin-top: 2px; }
+
+  /* Flashcard */
+  .flashcard-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .flashcard {
+    width: 100%;
+    max-width: 580px;
+    height: 260px;
+    perspective: 1500px;
+    cursor: pointer;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .flashcard-front {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+  }
+  .flashcard-back {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+    transform: rotateY(180deg);
+  }
+  .card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  .card-text {
+    font-size: 30px;
+    line-height: 1.3;
+    font-weight: 500;
+    word-wrap: break-word;
+    max-width: 100%;
+  }
+  .card-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  .card-category {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 10px;
+    background: rgba(255,255,255,0.25);
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .card-counter {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-size: 11px;
+    opacity: 0.85;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary { background: #2a5298; color: white; }
+  .btn-primary:hover { background: #1e3c72; transform: translateY(-1px); }
+  .btn-success { background: #10b981; color: white; }
+  .btn-success:hover { background: #059669; }
+  .btn-warning { background: #f59e0b; color: white; }
+  .btn-warning:hover { background: #d97706; }
+  .btn-danger { background: #ef4444; color: white; }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #e5e7eb; color: #374151; }
+  .btn-secondary:hover { background: #d1d5db; }
+  .btn-small { padding: 6px 12px; font-size: 12px; }
+
+  .toggle-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .toggle-row span { align-self: center; font-size: 12px; color: #666; }
+  .toggle-row button {
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .toggle-row button.active {
+    background: #2a5298;
+    color: white;
+    border-color: #2a5298;
+  }
+
+  /* Quiz */
+  .quiz-question {
+    background: #f6f9fc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 4px solid #2a5298;
+  }
+  .quiz-prompt-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .quiz-prompt {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .quiz-option {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 15px;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .quiz-option:hover { border-color: #2a5298; background: #f6f9fc; }
+  .quiz-option.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+  .quiz-option.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+  .quiz-feedback {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #d1fae5; color: #065f46; }
+  .quiz-feedback.incorrect { background: #fee2e2; color: #991b1b; }
+
+  /* Type quiz */
+  .type-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 18px;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+  }
+  .type-input:focus { border-color: #2a5298; }
+  .type-input.correct { border-color: #10b981; background: #d1fae5; }
+  .type-input.incorrect { border-color: #ef4444; background: #fee2e2; }
+
+  /* Matching */
+  .matching-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .match-item {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 15px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .match-item:hover { border-color: #2a5298; background: #f6f9fc; }
+  .match-item.selected { border-color: #2a5298; background: #dbeafe; }
+  .match-item.matched { background: #d1fae5; border-color: #10b981; color: #065f46; pointer-events: none; opacity: 0.7; }
+  .match-item.wrong { background: #fee2e2; border-color: #ef4444; }
+
+  /* List */
+  .word-list { display: flex; flex-direction: column; gap: 8px; }
+  .word-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .word-ro { color: #1e3a8a; font-weight: 500; }
+  .word-de { color: #555; font-style: italic; }
+  .word-status {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .status-easy { background: #d1fae5; color: #065f46; }
+  .status-medium { background: #fef3c7; color: #92400e; }
+  .status-hard { background: #fee2e2; color: #991b1b; }
+  .status-untouched { background: #f3f4f6; color: #6b7280; }
+  .category-label {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* Sections list */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-chip {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-chip:hover { border-color: #2a5298; }
+  .section-chip.active { background: #2a5298; color: white; border-color: #2a5298; }
+  .section-chip .count {
+    font-size: 11px;
+    background: rgba(0,0,0,0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .section-chip.active .count { background: rgba(255,255,255,0.25); }
+
+  /* Upload */
+  .upload-zone {
+    border: 3px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .upload-zone:hover { border-color: #2a5298; background: #eff6ff; }
+  .upload-zone.dragover { border-color: #10b981; background: #d1fae5; }
+  .upload-icon { font-size: 40px; margin-bottom: 8px; }
+  .upload-zone h3 { color: #2a5298; margin-bottom: 6px; }
+  .upload-zone p { color: #666; font-size: 13px; }
+
+  textarea.paste-area {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    resize: vertical;
+    margin: 10px 0;
+  }
+
+  .info-box {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #78350f;
+    line-height: 1.5;
+  }
+  .info-box code {
+    background: rgba(146, 64, 14, 0.15);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 6px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 0.3s;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: #6b7280;
+  }
+  .empty-state-icon { font-size: 40px; margin-bottom: 10px; }
+
+  h2.section-title { color: #1e3c72; margin: 16px 0 12px; font-size: 18px; }
+  h3.subsection { color: #2a5298; margin: 16px 0 10px; font-size: 15px; }
+
+  .pill-input {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 70px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+
+  details {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    cursor: pointer;
+  }
+  details summary {
+    font-weight: 600;
+    color: #2a5298;
+    font-size: 13px;
+  }
+  details > div { margin-top: 8px; font-size: 13px; line-height: 1.5; color: #4b5563; }
+
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #2a5298;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(0); }
+  .toast.success { background: #10b981; }
+  .toast.error { background: #ef4444; }
+
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .panel { padding: 18px; }
+    .card-text { font-size: 22px; }
+    nav button { font-size: 11px; padding: 12px 6px; min-width: 90px; }
+    header h1 { font-size: 20px; }
+    .word-item { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="background:#0f172a; color:white; padding:10px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-size:13px;">
+    <strong style="color:#60a5fa;">Germana A2</strong>
+    <a href="index.html" style="color:#fbbf24; text-decoration:none; font-weight:600;">Vocabular</a>
+    <a href="fraze.html" style="color:#cbd5e1; text-decoration:none;">Fraze &amp; gramatica</a>
+    <span style="margin-left:auto; color:#94a3b8;">
+      <a href="data/vocabular_a2.csv" download style="color:#94a3b8; text-decoration:none;">CSV</a>
+      &middot;
+      <a href="descarcari/flashcards.xlsx" download style="color:#94a3b8; text-decoration:none;">XLSX</a>
+      &middot;
+      <a href="descarcari/ghid-studiu.docx" download style="color:#94a3b8; text-decoration:none;">DOCX</a>
+    </span>
+  </div>
+  <header>
+    <h1>Vocabular A2 - RO ↔ DE</h1>
+    <p>Flashcards, quiz si exercitii pentru vocabularul tau (poti incarca propriile fisiere CSV/TXT)</p>
+  </header>
+
+  <div class="deck-bar">
+    <label for="deck-select">Deck:</label>
+    <select id="deck-select" onchange="switchDeck(this.value)"></select>
+    <button class="btn-small" onclick="goTab('upload')">+ Adauga deck</button>
+    <button class="btn-small" onclick="goTab('sections')">Filtreaza sectiuni</button>
+    <span class="deck-info" id="deck-info">0 cuvinte active</span>
+  </div>
+
+  <nav>
+    <button class="active" data-tab="flashcards">Flashcards</button>
+    <button data-tab="quiz">Quiz alegere</button>
+    <button data-tab="type">Quiz scriere</button>
+    <button data-tab="match">Matching</button>
+    <button data-tab="sections">Sectiuni</button>
+    <button data-tab="list">Lista</button>
+    <button data-tab="progress">Progres</button>
+    <button data-tab="upload">Incarca</button>
+  </nav>
+
+  <!-- FLASHCARDS -->
+  <div class="panel" id="panel-flashcards">
+    <div class="toggle-row">
+      <span>Directie:</span>
+      <button class="active" data-direction="ro-de">RO &raquo; DE</button>
+      <button data-direction="de-ro">DE &raquo; RO</button>
+      <button data-direction="random">Aleator</button>
+    </div>
+    <div class="flashcard-area">
+      <div class="flashcard" id="flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="card-counter" id="card-counter">1/0</div>
+            <div class="card-category" id="card-cat-front"></div>
+            <div class="card-label" id="card-label-front">Romana</div>
+            <div class="card-text" id="card-front-text">Incarca un deck</div>
+            <div class="card-hint">Click pentru raspuns - SPACE flip</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="card-category" id="card-cat-back"></div>
+            <div class="card-label" id="card-label-back">Germana</div>
+            <div class="card-text" id="card-back-text"></div>
+            <div class="card-hint" id="card-back-hint"></div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-secondary" onclick="prevCard()">&laquo; Anterior</button>
+        <button class="btn btn-danger" onclick="markCard('hard')">Greu</button>
+        <button class="btn btn-warning" onclick="markCard('medium')">Mediu</button>
+        <button class="btn btn-success" onclick="markCard('easy')">Stiu!</button>
+        <button class="btn btn-primary" onclick="nextCard()">Urmator &raquo;</button>
+      </div>
+      <div style="font-size:12px; color:#666; text-align:center;">
+        SPACE = flip | Sageti = navigare | 1/2/3 = greu/mediu/usor
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="panel" id="panel-quiz" style="display:none;">
+    <div class="toggle-row">
+      <span>Directie:</span>
+      <button class="active" data-quiz-dir="ro-de">RO &raquo; DE</button>
+      <button data-quiz-dir="de-ro">DE &raquo; RO</button>
+      <button data-quiz-dir="random">Aleator</button>
+    </div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="quiz-correct">0</div><div class="stat-label">Corecte</div></div>
+      <div class="stat-card"><div class="stat-value" id="quiz-total">0</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-value" id="quiz-percent">0%</div><div class="stat-label">Acuratete</div></div>
+      <div class="stat-card"><div class="stat-value" id="quiz-streak">0</div><div class="stat-label">Streak</div></div>
+    </div>
+    <div id="quiz-content"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn btn-primary" onclick="newQuiz()">Intrebare noua</button>
+      <button class="btn btn-secondary" onclick="resetQuiz()">Reseteaza</button>
+    </div>
+  </div>
+
+  <!-- TYPE QUIZ -->
+  <div class="panel" id="panel-type" style="display:none;">
+    <div class="toggle-row">
+      <span>Directie:</span>
+      <button class="active" data-type-dir="ro-de">RO &raquo; DE</button>
+      <button data-type-dir="de-ro">DE &raquo; RO</button>
+    </div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="type-correct">0</div><div class="stat-label">Corecte</div></div>
+      <div class="stat-card"><div class="stat-value" id="type-total">0</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-value" id="type-percent">0%</div><div class="stat-label">Acuratete</div></div>
+    </div>
+    <div id="type-content"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn btn-primary" onclick="newType()">Cuvant nou</button>
+      <button class="btn btn-secondary" onclick="resetType()">Reseteaza</button>
+    </div>
+    <div class="info-box" style="margin-top:14px;">
+      Tasta <strong>Enter</strong> pentru a verifica raspunsul. La germana, articolul (der/die/das) este optional in raspuns -- ce conteaza este cuvantul corect. Caracterele speciale (a/o/u/s) sunt acceptate ca echivalent (a=ä, o=ö, u=ü, ss=ß).
+    </div>
+  </div>
+
+  <!-- MATCHING -->
+  <div class="panel" id="panel-match" style="display:none;">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="match-rounds">0</div><div class="stat-label">Runde</div></div>
+      <div class="stat-card"><div class="stat-value" id="match-pairs">0</div><div class="stat-label">Perechi gasite</div></div>
+      <div class="stat-card"><div class="stat-value" id="match-mistakes">0</div><div class="stat-label">Greseli</div></div>
+    </div>
+    <div id="match-content"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn btn-primary" onclick="newMatch()">Runda noua</button>
+      <button class="btn btn-secondary" onclick="resetMatch()">Reseteaza</button>
+    </div>
+  </div>
+
+  <!-- SECTIONS FILTER -->
+  <div class="panel" id="panel-sections" style="display:none;">
+    <h2 class="section-title">Filtreaza pe sectiuni</h2>
+    <p style="font-size:13px; color:#666; margin-bottom:12px;">
+      Click pe sectiuni ca sa le activezi/dezactivezi. Doar cuvintele din sectiunile active vor aparea in flashcards si quiz-uri.
+    </p>
+    <div style="margin-bottom:12px;">
+      <button class="btn btn-small btn-primary" onclick="selectAllSections(true)">Selecteaza tot</button>
+      <button class="btn btn-small btn-secondary" onclick="selectAllSections(false)">Deselecteaza tot</button>
+    </div>
+    <div class="sections-grid" id="sections-grid"></div>
+  </div>
+
+  <!-- LIST -->
+  <div class="panel" id="panel-list" style="display:none;">
+    <div style="margin-bottom:14px;">
+      <input type="text" id="list-search" placeholder="Cauta cuvant..." style="width:100%; padding:10px 14px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; font-family:inherit;" oninput="renderList()">
+    </div>
+    <div class="toggle-row">
+      <span>Filtru:</span>
+      <button class="active" data-list-filter="all">Toate</button>
+      <button data-list-filter="hard">De repetat</button>
+      <button data-list-filter="medium">Mediu</button>
+      <button data-list-filter="easy">Stiu</button>
+      <button data-list-filter="untouched">Neincepute</button>
+    </div>
+    <div id="list-content"></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="panel" id="panel-progress" style="display:none;">
+    <h2 class="section-title">Progresul tau global</h2>
+    <div class="stats" style="margin-bottom:18px;">
+      <div class="stat-card"><div class="stat-value" id="prog-total">0</div><div class="stat-label">Total cuvinte</div></div>
+      <div class="stat-card"><div class="stat-value" id="prog-easy">0</div><div class="stat-label">Stiu bine</div></div>
+      <div class="stat-card"><div class="stat-value" id="prog-medium">0</div><div class="stat-label">Mediu</div></div>
+      <div class="stat-card"><div class="stat-value" id="prog-hard">0</div><div class="stat-label">De repetat</div></div>
+    </div>
+    <div style="margin-bottom:18px;">
+      <div style="font-size:13px; color:#666; margin-bottom:4px;">Progres general (cuvinte stiute)</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-bar"></div></div>
+      <div style="font-size:12px; color:#666;" id="prog-text">0 din 0</div>
+    </div>
+    <h3 class="subsection">Pe sectiuni</h3>
+    <div id="prog-sections"></div>
+    <div style="text-align:center; margin-top:24px;">
+      <button class="btn btn-secondary" onclick="exportProgress()">Exporta progres (JSON)</button>
+      <button class="btn btn-danger" onclick="resetAllProgress()">Reseteaza progresul</button>
+    </div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="panel" id="panel-upload" style="display:none;">
+    <h2 class="section-title">Incarca propriul vocabular</h2>
+
+    <div class="info-box">
+      <strong>Formate acceptate:</strong> CSV (cu separator <code>;</code> sau <code>,</code>), TXT cu sageata <code>→</code>, sau cu liniuta <code>-</code>.
+      Header-ul e optional. Coloana 3 (categorie) e optionala.<br><br>
+      <strong>Exemple:</strong><br>
+      <code>frate;der Bruder</code> sau <code>frate;der Bruder;Familie</code><br>
+      <code>frate → der Bruder</code> (cu sageata)<br>
+      <code>frate, der Bruder</code> (cu virgula)
+    </div>
+
+    <h3 class="subsection">Optiunea 1: Upload fisier</h3>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="upload-icon">[+]</div>
+      <h3>Alege un fisier sau trage-l aici</h3>
+      <p>CSV, TXT sau orice fisier text -- max 5 MB</p>
+      <input type="file" id="file-input" accept=".csv,.txt" style="display:none;" onchange="handleFileUpload(event)">
+    </div>
+
+    <h3 class="subsection">Optiunea 2: Lipeste text direct</h3>
+    <textarea class="paste-area" id="paste-area" placeholder="frate;der Bruder;Familie&#10;sora;die Schwester;Familie&#10;mama;die Mutter;Familie"></textarea>
+    <div>
+      <input type="text" id="deck-name-input" placeholder="Nume deck (ex: Vocabular Familie)" style="padding:8px 12px; border:1px solid #d1d5db; border-radius:8px; width:280px; font-family:inherit; font-size:13px;">
+      <button class="btn btn-primary" onclick="importPaste()">Importa</button>
+    </div>
+
+    <h3 class="subsection" style="margin-top:24px;">Deck-uri salvate</h3>
+    <div id="deck-list"></div>
+
+    <h3 class="subsection" style="margin-top:24px;">Export</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:8px;">Descarca deck-ul activ ca CSV pentru editare in Excel.</p>
+    <button class="btn btn-secondary" onclick="exportCurrentDeck()">Descarca deck activ ca CSV</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// === DEFAULT VOCAB (embedded) ===
+const DEFAULT_VOCAB = [{"ro":"angajat","de":"der Angestellte","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"medic (bărbat)","de":"der Arzt","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"medic (femeie)","de":"die Ärztin","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"ucenic","de":"der Auszubildende","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"autor","de":"der Autor","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"baby-sitter","de":"der Babysitter","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"brutar","de":"der Bäcker","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"doctor","de":"der Doktor","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"șofer","de":"der Fahrer","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"frizer","de":"der Friseur","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"meșteșugar","de":"der Handwerker","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"casnic","de":"der Hausmann","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"casnică","de":"die Hausfrau","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"jurnalist","de":"der Journalist","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"comerciant","de":"der Kaufmann","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"chelner","de":"der Kellner","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"bucătar","de":"der Koch","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"asistent medical","de":"der Krankenpfleger","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"asistentă medicală","de":"die Krankenschwester","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"artist","de":"der Künstler","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"profesor","de":"der Lehrer","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"mecanic","de":"der Mechaniker","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"model","de":"das Model","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"muzician","de":"der Musiker","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"polițist","de":"der Polizist","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"pensionar","de":"der Rentner","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"cântăreț","de":"der Sänger","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"actor","de":"der Schauspieler","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"tehnician","de":"der Techniker","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"vânzător","de":"der Verkäufer","section_ro":"PROFESII","section_de":"Berufe"},{"ro":"frate","de":"der Bruder","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"văr","de":"der Cousin","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"vară","de":"die Cousine","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"părinți","de":"die Eltern","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"nepot","de":"der Enkel","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"nepoată","de":"die Enkelin","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"frați și surori","de":"die Geschwister","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"bunici","de":"die Großeltern","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"bunică","de":"die Großmutter","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"bunic","de":"der Großvater","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"copil","de":"das Kind","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"mamă","de":"die Mutter","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"unchi","de":"der Onkel","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"soră","de":"die Schwester","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"fiu","de":"der Sohn","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"mătușă","de":"die Tante","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"fiică","de":"die Tochter","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"tată","de":"der Vater","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"rudă","de":"der Verwandte","section_ro":"FAMILIE","section_de":"Familienmitglieder"},{"ro":"necăsătorit","de":"ledig","section_ro":"STARE CIVILĂ","section_de":"Familienstand"},{"ro":"căsătorit","de":"verheiratet","section_ro":"STARE CIVILĂ","section_de":"Familienstand"},{"ro":"separat / divorțat","de":"getrennt / geschieden","section_ro":"STARE CIVILĂ","section_de":"Familienstand"},{"ro":"albastru","de":"blau","section_ro":"CULORI","section_de":"Farben"},{"ro":"maro","de":"braun","section_ro":"CULORI","section_de":"Farben"},{"ro":"galben","de":"gelb","section_ro":"CULORI","section_de":"Farben"},{"ro":"gri","de":"grau","section_ro":"CULORI","section_de":"Farben"},{"ro":"verde","de":"grün","section_ro":"CULORI","section_de":"Farben"},{"ro":"mov","de":"lila","section_ro":"CULORI","section_de":"Farben"},{"ro":"portocaliu","de":"orange","section_ro":"CULORI","section_de":"Farben"},{"ro":"roz","de":"rosa","section_ro":"CULORI","section_de":"Farben"},{"ro":"roșu","de":"rot","section_ro":"CULORI","section_de":"Farben"},{"ro":"negru","de":"schwarz","section_ro":"CULORI","section_de":"Farben"},{"ro":"alb","de":"weiß","section_ro":"CULORI","section_de":"Farben"},{"ro":"nord","de":"der Norden","section_ro":"PUNCTE CARDINALE","section_de":"Himmelsrichtungen"},{"ro":"sud","de":"der Süden","section_ro":"PUNCTE CARDINALE","section_de":"Himmelsrichtungen"},{"ro":"est","de":"der Osten","section_ro":"PUNCTE CARDINALE","section_de":"Himmelsrichtungen"},{"ro":"vest","de":"der Westen","section_ro":"PUNCTE CARDINALE","section_de":"Himmelsrichtungen"},{"ro":"primăvară","de":"der Frühling","section_ro":"ANOTIMPURI","section_de":"Jahreszeiten"},{"ro":"vară","de":"der Sommer","section_ro":"ANOTIMPURI","section_de":"Jahreszeiten"},{"ro":"toamnă","de":"der Herbst","section_ro":"ANOTIMPURI","section_de":"Jahreszeiten"},{"ro":"iarnă","de":"der Winter","section_ro":"ANOTIMPURI","section_de":"Jahreszeiten"},{"ro":"ianuarie","de":"Januar","section_ro":"LUNI","section_de":"Monate"},{"ro":"februarie","de":"Februar","section_ro":"LUNI","section_de":"Monate"},{"ro":"martie","de":"März","section_ro":"LUNI","section_de":"Monate"},{"ro":"aprilie","de":"April","section_ro":"LUNI","section_de":"Monate"},{"ro":"mai","de":"Mai","section_ro":"LUNI","section_de":"Monate"},{"ro":"iunie","de":"Juni","section_ro":"LUNI","section_de":"Monate"},{"ro":"iulie","de":"Juli","section_ro":"LUNI","section_de":"Monate"},{"ro":"august","de":"August","section_ro":"LUNI","section_de":"Monate"},{"ro":"septembrie","de":"September","section_ro":"LUNI","section_de":"Monate"},{"ro":"octombrie","de":"Oktober","section_ro":"LUNI","section_de":"Monate"},{"ro":"noiembrie","de":"November","section_ro":"LUNI","section_de":"Monate"},{"ro":"decembrie","de":"Dezember","section_ro":"LUNI","section_de":"Monate"},{"ro":"luni","de":"Montag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"marți","de":"Dienstag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"miercuri","de":"Mittwoch","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"joi","de":"Donnerstag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"vineri","de":"Freitag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"sâmbătă","de":"Samstag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"duminică","de":"Sonntag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"weekend","de":"das Wochenende","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"zi lucrătoare","de":"der Arbeitstag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"sărbătoare","de":"der Feiertag","section_ro":"ZILELE SĂPTĂMÂNII","section_de":"Wochentage"},{"ro":"zi","de":"der Tag","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"dimineață","de":"der Morgen","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"înainte de prânz","de":"der Vormittag","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"prânz","de":"der Mittag","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"după-amiază","de":"der Nachmittag","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"seară","de":"der Abend","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"noapte","de":"die Nacht","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"miezul nopții","de":"die Mitternacht","section_ro":"TIMPUL ZILEI","section_de":"Tageszeiten"},{"ro":"secundă","de":"die Sekunde","section_ro":"UNITĂȚI DE TIMP","section_de":"Zeitmaße"},{"ro":"minut","de":"die Minute","section_ro":"UNITĂȚI DE TIMP","section_de":"Zeitmaße"},{"ro":"oră","de":"die Stunde","section_ro":"UNITĂȚI DE TIMP","section_de":"Zeitmaße"},{"ro":"săptămână","de":"die Woche","section_ro":"UNITĂȚI DE TIMP","section_de":"Zeitmaße"},{"ro":"an","de":"das Jahr","section_ro":"UNITĂȚI DE TIMP","section_de":"Zeitmaße"},{"ro":"de la / din","de":"ab","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"dar","de":"aber","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a preda / a da jos","de":"abgeben","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a lua / a ridica","de":"abholen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a încuia","de":"abschließen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"atenție","de":"Achtung","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"adresă","de":"die Adresse","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"habar","de":"die Ahnung","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"activ","de":"aktiv","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"actual","de":"aktuell","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"tot / toți","de":"all-","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"singur","de":"allein","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"decât (comparativ)","de":"als","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"deci","de":"also","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"vechi / bătrân","de":"alt","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"vârstă","de":"das Alter","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"semafor","de":"die Ampel","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"la / pe / în","de":"an","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a oferi","de":"anbieten","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"ofertă","de":"das Angebot","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"alt / altul","de":"ander-","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a schimba","de":"ändern","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"altfel","de":"anders","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a începe","de":"anfangen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"început","de":"der Anfang","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"frică","de":"die Angst","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a sosi","de":"ankommen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a aprinde","de":"anmachen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a se înregistra","de":"anmelden","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"înregistrare","de":"die Anmeldung","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"robot telefonic","de":"der Anrufbeantworter","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a suna","de":"anrufen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"apel telefonic","de":"der Anruf","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"legătură (tren)","de":"der Anschluss","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a privi / a se uita","de":"ansehen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a răspunde","de":"antworten","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"răspuns","de":"die Antwort","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"anunț","de":"die Anzeige","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"costum","de":"der Anzug","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"măr","de":"der Apfel","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"farmacie","de":"die Apotheke","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"aparat","de":"der Apparat","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a lucra","de":"arbeiten","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"muncă","de":"die Arbeit","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"șomer","de":"arbeitslos","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a se supăra","de":"ärgern","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"sărac","de":"arm","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"braț","de":"der Arm","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"articol","de":"der Artikel","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"și / de asemenea","de":"auch","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"pe / sus / deschis","de":"auf","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"în orice caz","de":"auf jeden Fall","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a termina / a înceta","de":"aufhören","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a deschide","de":"aufmachen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a fi atent","de":"aufpassen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a face ordine","de":"aufräumen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"interesant / captivant","de":"aufregend","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a se scula","de":"aufstehen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"lift","de":"der Aufzug","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"ochi","de":"das Auge","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"din / afară","de":"aus","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"formare profesională","de":"die Ausbildung","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"excursie","de":"der Ausflug","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a completa","de":"ausfüllen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"ieșire","de":"der Ausgang","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a cheltui","de":"ausgeben","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a ieși","de":"ausgehen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"informații","de":"die Auskunft","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"străinătate","de":"das Ausland","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a stinge","de":"ausmachen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a despacheta","de":"auspacken","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a se odihni","de":"ausruhen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a arăta","de":"aussehen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"în afară de","de":"außer","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"în plus","de":"außerdem","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"în afara orașului","de":"außerhalb","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a pronunța","de":"aussprechen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a coborî (din vehicul)","de":"aussteigen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"expoziție","de":"die Ausstellung","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"a distribui (ziare)","de":"austragen","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"buletin / act de identitate","de":"der Ausweis","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"mașină","de":"das Auto","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"autostradă","de":"die Autobahn","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"automat","de":"der Automat","section_ro":"VOCABULAR ALFABETIC A","section_de":""},{"ro":"bebeluș","de":"das Baby","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a coace","de":"backen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"brutărie","de":"die Bäckerei","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"baie","de":"das Bad","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a face baie","de":"baden","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"tren","de":"die Bahn","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"gară","de":"der Bahnhof","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"peron","de":"der Bahnsteig","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"curând","de":"bald","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"balcon","de":"der Balkon","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"minge","de":"der Ball","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"banană","de":"die Banane","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"trupă","de":"die Band","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"bancă (instituție)","de":"die Bank","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"bancă (mobilier)","de":"die Bank","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"în numerar","de":"bar","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"baschet","de":"der Basketball","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a confecționa","de":"basteln","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"burtă","de":"der Bauch","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a construi","de":"bauen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"copac","de":"der Baum","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"șantier","de":"die Baustelle","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a răspunde (la o întrebare)","de":"beantworten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a mulțumi","de":"bedanken","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a însemna","de":"bedeuten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a se grăbi","de":"beeilen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a termina","de":"beenden","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a începe","de":"beginnen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a argumenta","de":"begründen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"lângă / la","de":"bei","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"amândoi","de":"beide","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"picior","de":"das Bein","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"cunoscut / celebru","de":"bekannt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"cunoscut (persoană)","de":"der Bekannte","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a primi","de":"bekommen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"popular","de":"beliebt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a folosi","de":"benutzen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"confortabil","de":"bequem","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a sfătui","de":"beraten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"munte","de":"der Berg","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a raporta","de":"berichten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"profesie","de":"der Beruf","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"faimos","de":"berühmt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"veste / informație","de":"der Bescheid","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a descrie","de":"beschreiben","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a se plânge","de":"beschweren","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"ocupat","de":"besetzt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a vizita (obiectiv)","de":"besichtigen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"în mod deosebit","de":"besonders","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a confirma","de":"bestätigen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a trece (examen)","de":"bestehen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a comanda","de":"bestellen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"vizită","de":"der Besuch","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a vizita (persoană)","de":"besuchen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"pat","de":"das Bett","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a aplica pentru un post","de":"bewerben","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"candidatură","de":"die Bewerbung","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"înnorat","de":"bewölkt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a plăti","de":"bezahlen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"bibliotecă","de":"die Bibliothek","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"bere","de":"das Bier","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"imagine / poză","de":"das Bild","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"ieftin","de":"billig","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"pară","de":"die Birne","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"până","de":"bis","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"puțin","de":"bisschen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"vă rog / mulțumesc","de":"bitte","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"rugăminte","de":"die Bitte","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a ruga","de":"bitten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"amar","de":"bitter","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"foaie","de":"das Blatt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a rămâne","de":"bleiben","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"creion","de":"der Bleistift","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"prost","de":"blöd","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"blog","de":"der Blog","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"blond","de":"blond","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"floare","de":"die Blume","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"bluză","de":"die Blusa","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"fasole","de":"die Bohne","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"supărat","de":"böse","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a prăji","de":"braten","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a avea nevoie","de":"brauchen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"scrisoare","de":"der Brief","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"timbru","de":"die Briefmarke","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"ochelari","de":"die Brille","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a aduce","de":"bringen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"pâine","de":"das Brot","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"chiflă","de":"das Brötchen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"pod","de":"die Brücke","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"carte","de":"das Buch","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a rezerva","de":"buchen","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"literă","de":"der Buchstabe","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"a silabisi","de":"buchstabieren","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"colorat","de":"bunt","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"birou","de":"das Büro","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"autobuz","de":"der Bus","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"unt","de":"die Butter","section_ro":"VOCABULAR ALFABETIC B","section_de":""},{"ro":"cafenea","de":"das Café","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"cafeterie","de":"die Cafeteria","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a chata","de":"chatten","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"șef","de":"der Chef","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"club","de":"der Club","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"bandă desenată","de":"der Comic","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"calculator","de":"der Computer","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"cremă","de":"die Creme","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"acolo / prezent","de":"da","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"pe asta / despre asta","de":"da(r)","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"cu sine / prezent","de":"dabei","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a fi pentru / împotrivă","de":"dafür/dagegen sein","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"pe atunci","de":"damals","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"doamnă","de":"die Dame","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"alături","de":"daneben","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"mulțumire","de":"der Dank","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"mulțumesc","de":"danke","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a mulțumi","de":"danken","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"apoi","de":"dann","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"că (conjuncție)","de":"dass","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"fișier","de":"die Datei","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"dată","de":"das Datum","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a dura","de":"dauern","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a gândi","de":"denken","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"căci / pentru că","de":"denn","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"de aceea","de":"deshalb","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"clar / distinct","de":"deutlich","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"gras","de":"dick","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"lucru","de":"das Ding","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"direct","de":"direkt","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"discotecă","de":"die Disco","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a discuta","de":"diskutieren","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"totuși / ba da","de":"doch","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"cameră dublă","de":"das Doppelzimmer","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"sat","de":"das Dorf","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"acolo / de acolo / până acolo","de":"dort","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"afară","de":"draußen","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"urgent","de":"dringend","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"înăuntru","de":"drinnen","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"dincolo","de":"drüben","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a apăsa","de":"drücken","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a imprima","de":"drucken","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"imprimantă","de":"der Drucker","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"prost / stupid","de":"dumm","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"întunecat","de":"dunkel","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"subțire","de":"dünn","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"prin","de":"durch","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a avea voie","de":"dürfen","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"sete","de":"der Durst","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"duș","de":"die Dusche","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"a face duș","de":"duschen","section_ro":"VOCABULAR ALFABETIC C-D","section_de":""},{"ro":"carte electronică","de":"das E-Book","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"adevărat / cu adevărat","de":"echt","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"colț","de":"die Ecke","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"indiferent","de":"egal","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"soție","de":"die Ehefrau","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"soț","de":"der Ehemann","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"ou","de":"das Ei","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"propriu","de":"eigen-","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"de fapt","de":"eigentlich","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"urgent","de":"eilig","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"simplu / dus (bilet)","de":"einfach","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"intrare","de":"der Eingang","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"câțiva","de":"einig-","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a face cumpărături","de":"einkaufen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"centru comercial","de":"das Einkaufszentrum","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a invita","de":"einladen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"invitație","de":"die Einladung","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"o dată / cândva","de":"einmal","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a împacheta","de":"einpacken","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a urca (în vehicul)","de":"einsteigen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a se înscrie","de":"eintragen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"intrare (preț)","de":"der Eintritt","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a fi de acord","de":"einverstanden sein","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"individual / singur","de":"einzel-","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a se muta (în)","de":"einziehen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"înghețată","de":"das Eis","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"e-mail","de":"die E-Mail","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"destinatar","de":"der Empfänger","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a recomanda","de":"empfehlen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"capăt / sfârșit","de":"das Ende","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a se termina","de":"enden","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"în sfârșit","de":"endlich","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"strâmt","de":"eng","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a-și cere scuze","de":"entschuldigen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"scuze","de":"die Entschuldigung","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"parter","de":"das Erdgeschoss","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"experiență","de":"die Erfahrung","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a-și aminti","de":"erinnern","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"răcit","de":"erkältet sein","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a explica","de":"erklären","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a permite","de":"erlauben","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"permis","de":"erlaubt sein","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"permisiune","de":"die Erlaubnis","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"reducere","de":"die Ermäßigung","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a ajunge (la timp)","de":"erreichen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"abia / doar","de":"erst","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"adult","de":"der Erwachsene","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a povesti","de":"erzählen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"a mânca","de":"essen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"mâncare","de":"das Essen","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"ceva","de":"etwas","section_ro":"VOCABULAR ALFABETIC E","section_de":""},{"ro":"materie (școală)","de":"das Fach","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a pleca / a conduce","de":"fahren","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"bilet","de":"die Fahrkarte","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"orar","de":"der Fahrplan","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"bicicletă","de":"das Fahrrad","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a cădea","de":"fallen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"greșit","de":"falsch","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"familie","de":"die Familie","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"nume de familie","de":"der Familienname","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"fan","de":"der Fan","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"fantastic","de":"fantastisch","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"culoare","de":"die Farbe","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"aproape","de":"fast","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"leneș","de":"faul","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a lipsi","de":"fehlen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"greșeală","de":"der Fehler","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"sărbătoare","de":"die Feier","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a sărbători","de":"feiern","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"fereastră","de":"das Fenster","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"vacanță","de":"die Ferien","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a se uita la televizor","de":"fernsehen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"televizor","de":"der Fernseher","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"gata","de":"fertig sein","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"sărbătoare / petrecere","de":"das Fest","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"festival","de":"das Festival","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"gras (mâncare)","de":"fett","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"febră","de":"das Fieber","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"film","de":"der Film","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a găsi / a considera","de":"finden","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"firmă","de":"die Firma","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"pește","de":"der Fisch","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"în formă","de":"fit sein","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"sticlă","de":"die Flasche","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"carne","de":"das Fleisch","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"harnic","de":"fleißig","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a zbura","de":"fliegen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"târg de vechituri","de":"der Flohmarkt","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"zbor","de":"der Flug","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"aeroport","de":"der Flughafen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"avion","de":"das Flugzeug","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"râu","de":"der Fluss","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"formular","de":"das Formular","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"aparat foto","de":"der Fotoapparat","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a fotografia","de":"fotografieren","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"fotografie","de":"das Foto","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"întrebare","de":"die Frage","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a întreba","de":"fragen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"femeie / doamnă","de":"die Frau","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"liber / gratuit","de":"frei","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"voluntar","de":"freiwillig","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"timp liber","de":"die Freizeit","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"străin","de":"fremd","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a se bucura","de":"freuen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"prieten","de":"der Freund","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"prietenă","de":"die Freundin","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"prietenos","de":"freundlich","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"proaspăt","de":"frisch","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"bucuros","de":"froh","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"devreme","de":"früh","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"mai devreme / anterior","de":"früher","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"mic dejun","de":"das Frühstück","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a lua micul dejun","de":"frühstücken","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"a se simți","de":"fühlen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"permis de conducere","de":"der Führerschein","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"ghidaj / tur","de":"die Führung","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"obiecte găsite","de":"die Fundsachen","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"pentru","de":"für","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"îngrozitor","de":"furchtbar","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"picior","de":"der Fuß","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"fotbal","de":"der Fußball","section_ro":"VOCABULAR ALFABETIC F","section_de":""},{"ro":"furculiță","de":"die Gabel","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"întreg / destul de","de":"ganz","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"garaj","de":"die Garage","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"grădină","de":"der Garten","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"oaspete","de":"der Gast","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a da / există","de":"geben","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"născut","de":"geboren","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"an naștere / loc naștere / zi naștere","de":"Geburtsjahr/ort/tag","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"stimat","de":"geehrt-","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"periculos","de":"gefährlich","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a plăcea","de":"gefallen","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"împotriva / contra","de":"gegen","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"contrariul","de":"das Gegenteil","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"vizavi","de":"gegenüber","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"salariu","de":"das Gehalt","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a merge / a funcționa","de":"gehen","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a aparține","de":"gehören","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"bani","de":"das Geld","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"portofel","de":"die Geldbörse","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"legume","de":"das Gemüse","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"exact","de":"genau","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"destul","de":"genug","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"bagaj","de":"das Gepäck","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"tocmai / chiar acum","de":"gerade","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"drept înainte","de":"geradeaus","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"aparat / dispozitiv","de":"das Gerät","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"preparat / fel de mâncare","de":"das Gericht","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"cu plăcere / mai degrabă","de":"gern","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"magazin","de":"das Geschäft","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"cadou","de":"das Geschenk","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"istorie / poveste","de":"die Geschichte","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"veselă","de":"das Geschirr","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"față","de":"das Gesicht","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"conversație","de":"das Gespräch","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"ieri","de":"gestern","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"sănătos","de":"gesund","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"sănătate","de":"die Gesundheit","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"băutură","de":"das Getränk","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a câștiga","de":"gewinnen","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"furtună","de":"das Gewitter","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"chitară","de":"die Gitarre","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"pahar","de":"das Glas","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a crede","de":"glauben","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"imediat / la fel","de":"gleich","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"linie (cale ferată)","de":"das Gleis","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"noroc","de":"das Glück","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"fericit","de":"glücklich","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"felicitare","de":"der Glückwunsch","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a felicita","de":"gratulieren","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"a face grătar","de":"grillen","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"gripă","de":"die Grippe","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"mare","de":"groß","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"mărime","de":"die Größe","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"grup","de":"die Gruppe","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"salutări","de":"der Gruß","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"valabil","de":"gültig sein","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"ieftin / avantajos","de":"günstig","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"bun","de":"gut","section_ro":"VOCABULAR ALFABETIC G","section_de":""},{"ro":"păr","de":"das Haar","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a avea","de":"haben","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"pui (mâncare)","de":"das Hähnchen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"sală","de":"die Halle","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"bună ziua","de":"hallo","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"gât","de":"der Hals","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a opri / a ține","de":"halten","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"stație","de":"die Haltestelle","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"hamburger","de":"der Hamburger","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"mână","de":"die Hand","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"prosop","de":"das Handtuch","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"telefon mobil","de":"das Handy","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a atârna","de":"hängen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"dur / tare","de":"hart","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"urât","de":"hässlich","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"capitală","de":"die Hauptstadt","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"casă","de":"das Haus","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"gospodărie","de":"der Haushalt","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"caiet","de":"das Heft","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"patrie","de":"die Heimat","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a se căsători","de":"heiraten","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"fierbinte","de":"heiß","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a se numi","de":"heißen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"calorifer","de":"die Heizung","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a ajuta","de":"helfen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"luminos","de":"hell","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"cămașă","de":"das Hemd","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"încoace","de":"her-","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"afară","de":"heraus","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"înăuntru","de":"herein","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"aragaz","de":"der Herd","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"domn","de":"der Herr","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a produce","de":"herstellen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a descărca","de":"herunterladen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"cordial","de":"herzlich","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"azi","de":"heute","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"aici","de":"hier","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"ajutor","de":"die Hilfe","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"cer","de":"der Himmel","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"încolo","de":"hin-","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"în spate","de":"hinten","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"în spatele","de":"hinter","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"hobby","de":"das Hobby","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"înalt / ridicat","de":"hoch","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"nuntă","de":"die Hochzeit","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a spera","de":"hoffen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"sper că","de":"hoffentlich","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a lua / a aduce","de":"holen","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"pagină web","de":"die Homepage","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a auzi","de":"hören","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"pantaloni","de":"die Hose","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"hotel","de":"das Hotel","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"câine","de":"der Hund","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"foame","de":"der Hunger","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"a tuși","de":"husten","section_ro":"VOCABULAR ALFABETIC H","section_de":""},{"ro":"idee","de":"die Idee","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"mereu","de":"immer","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"în / la","de":"in","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"informație","de":"die Information","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"a se informa","de":"informieren","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"insulă","de":"die Insel","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"instrument","de":"das Instrument","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"inteligent","de":"intelligent","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"interes","de":"das Interesse","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"a se interesa","de":"interessieren","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"interesant","de":"interessant","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"internațional","de":"international","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"internet","de":"das Internet","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"interviu","de":"das Interview","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"da","de":"ja","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"geacă","de":"die Jacke","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"jeans","de":"die Jeans","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"fiecare","de":"jeder","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"cineva","de":"jemand","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"acum","de":"jetzt","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"job","de":"der Job","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"a face jogging","de":"joggen","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"hostel","de":"die Jugendherberge","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"tânăr","de":"der Jugendliche","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"tânăr (adj.)","de":"jung","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"băiat","de":"der Junge","section_ro":"VOCABULAR ALFABETIC I-J","section_de":""},{"ro":"cafea","de":"der Kaffee","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"calendar","de":"der Kalender","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"rece","de":"kalt","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cameră foto","de":"die Kamera","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"stricat","de":"kaputt","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"carte / card / meniu","de":"die Karte","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cartof","de":"die Kartoffel","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"brânză","de":"der Käse","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"casă de marcat","de":"die Kasse","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"pisică","de":"die Katze","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a cumpăra","de":"kaufen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"magazin universal","de":"das Kaufhaus","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"niciun","de":"kein","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"pivniță","de":"der Keller","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a cunoaște","de":"kennen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a face cunoștință","de":"kennenlernen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cunoștințe","de":"die Kenntnisse","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"colier","de":"die Kette","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"copil","de":"das Kind","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"grădiniță","de":"der Kindergarten","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cinema","de":"das Kino","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"chioșc","de":"der Kiosk","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"biserică","de":"die Kirche","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a merge (a funcționa)","de":"klappen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"clar / sigur","de":"klar","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"pian","de":"das Klavier","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"rochie","de":"das Kleid","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"îmbrăcăminte","de":"die Kleidung","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"mic","de":"klein","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"deștept","de":"klug","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a găti","de":"kochen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"valiză","de":"der Koffer","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"coleg","de":"der Kollege","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"amuzant / ciudat","de":"komisch","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a veni","de":"kommen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a putea","de":"können","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"contact","de":"der Kontakt","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cont","de":"das Konto","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a controla","de":"kontrollieren","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"concert","de":"das Konzert","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cap","de":"der Kopf","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"corp","de":"der Körper","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cosmetice","de":"die Kosmetik","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a costa","de":"kosten","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"gratuit","de":"kostenlos","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"bolnav","de":"krank","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"spital","de":"das Krankenhaus","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"casă de asigurări","de":"die Krankenkasse","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"boală","de":"die Krankheit","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"credit","de":"der Kredit","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"intersecție","de":"die Kreuzung","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a primi / a lua","de":"kriegen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"roman polițist","de":"der Krimi","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"bucătărie","de":"die Küche","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"prăjitură","de":"der Kuchen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"răcoros","de":"kühl","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"frigider","de":"der Kühlschrank","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"cultură","de":"die Kultur","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a se ocupa","de":"kümmern","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"client","de":"der Kunde","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a demisiona","de":"kündigen","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"artă","de":"die Kunst","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"curs","de":"der Kurs","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"scurt","de":"kurz","section_ro":"VOCABULAR ALFABETIC K","section_de":""},{"ro":"a râde","de":"lachen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"magazin (mic)","de":"der Laden","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"lampă","de":"die Lampe","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"țară / sat","de":"das Land","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"peisaj","de":"die Landschaft","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"lung","de":"lang","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"mult timp","de":"lange","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"încet","de":"langsam","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"plictisitor","de":"langweilig","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"laptop","de":"der Laptop","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a lăsa","de":"lassen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a alerga / a merge","de":"laufen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"tare (sunet)","de":"laut","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a trăi","de":"leben","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"viață","de":"das Leben","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"alimente","de":"die Lebensmittel","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"gol","de":"leer","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a pune (culcat)","de":"legen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"ușor / simplu","de":"leicht","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"din păcate","de":"leider","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"îmi pare rău","de":"leidtun","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a împrumuta","de":"leihen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"liniștit","de":"leise","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a învăța","de":"lernen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a citi","de":"lesen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"ultimul","de":"letzt-","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"oameni","de":"die Leute","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"lumină","de":"das Licht","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"drag / mai degrabă","de":"lieb-","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a iubi","de":"lieben","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"preferat","de":"Lieblings-","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"cântec","de":"das Lied","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a livra","de":"liefern","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a sta jos","de":"liegen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"link","de":"der Link","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"stânga","de":"links","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"lingură","de":"der Löffel","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"local / restaurant","de":"das Lokal","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"minciună","de":"die Lüge","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a minți","de":"lügen","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"chef","de":"die Lust","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"amuzant","de":"lustig","section_ro":"VOCABULAR ALFABETIC L","section_de":""},{"ro":"a face","de":"machen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"fată","de":"das Mädchen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"stomac","de":"der Magen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"căsuța vocală","de":"die Mailbox","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"odată / de data asta","de":"mal","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a picta / a desena","de":"malen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"se / omul","de":"man","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"unii","de":"manch-","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"uneori","de":"manchmal","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"bărbat / soț","de":"der Mann","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"masculin","de":"männlich","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"echipă","de":"die Mannschaft","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"pardesiu","de":"der Mantel","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"piață","de":"der Markt","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mașină","de":"die Maschine","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"medicament","de":"das Medikament","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mare (ocean)","de":"das Meer","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mai mult","de":"mehr","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a crede / a spune","de":"meinen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"opinie","de":"die Meinung","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"cei mai mulți","de":"meist-","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"de obicei","de":"meistens","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"cantitate","de":"die Menge","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"om / persoană","de":"der Mensch","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a-și aminti","de":"merken","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"târg","de":"die Messe","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"cuțit","de":"das Messer","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"chirie","de":"die Miete","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a închiria","de":"mieten","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"lapte","de":"die Milch","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"cel puțin","de":"mindestens","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"apă minerală","de":"das Mineralwasser","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"cu / împreună","de":"mit","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"coleg de muncă","de":"der Mitarbeiter","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"prânz","de":"das Mittagessen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mijloc","de":"die Mitte","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"remediu","de":"das Mittel","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mobilă","de":"die Möbel","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"telefon mobil","de":"das Mobiltelefon","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a dori","de":"möchten","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"modă","de":"die Mode","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"modern","de":"modern","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"a-i plăcea","de":"mögen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"posibil","de":"möglich","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"moment","de":"der Moment","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"mâine","de":"morgen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"motor","de":"der Motor","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"scuter","de":"der Motorroller","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"obosit","de":"müde","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"gunoi","de":"der Müll","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"gură","de":"der Mund","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"muzeu","de":"das Museum","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"muzică","de":"die Musik","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"trebuie","de":"müssen","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"căciulă","de":"die Mütze","section_ro":"VOCABULAR ALFABETIC M","section_de":""},{"ro":"după / acasă","de":"nach","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"vecin","de":"der Nachbar","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"știre / mesaj","de":"die Nachricht","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"următor","de":"nächste-","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"apropiere","de":"die Nähe","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nume","de":"der Name","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"ud","de":"nass","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"natură","de":"die Natur","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"bineînțeles","de":"natürlich","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"lângă","de":"neben","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"alături","de":"nebenan","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"ceațos","de":"neblig","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"a lua","de":"nehmen","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nu","de":"nein","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"a numi","de":"nennen","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nervos","de":"nervös","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"drăguț","de":"nett","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nou","de":"neu","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nu","de":"nicht","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nimic","de":"nichts","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"niciodată","de":"nie","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nimeni","de":"niemand","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"nicăieri","de":"nirgends","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"încă / mai","de":"noch","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"normal","de":"normal","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"notă (școală)","de":"die Note","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"a nota","de":"notieren","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"notiță","de":"die Notiz","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"necesar","de":"notwendig","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"paste","de":"die Nudel","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"număr","de":"die Nummer","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"doar","de":"nur","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"util","de":"nützlich","section_ro":"VOCABULAR ALFABETIC N","section_de":""},{"ro":"sus / deasupra","de":"oben","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"fructe","de":"das Obst","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"sau","de":"oder","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"deschis","de":"offen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a deschide","de":"öffnen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"des","de":"oft","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"fără","de":"ohne","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"ureche","de":"das Ohr","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"ulei","de":"das Öl","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"online","de":"online","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"portocală","de":"die Orange","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"ordine","de":"die Ordnung","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a organiza","de":"organisieren","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"loc","de":"der Ort","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pereche","de":"das Paar","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"câteva","de":"ein paar","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a împacheta","de":"packen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pachet","de":"das Paket","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"hârtie","de":"das Papier","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"acte","de":"die Papiere","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"parfum","de":"das Parfüm","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"parc","de":"der Park","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a parca","de":"parken","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"partener","de":"der Partner","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"petrecere","de":"die Party","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pașaport","de":"der Pass","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a se potrivi","de":"passen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a se întâmpla","de":"passieren","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"parolă","de":"das Passwort","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pauză","de":"die Pause","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"persoană","de":"die Person","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"cal","de":"das Pferd","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"plantă","de":"die Pflanze","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pizza","de":"die Pizza","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"afiș","de":"das Plakat","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"plan","de":"der Plan","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a planifica","de":"planen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"loc","de":"der Platz","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"deodată","de":"plötzlich","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"poliție","de":"die Polizei","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"cartofi prăjiți","de":"die Pommes frites","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"porție","de":"die Portion","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"poștă","de":"die Post","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"poster","de":"das Poster","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"carte poștală","de":"die Postkarte","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"cod poștal","de":"die Postleitzahl","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"practică / stagiu","de":"das Praktikum","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"practic","de":"praktisch","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"cabinet medical","de":"die Praxis","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"preț","de":"der Preis","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"ieftin (calitate bună)","de":"preiswert","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"privat","de":"privat","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pe (fiecare)","de":"pro","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a gusta / a încerca","de":"probieren","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"problemă","de":"das Problem","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"produs","de":"das Produkt","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"program","de":"das Programm","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"proiect","de":"das Projekt","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pliant","de":"der Prospekt","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a verifica","de":"prüfen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"examen","de":"die Prüfung","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"pulover","de":"der Pullover","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"punctual","de":"pünktlich","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"a curăța","de":"putzen","section_ro":"VOCABULAR ALFABETIC O-P","section_de":""},{"ro":"calitate","de":"die Qualität","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"quiz","de":"das Quiz","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"radio","de":"das Radio","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a sfătui / a ghici","de":"raten","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"primărie","de":"das Rathaus","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"ghicitoare","de":"das Rätsel","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a fuma","de":"rauchen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"cameră","de":"der Raum","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a calcula","de":"rechnen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"factură","de":"die Rechnung","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a avea dreptate","de":"recht haben","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"dreapta","de":"rechts","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a vorbi","de":"reden","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"ploaie","de":"der Regen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a ploua","de":"regnen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"bogat","de":"reich","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"anvelopă","de":"der Reifen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"rând","de":"die Reihe","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"curățătorie","de":"die Reinigung","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"orez","de":"der Reis","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"călătorie","de":"die Reise","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"agenție de turism","de":"das Reisebüro","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"ghid turistic","de":"der Reiseführer","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a călători","de":"reisen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a călări","de":"reiten","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a renova","de":"renovieren","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"pensionar","de":"der Rentner","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"reparație","de":"die Reparatur","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a repara","de":"reparieren","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a rezerva","de":"reservieren","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"rest","de":"der Rest","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"restaurant","de":"das Restaurant","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"rețetă","de":"das Rezept","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"recepție","de":"die Rezeption","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"corect","de":"richtig","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a mirosi","de":"riechen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"vită","de":"das Rind","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"inel","de":"der Ring","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"fustă","de":"der Rock","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"romantic","de":"romantisch","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"trandafir","de":"die Rose","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"spate","de":"der Rücken","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"rucsac","de":"der Rucksack","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"a striga / a chema","de":"rufen","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"liniște","de":"die Ruhe","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"liniștit","de":"ruhig","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"rotund / aproximativ","de":"rund","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"tur ghidat","de":"der Rundgang","section_ro":"VOCABULAR ALFABETIC Q-R","section_de":""},{"ro":"lucru / treabă","de":"die Sache","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"suc","de":"der Saft","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a spune","de":"sagen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"salată","de":"der Salat","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sare","de":"das Salz","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a colecționa","de":"sammeln","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"propoziție","de":"der Satz","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"curat","de":"sauber","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"acru / supărat","de":"sauer","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"păcat","de":"schade","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dăunător","de":"schädlich","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a reuși","de":"schaffen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"ghișeu","de":"der Schalter","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"picant","de":"scharf","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a străluci","de":"scheinen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a dărui","de":"schenken","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"foarfece","de":"die Schere","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a trimite","de":"schicken","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"vapor","de":"das Schiff","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"indicator / panou","de":"das Schild","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a certa","de":"schimpfen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"umbrelă","de":"der Schirm","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a dormi","de":"schlafen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dormitor","de":"das Schlafzimmer","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"rău","de":"schlecht","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a închide","de":"schließen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"grav","de":"schlimm","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"castel","de":"das Schloss","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sfârșit","de":"der Schluss","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"cheie","de":"der Schlüssel","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a gusta","de":"schmecken","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"durere","de":"der Schmerz","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"murdar","de":"schmutzig","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"zăpadă","de":"der Schnee","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a tăia","de":"schneiden","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a ninge","de":"schneien","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"repede","de":"schnell","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"ciocolată","de":"die Schokolade","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"deja","de":"schon","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"frumos","de":"schön","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dulap","de":"der Schrank","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"îngrozitor","de":"schrecklich","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a scrie","de":"schreiben","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"scris","de":"schriftlich","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"pantof","de":"der Schuh","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"școală","de":"die Schule","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"elev","de":"der Schüler","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"slab","de":"schwach","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"gravidă","de":"schwanger","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"porc","de":"das Schwein","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"greu / dificil","de":"schwer","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dificil","de":"schwierig","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"piscină","de":"das Schwimmbad","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a înota","de":"schwimmen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"lac","de":"der See","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"mare (ocean)","de":"die See","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a vedea","de":"sehen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"obiectiv turistic","de":"die Sehenswürdigkeit","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"foarte","de":"sehr","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"săpun","de":"die Seife","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a fi","de":"sein","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"de la / de când","de":"seit","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"pagină","de":"die Seite","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"singur / tu însuți","de":"selbst","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"emisiune","de":"die Sendung","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"serviciu","de":"der Service","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a se așeza","de":"setzen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sigur","de":"sicher","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a cânta","de":"singen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"situație","de":"die Situation","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a sta jos","de":"sitzen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"schi","de":"der Ski","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"astfel / atât de","de":"so","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"canapea","de":"das Sofa","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"imediat","de":"sofort","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"chiar și","de":"sogar","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"trebuie (altcineva a spus)","de":"sollen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"soare","de":"die Sonne","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"însorit","de":"sonnig","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"altfel","de":"sonst","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"captivant","de":"spannend","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a economisi","de":"sparen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"distracție","de":"der Spaß","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"târziu","de":"spät","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"mai târziu","de":"später","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a se plimba","de":"spazieren gehen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"plimbare","de":"der Spaziergang","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a salva (fișier)","de":"speichern","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"meniu","de":"die Speisekarte","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"joc","de":"das Spiel","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a juca / a cânta","de":"spielen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sport","de":"der Sport","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sportiv","de":"sportlich","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"teren de sport","de":"der Sportplatz","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"limbă","de":"die Sprache","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a vorbi","de":"sprechen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"orar de consultații","de":"die Sprechstunde","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"oraș","de":"die Stadt","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"hartă a orașului","de":"der Stadtplan","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"star","de":"der Star","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"puternic","de":"stark","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a avea loc","de":"stattfinden","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a sta","de":"stehen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"post / loc de muncă","de":"die Stelle","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a pune","de":"stellen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a muri","de":"sterben","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"cizmă","de":"der Stiefel","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"pix / creion","de":"der Stift","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"bursă","de":"das Stipendium","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"etaj","de":"der Stock","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a deranja","de":"stören","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"plajă","de":"der Strand","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"stradă","de":"die Straße","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"tramvai","de":"die Straßenbahn","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a se certa","de":"streiten","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"sever","de":"streng","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"stres","de":"der Stress","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"stresant","de":"stressig","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"bucată","de":"das Stück","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"student","de":"der Student","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a studia","de":"studieren","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"studii","de":"das Studium","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"scaun","de":"der Stuhl","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a căuta","de":"suchen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"super","de":"super","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"supermarket","de":"der Supermarkt","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"supă","de":"die Suppe","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"a naviga pe internet","de":"surfen","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dulce / drăguț","de":"süß","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"dulciuri","de":"die Süßigkeiten","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"simpatic","de":"sympathisch","section_ro":"VOCABULAR ALFABETIC S","section_de":""},{"ro":"tabletă","de":"das Tablet","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"pastilă","de":"die Tablette","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tablă / panou","de":"die Tafel","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a dansa","de":"tanzen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"geantă","de":"die Tasche","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"bani de buzunar","de":"das Taschengeld","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"ceașcă","de":"die Tasse","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a schimba","de":"tauschen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"taxi","de":"das Taxi","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"echipă","de":"das Team","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"ceai","de":"der Tee","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a împărți","de":"teilen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a participa","de":"teilnehmen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"telefon","de":"das Telefon","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a telefona","de":"telefonieren","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"farfurie","de":"der Teller","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tenis","de":"das Tennis","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"programare","de":"der Termin","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"scump","de":"teuer","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"text","de":"der Text","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"teatru","de":"das Theater","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"temă","de":"das Thema","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"bilet","de":"das Ticket","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"adânc","de":"tief","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"animal","de":"das Tier","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"sfat","de":"der Tipp","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"masă","de":"der Tisch","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"titlu","de":"der Titel","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"toaletă","de":"die Toilette","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"grozav","de":"toll","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"roșie","de":"die Tomate","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"oală","de":"der Topf","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tort","de":"die Torte","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"mort","de":"tot","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"total / complet","de":"total","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tur","de":"die Tour","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"turist","de":"der Tourist","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a purta / a căra","de":"tragen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a se antrena","de":"trainieren","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"antrenament","de":"das Training","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"vis","de":"der Traum","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a visa","de":"träumen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"trist","de":"traurig","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a se întâlni","de":"treffen","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"scară","de":"die Treppe","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a bea","de":"trinken","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"uscat","de":"trocken","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"pa","de":"tschüs","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tricou","de":"das T-Shirt","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a durea / a face","de":"tun","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"ușă","de":"die Tür","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"tipic","de":"typisch","section_ro":"VOCABULAR ALFABETIC T","section_de":""},{"ro":"a exersa","de":"üben","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"peste / deasupra","de":"über","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"peste tot","de":"überall","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"poimâine","de":"übermorgen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a sta peste noapte","de":"übernachten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a traduce","de":"übersetzen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"traducere","de":"die Übersetzung","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a transfera bani","de":"überweisen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"ceas / ora","de":"die Uhr","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"la ora / în jurul","de":"um","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a schimba (trenul)","de":"umsteigen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a se muta","de":"umziehen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"mutare","de":"der Umzug","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"neapărat","de":"unbedingt","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"și","de":"und","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"accident","de":"der Unfall","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"universitate","de":"die Universität","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"jos / dedesubt","de":"unten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"sub","de":"unter","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a conversa","de":"unterhalten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"cazare","de":"die Unterkunft","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a întreprinde","de":"unternehmen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"curs (lecție)","de":"der Unterricht","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"diferență","de":"der Unterschied","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a semna","de":"unterschreiben","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"semnătură","de":"die Unterschrift","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a examina","de":"untersuchen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"în drum","de":"unterwegs sein","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"vacanță","de":"der Urlaub","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a fi de întâlnit","de":"verabredet sein","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"eveniment","de":"die Veranstaltung","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a interzice / interzis","de":"verbieten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a câștiga (bani)","de":"verdienen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"asociație / club","de":"der Verein","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a stabili","de":"vereinbaren","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a uita","de":"vergessen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a compara","de":"vergleichen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a vinde","de":"verkaufen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"trafic","de":"der Verkehr","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"mijloc de transport","de":"das Verkehrsmittel","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a se răni","de":"verletzen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a se îndrăgosti","de":"verlieben","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a pierde","de":"verlieren","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a închiria (ca proprietar)","de":"vermieten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"proprietar","de":"der Vermieter","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a rata","de":"verpassen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a călători (în vacanță)","de":"verreisen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a amâna","de":"verschieben","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"diferit","de":"verschieden","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"întârziere","de":"die Verspätung","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a înțelege","de":"verstehen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a încerca","de":"versuchen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"contract","de":"der Vertrag","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"mult / mulți","de":"viel","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"poate","de":"vielleicht","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"pasăre","de":"der Vogel","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"plin","de":"voll","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"volei","de":"der Volleyball","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"de la / al lui","de":"von","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"în fața / acum (timp)","de":"vor","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"pe lângă / trecut","de":"vorbei","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a pregăti","de":"vorbereiten","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"alaltăieri","de":"vorgestern","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"înainte","de":"vorher","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"în față","de":"vorn","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"prenume","de":"der Vorname","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"propunere","de":"der Vorschlag","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"atent","de":"vorsichtig","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"a se prezenta","de":"vorstellen","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"înainte","de":"vorwärts","section_ro":"VOCABULAR ALFABETIC U-V","section_de":""},{"ro":"treaz","de":"wach","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"mașină / vagon","de":"der Wagen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a alege / a forma (număr)","de":"wählen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"adevărat","de":"wahr","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"probabil","de":"wahrscheinlich","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"pădure","de":"der Wald","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a merge pe jos (drumeție)","de":"wandern","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"când","de":"wann","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cald","de":"warm","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a aștepta","de":"warten","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"de ce","de":"warum","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"ce","de":"was","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"rufe","de":"die Wäsche","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a spăla","de":"waschen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"apă","de":"das Wasser","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"pagină web","de":"die Webseite","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a schimba","de":"wechseln","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a trezi","de":"wecken","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"plecat / dispărut","de":"weg-","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"drum","de":"der Weg","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"din cauza","de":"wegen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a durea","de":"wehtun","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"feminin","de":"weiblich","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"moale","de":"weich","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"pentru că","de":"weil","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"vin","de":"der Wein","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a plânge","de":"weinen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"departe","de":"weit","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"mai departe","de":"weiter","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"care","de":"welcher","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"lume","de":"die Welt","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"puțin","de":"wenig","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cel puțin","de":"wenigstens","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"dacă / când","de":"wenn","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cine","de":"wer","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a deveni","de":"werden","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"atelier","de":"die Werkstatt","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"concurs","de":"der Wettbewerb","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"vreme","de":"das Wetter","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"important","de":"wichtig","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cum / cât de","de":"wie","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cât de mult / câți","de":"wie viel","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"din nou","de":"wieder","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a repeta","de":"wiederholen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"la revedere (telefon)","de":"das Wiederhören","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"la revedere","de":"das Wiedersehen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"bine venit","de":"willkommen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"vânt","de":"der Wind","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"vântos","de":"windig","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cu adevărat","de":"wirklich","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a ști","de":"wissen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"glumă","de":"der Witz","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"amuzant / spiritual","de":"witzig","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"unde","de":"wo","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"de unde","de":"woher","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"unde (destinație)","de":"wohin","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a locui","de":"wohnen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"apartament","de":"die Wohnung","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"sufragerie","de":"das Wohnzimmer","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"nor","de":"die Wolke","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a vrea","de":"wollen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"workshop","de":"der Workshop","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cuvânt","de":"das Wort","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"minunat","de":"wunderbar","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"dorință","de":"der Wunsch","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a-și dori","de":"wünschen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cârnat","de":"die Wurst","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"număr","de":"die Zahl","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a plăti","de":"zahlen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"dinte","de":"der Zahn","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a desena","de":"zeichnen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a arăta","de":"zeigen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"timp","de":"die Zeit","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"revistă","de":"die Zeitschrift","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"ziar","de":"die Zeitung","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cort","de":"das Zelt","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"centru","de":"das Zentrum","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"biletel","de":"der Zettel","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"certificat / carnet","de":"das Zeugnis","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a se îmbrăca / a se dezbrăca","de":"ziehen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"obiectiv / scop","de":"das Ziel","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"cameră","de":"das Zimmer","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"circ","de":"der Zirkus","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"lămâie","de":"die Zitrone","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"grădină zoologică","de":"der Zoo","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"la / prea / spre","de":"zu","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"zahăr","de":"der Zucker","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"mai întâi","de":"zuerst","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"mulțumit","de":"zufrieden","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"tren","de":"der Zug","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a asculta","de":"zuhören","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"ultima dată / la final","de":"zuletzt","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"de exemplu","de":"zum Beispiel","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"a închide","de":"zumachen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"înapoi / retur","de":"zurück","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"împreună","de":"zusammen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""},{"ro":"între","de":"zwischen","section_ro":"VOCABULAR ALFABETIC W-Z","section_de":""}];
+
+// === STATE ===
+const STORAGE = {
+  decks: "vocab_a2_decks_v1",
+  active: "vocab_a2_active_v1",
+  sections: "vocab_a2_sections_v1",
+  progress: "vocab_a2_progress_v1",
+  stats: "vocab_a2_stats_v1",
+};
+
+function loadJSON(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch(e) { return fallback; }
+}
+function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let decks = loadJSON(STORAGE.decks, null);
+if (!decks || !decks["A2 Goethe"]) {
+  decks = decks || {};
+  decks["A2 Goethe"] = DEFAULT_VOCAB;
+  saveJSON(STORAGE.decks, decks);
+}
+let activeDeck = loadJSON(STORAGE.active, "A2 Goethe");
+if (!decks[activeDeck]) activeDeck = Object.keys(decks)[0];
+let sectionFilter = loadJSON(STORAGE.sections, {});
+let progress = loadJSON(STORAGE.progress, {});
+let stats = loadJSON(STORAGE.stats, {
+  quiz: { correct: 0, total: 0, streak: 0 },
+  type: { correct: 0, total: 0 },
+  match: { rounds: 0, pairs: 0, mistakes: 0 }
+});
+
+// === HELPERS ===
+function entryKey(e) { return activeDeck + "::" + e.ro + "::" + e.de; }
+function getActiveEntries() {
+  const all = decks[activeDeck] || [];
+  const sf = sectionFilter[activeDeck] || {};
+  // If no sections selected at all, treat as all selected
+  const anySelected = Object.values(sf).some(v => v);
+  if (!anySelected) return all.slice();
+  return all.filter(e => sf[e.section_ro || "general"]);
+}
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+function showToast(msg, type = "") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + type;
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+// === PARSING ===
+function parseVocabText(text, deckName) {
+  const lines = text.split(/\r?\n/);
+  const entries = [];
+  let currentSection = "general";
+  let lineCount = 0;
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+    // Section header detection: line of equals signs, or lines starting with #, or "SECȚIUNEA X: name"
+    if (/^=+$/.test(line) || line.startsWith("//")) continue;
+    const secMatch = line.match(/^(?:SEC[ȚT]IUNEA\s+\d+\s*:|##?\s+|\[)\s*(.+?)\]?$/i);
+    if (secMatch) {
+      currentSection = secMatch[1].replace(/\([^)]*\)\s*$/, "").trim().toUpperCase();
+      continue;
+    }
+    // Try to detect separator
+    let parts;
+    if (line.includes("→") || line.includes("➜")) parts = line.split(/[→➜]/);
+    else if (line.includes(";")) parts = line.split(";");
+    else if (line.includes("\t")) parts = line.split("\t");
+    else if (line.match(/\s+[-–]\s+/)) parts = line.split(/\s+[-–]\s+/);
+    else if (line.includes(",")) parts = line.split(",");
+    else continue;
+    if (parts.length < 2) continue;
+    const ro = parts[0].trim();
+    const de = parts[1].trim();
+    const cat = (parts[2] || currentSection || "general").trim().toUpperCase();
+    if (!ro || !de) continue;
+    // Skip header row
+    if (lineCount === 0 && (ro.toLowerCase() === "romana" || ro.toLowerCase() === "română" || ro.toLowerCase() === "ro")) {
+      lineCount++;
+      continue;
+    }
+    lineCount++;
+    entries.push({ ro, de, section_ro: cat, section_de: "" });
+  }
+  return entries;
+}
+
+function importDeck(name, entries) {
+  if (!name) name = "Deck " + new Date().toLocaleDateString();
+  if (!entries.length) {
+    showToast("Niciun cuvant gasit in fisier", "error");
+    return false;
+  }
+  decks[name] = entries;
+  saveJSON(STORAGE.decks, decks);
+  activeDeck = name;
+  saveJSON(STORAGE.active, activeDeck);
+  refreshUI();
+  showToast(`Importat ${entries.length} cuvinte in "${name}"`, "success");
+  return true;
+}
+
+// === UI WIRING ===
+function refreshUI() {
+  populateDeckSelect();
+  updateDeckInfo();
+  renderSections();
+  renderCard();
+  renderDeckList();
+  renderProgress();
+  renderList();
+}
+
+function populateDeckSelect() {
+  const sel = document.getElementById("deck-select");
+  sel.innerHTML = "";
+  Object.keys(decks).forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = `${name} (${decks[name].length})`;
+    if (name === activeDeck) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function switchDeck(name) {
+  if (!decks[name]) return;
+  activeDeck = name;
+  saveJSON(STORAGE.active, activeDeck);
+  cardIdx = 0;
+  refreshUI();
+  showToast(`Deck activ: ${name}`);
+}
+
+function updateDeckInfo() {
+  const total = (decks[activeDeck] || []).length;
+  const active = getActiveEntries().length;
+  document.getElementById("deck-info").textContent = `${active}/${total} cuvinte active`;
+}
+
+// === TABS ===
+const tabs = document.querySelectorAll("nav button");
+tabs.forEach(b => b.addEventListener("click", () => goTab(b.dataset.tab)));
+function goTab(name) {
+  tabs.forEach(x => x.classList.toggle("active", x.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.style.display = p.id === "panel-" + name ? "block" : "none");
+  if (name === "list") renderList();
+  if (name === "progress") renderProgress();
+  if (name === "sections") renderSections();
+  if (name === "upload") renderDeckList();
+  if (name === "quiz") { if (!document.getElementById("quiz-content").innerHTML) newQuiz(); }
+  if (name === "type") { if (!document.getElementById("type-content").innerHTML) newType(); }
+  if (name === "match") { if (!document.getElementById("match-content").innerHTML) newMatch(); }
+}
+
+// === FLASHCARDS ===
+let cardIdx = 0;
+let direction = "ro-de";
+const card = document.getElementById("flashcard");
+card.addEventListener("click", () => card.classList.toggle("flipped"));
+
+document.querySelectorAll("[data-direction]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-direction]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  direction = b.dataset.direction;
+  renderCard();
+}));
+
+function renderCard() {
+  card.classList.remove("flipped");
+  const entries = getActiveEntries();
+  if (!entries.length) {
+    document.getElementById("card-front-text").textContent = "Nicio sectiune activa";
+    document.getElementById("card-back-text").textContent = "Activeaza sectiuni in tab-ul Sectiuni";
+    document.getElementById("card-counter").textContent = "0/0";
+    return;
+  }
+  if (cardIdx >= entries.length) cardIdx = 0;
+  if (cardIdx < 0) cardIdx = entries.length - 1;
+  const e = entries[cardIdx];
+  let useDir = direction;
+  if (direction === "random") useDir = Math.random() < 0.5 ? "ro-de" : "de-ro";
+  if (useDir === "ro-de") {
+    document.getElementById("card-front-text").textContent = e.ro;
+    document.getElementById("card-back-text").textContent = e.de;
+    document.getElementById("card-label-front").textContent = "Romana";
+    document.getElementById("card-label-back").textContent = "Germana";
+  } else {
+    document.getElementById("card-front-text").textContent = e.de;
+    document.getElementById("card-back-text").textContent = e.ro;
+    document.getElementById("card-label-front").textContent = "Germana";
+    document.getElementById("card-label-back").textContent = "Romana";
+  }
+  document.getElementById("card-cat-front").textContent = e.section_ro || "";
+  document.getElementById("card-cat-back").textContent = e.section_ro || "";
+  const status = progress[entryKey(e)];
+  const statusLabel = { easy: "Stiut bine", medium: "Mediu", hard: "De repetat" }[status] || "";
+  document.getElementById("card-back-hint").textContent = statusLabel ? `Status: ${statusLabel}` : "";
+  document.getElementById("card-counter").textContent = (cardIdx + 1) + "/" + entries.length;
+}
+function nextCard() { cardIdx = (cardIdx + 1) % Math.max(getActiveEntries().length, 1); renderCard(); }
+function prevCard() {
+  const len = getActiveEntries().length;
+  cardIdx = (cardIdx - 1 + Math.max(len, 1)) % Math.max(len, 1);
+  renderCard();
+}
+function markCard(level) {
+  const entries = getActiveEntries();
+  if (!entries.length) return;
+  progress[entryKey(entries[cardIdx])] = level;
+  saveJSON(STORAGE.progress, progress);
+  nextCard();
+}
+
+document.addEventListener("keydown", (e) => {
+  const fcVisible = document.getElementById("panel-flashcards").style.display !== "none";
+  if (!fcVisible) return;
+  if (e.code === "Space") { e.preventDefault(); card.classList.toggle("flipped"); }
+  else if (e.code === "ArrowRight") nextCard();
+  else if (e.code === "ArrowLeft") prevCard();
+  else if (e.key === "1") markCard("hard");
+  else if (e.key === "2") markCard("medium");
+  else if (e.key === "3") markCard("easy");
+});
+
+// === MULTIPLE CHOICE QUIZ ===
+let quizDir = "ro-de";
+document.querySelectorAll("[data-quiz-dir]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-quiz-dir]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  quizDir = b.dataset.quizDir;
+  newQuiz();
+}));
+
+function newQuiz() {
+  const entries = getActiveEntries();
+  if (entries.length < 4) {
+    document.getElementById("quiz-content").innerHTML = '<div class="empty-state"><div class="empty-state-icon">[!]</div>E nevoie de cel putin 4 cuvinte. Activeaza mai multe sectiuni sau adauga un deck.</div>';
+    return;
+  }
+  const correct = entries[Math.floor(Math.random() * entries.length)];
+  let useDir = quizDir;
+  if (quizDir === "random") useDir = Math.random() < 0.5 ? "ro-de" : "de-ro";
+  const promptKey = useDir === "ro-de" ? "ro" : "de";
+  const answerKey = useDir === "ro-de" ? "de" : "ro";
+
+  const wrongPool = entries.filter(e => e[answerKey] !== correct[answerKey]);
+  const wrongs = shuffle(wrongPool).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">' + (useDir === "ro-de" ? "Tradu in germana:" : "Tradu in romana:") + ' (' + (correct.section_ro || "") + ')</div>';
+  html += '<div class="quiz-prompt">' + escapeHtml(correct[promptKey]) + '</div>';
+  html += '</div>';
+  html += '<div class="quiz-options">';
+  options.forEach(o => {
+    html += '<button class="quiz-option" data-correct="' + (o[answerKey] === correct[answerKey]) + '">' + escapeHtml(o[answerKey]) + '</button>';
+  });
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="quiz-feedback"></div>';
+  document.getElementById("quiz-content").innerHTML = html;
+
+  document.querySelectorAll("#panel-quiz .quiz-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const isCorrect = btn.dataset.correct === "true";
+      document.querySelectorAll("#panel-quiz .quiz-option").forEach(x => {
+        x.classList.add("disabled");
+        if (x.dataset.correct === "true") x.classList.add("correct");
+        else if (x === btn) x.classList.add("incorrect");
+      });
+      const fb = document.getElementById("quiz-feedback");
+      fb.classList.add("show");
+      if (isCorrect) {
+        fb.classList.add("correct"); fb.classList.remove("incorrect");
+        fb.innerHTML = "Corect! <strong>" + escapeHtml(correct[promptKey]) + "</strong> = <strong>" + escapeHtml(correct[answerKey]) + "</strong>";
+        stats.quiz.correct++;
+        stats.quiz.streak++;
+        // Auto-mark as easy if got it right and was untouched
+        if (!progress[entryKey(correct)]) progress[entryKey(correct)] = "easy";
+      } else {
+        fb.classList.add("incorrect"); fb.classList.remove("correct");
+        fb.innerHTML = "Gresit. Corect: <strong>" + escapeHtml(correct[answerKey]) + "</strong>";
+        stats.quiz.streak = 0;
+        progress[entryKey(correct)] = "hard";
+      }
+      stats.quiz.total++;
+      saveJSON(STORAGE.stats, stats);
+      saveJSON(STORAGE.progress, progress);
+      updateQuizStats();
+    });
+  });
+}
+function updateQuizStats() {
+  document.getElementById("quiz-correct").textContent = stats.quiz.correct;
+  document.getElementById("quiz-total").textContent = stats.quiz.total;
+  document.getElementById("quiz-percent").textContent = (stats.quiz.total ? Math.round(100 * stats.quiz.correct / stats.quiz.total) : 0) + "%";
+  document.getElementById("quiz-streak").textContent = stats.quiz.streak;
+}
+function resetQuiz() {
+  stats.quiz = { correct: 0, total: 0, streak: 0 };
+  saveJSON(STORAGE.stats, stats);
+  updateQuizStats();
+  newQuiz();
+}
+
+// === TYPE QUIZ ===
+let typeDir = "ro-de";
+let typeCurrent = null;
+document.querySelectorAll("[data-type-dir]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-type-dir]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  typeDir = b.dataset.typeDir;
+  newType();
+}));
+
+function normalizeAnswer(s, isGerman) {
+  let n = (s || "").trim().toLowerCase();
+  // Remove articles for German
+  if (isGerman) n = n.replace(/^(der|die|das)\s+/i, "");
+  // Remove leading "a " (Romanian verb infinitive)
+  if (!isGerman) n = n.replace(/^a\s+/i, "");
+  // Normalize umlauts and ß
+  n = n.replace(/ä/g, "a").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ß/g, "ss");
+  // Remove parenthesized clarifications
+  n = n.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  // Multiple spaces
+  n = n.replace(/\s+/g, " ");
+  return n;
+}
+
+function newType() {
+  const entries = getActiveEntries();
+  if (!entries.length) {
+    document.getElementById("type-content").innerHTML = '<div class="empty-state">Nicio sectiune activa.</div>';
+    return;
+  }
+  typeCurrent = entries[Math.floor(Math.random() * entries.length)];
+  const promptKey = typeDir === "ro-de" ? "ro" : "de";
+  const answerKey = typeDir === "ro-de" ? "de" : "ro";
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">' + (typeDir === "ro-de" ? "Tradu in germana" : "Tradu in romana") + ' (' + (typeCurrent.section_ro || "") + ')</div>';
+  html += '<div class="quiz-prompt">' + escapeHtml(typeCurrent[promptKey]) + '</div>';
+  html += '</div>';
+  html += '<input class="type-input" id="type-input" autocomplete="off" placeholder="Scrie raspunsul..." />';
+  html += '<div style="text-align:center; margin-top:14px;">';
+  html += '<button class="btn btn-primary" onclick="checkType()">Verifica</button>';
+  html += '<button class="btn btn-secondary" onclick="hintType()">Indiciu</button>';
+  html += '<button class="btn btn-warning" onclick="revealType()">Arata</button>';
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="type-feedback" style="margin-top:14px;"></div>';
+  document.getElementById("type-content").innerHTML = html;
+  setTimeout(() => {
+    const inp = document.getElementById("type-input");
+    inp.focus();
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") checkType(); });
+  }, 50);
+}
+
+function checkType() {
+  if (!typeCurrent) return;
+  const inp = document.getElementById("type-input");
+  const fb = document.getElementById("type-feedback");
+  const answerKey = typeDir === "ro-de" ? "de" : "ro";
+  const isGerman = answerKey === "de";
+  const userAns = normalizeAnswer(inp.value, isGerman);
+  const correctAns = normalizeAnswer(typeCurrent[answerKey], isGerman);
+  fb.classList.add("show");
+  if (userAns === correctAns) {
+    inp.classList.add("correct"); inp.classList.remove("incorrect");
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Corect! <strong>" + escapeHtml(typeCurrent[answerKey]) + "</strong>";
+    stats.type.correct++;
+    if (!progress[entryKey(typeCurrent)] || progress[entryKey(typeCurrent)] !== "hard") progress[entryKey(typeCurrent)] = "easy";
+  } else {
+    inp.classList.add("incorrect"); inp.classList.remove("correct");
+    fb.classList.add("incorrect"); fb.classList.remove("correct");
+    fb.innerHTML = "Gresit. Corect: <strong>" + escapeHtml(typeCurrent[answerKey]) + "</strong>";
+    progress[entryKey(typeCurrent)] = "hard";
+  }
+  stats.type.total++;
+  saveJSON(STORAGE.stats, stats);
+  saveJSON(STORAGE.progress, progress);
+  updateTypeStats();
+}
+function hintType() {
+  const fb = document.getElementById("type-feedback");
+  const answerKey = typeDir === "ro-de" ? "de" : "ro";
+  const ans = typeCurrent[answerKey];
+  fb.classList.add("show");
+  fb.style.background = "#fef3c7";
+  fb.style.color = "#92400e";
+  fb.innerHTML = "Hint: <strong>" + ans.substring(0, Math.min(2, ans.length)) + "...</strong> (" + ans.length + " caractere)";
+}
+function revealType() {
+  const fb = document.getElementById("type-feedback");
+  const answerKey = typeDir === "ro-de" ? "de" : "ro";
+  fb.classList.add("show", "incorrect");
+  fb.innerHTML = "Raspuns: <strong>" + escapeHtml(typeCurrent[answerKey]) + "</strong>";
+  progress[entryKey(typeCurrent)] = "hard";
+  saveJSON(STORAGE.progress, progress);
+}
+function updateTypeStats() {
+  document.getElementById("type-correct").textContent = stats.type.correct;
+  document.getElementById("type-total").textContent = stats.type.total;
+  document.getElementById("type-percent").textContent = (stats.type.total ? Math.round(100 * stats.type.correct / stats.type.total) : 0) + "%";
+}
+function resetType() {
+  stats.type = { correct: 0, total: 0 };
+  saveJSON(STORAGE.stats, stats);
+  updateTypeStats();
+  newType();
+}
+
+// === MATCHING ===
+let matchSelected = null;
+let matchCurrent = [];
+function newMatch() {
+  const entries = getActiveEntries();
+  if (entries.length < 5) {
+    document.getElementById("match-content").innerHTML = '<div class="empty-state"><div class="empty-state-icon">[!]</div>Activeaza cel putin 5 cuvinte pentru matching.</div>';
+    return;
+  }
+  const selected = shuffle(entries).slice(0, 5);
+  matchCurrent = selected;
+  const left = selected.map((e, i) => ({ idx: i, side: "ro", text: e.ro }));
+  const right = shuffle(selected.map((e, i) => ({ idx: i, side: "de", text: e.de })));
+  const all = [...left, ...right];
+  let html = '<div class="matching-grid">';
+  all.forEach((it, i) => {
+    html += '<div class="match-item" data-idx="' + it.idx + '" data-side="' + it.side + '" data-uid="' + i + '">' + escapeHtml(it.text) + '</div>';
+  });
+  html += '</div>';
+  document.getElementById("match-content").innerHTML = html;
+  matchSelected = null;
+  document.querySelectorAll("#match-content .match-item").forEach(el => el.addEventListener("click", () => handleMatchClick(el)));
+  stats.match.rounds++;
+  saveJSON(STORAGE.stats, stats);
+  updateMatchStats();
+}
+function handleMatchClick(el) {
+  if (el.classList.contains("matched")) return;
+  if (!matchSelected) {
+    matchSelected = el;
+    el.classList.add("selected");
+    return;
+  }
+  if (matchSelected === el) {
+    el.classList.remove("selected");
+    matchSelected = null;
+    return;
+  }
+  // Two selected
+  if (matchSelected.dataset.side === el.dataset.side) {
+    // Same side, just switch selection
+    matchSelected.classList.remove("selected");
+    matchSelected = el;
+    el.classList.add("selected");
+    return;
+  }
+  if (matchSelected.dataset.idx === el.dataset.idx) {
+    matchSelected.classList.add("matched");
+    el.classList.add("matched");
+    matchSelected.classList.remove("selected");
+    matchSelected = null;
+    stats.match.pairs++;
+    saveJSON(STORAGE.stats, stats);
+    updateMatchStats();
+    // Check if all matched
+    const remaining = document.querySelectorAll("#match-content .match-item:not(.matched)").length;
+    if (remaining === 0) {
+      showToast("Bravo! Toate perechile gasite!", "success");
+      setTimeout(newMatch, 1200);
+    }
+  } else {
+    el.classList.add("wrong");
+    matchSelected.classList.add("wrong");
+    const a = matchSelected, b = el;
+    setTimeout(() => {
+      a.classList.remove("wrong", "selected");
+      b.classList.remove("wrong");
+    }, 600);
+    matchSelected = null;
+    stats.match.mistakes++;
+    saveJSON(STORAGE.stats, stats);
+    updateMatchStats();
+  }
+}
+function updateMatchStats() {
+  document.getElementById("match-rounds").textContent = stats.match.rounds;
+  document.getElementById("match-pairs").textContent = stats.match.pairs;
+  document.getElementById("match-mistakes").textContent = stats.match.mistakes;
+}
+function resetMatch() {
+  stats.match = { rounds: 0, pairs: 0, mistakes: 0 };
+  saveJSON(STORAGE.stats, stats);
+  updateMatchStats();
+  newMatch();
+}
+
+// === SECTIONS ===
+function getSections() {
+  const all = decks[activeDeck] || [];
+  const map = {};
+  all.forEach(e => {
+    const sec = e.section_ro || "general";
+    map[sec] = (map[sec] || 0) + 1;
+  });
+  return map;
+}
+function renderSections() {
+  const grid = document.getElementById("sections-grid");
+  const map = getSections();
+  const sf = sectionFilter[activeDeck] = sectionFilter[activeDeck] || {};
+  const anySelected = Object.values(sf).some(v => v);
+  grid.innerHTML = "";
+  Object.keys(map).sort().forEach(sec => {
+    const div = document.createElement("div");
+    div.className = "section-chip" + ((!anySelected || sf[sec]) ? " active" : "");
+    div.innerHTML = '<span>' + escapeHtml(sec) + '</span><span class="count">' + map[sec] + '</span>';
+    div.addEventListener("click", () => {
+      if (!Object.values(sf).some(v => v)) {
+        // First click: enable only this section
+        Object.keys(map).forEach(s => sf[s] = false);
+        sf[sec] = true;
+      } else {
+        sf[sec] = !sf[sec];
+      }
+      saveJSON(STORAGE.sections, sectionFilter);
+      cardIdx = 0;
+      renderSections();
+      updateDeckInfo();
+      renderCard();
+    });
+    grid.appendChild(div);
+  });
+}
+function selectAllSections(on) {
+  const sf = sectionFilter[activeDeck] = sectionFilter[activeDeck] || {};
+  const map = getSections();
+  Object.keys(map).forEach(s => sf[s] = on);
+  saveJSON(STORAGE.sections, sectionFilter);
+  cardIdx = 0;
+  renderSections();
+  updateDeckInfo();
+  renderCard();
+}
+
+// === LIST ===
+let listFilter = "all";
+document.querySelectorAll("[data-list-filter]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-list-filter]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  listFilter = b.dataset.listFilter;
+  renderList();
+}));
+function renderList() {
+  const search = (document.getElementById("list-search").value || "").toLowerCase();
+  const all = decks[activeDeck] || [];
+  let filtered = all;
+  if (listFilter !== "all") {
+    filtered = filtered.filter(e => {
+      const s = progress[entryKey(e)];
+      if (listFilter === "untouched") return !s;
+      return s === listFilter;
+    });
+  }
+  if (search) {
+    filtered = filtered.filter(e => e.ro.toLowerCase().includes(search) || e.de.toLowerCase().includes(search));
+  }
+  // Group by section
+  const groups = {};
+  filtered.forEach(e => {
+    const sec = e.section_ro || "general";
+    (groups[sec] = groups[sec] || []).push(e);
+  });
+  let html = "";
+  if (!filtered.length) {
+    html = '<div class="empty-state"><div class="empty-state-icon">[?]</div>Niciun cuvant gasit.</div>';
+  } else {
+    Object.keys(groups).sort().forEach(sec => {
+      html += '<h3 class="subsection">' + escapeHtml(sec) + ' <span style="font-weight:400; color:#9ca3af;">(' + groups[sec].length + ')</span></h3>';
+      html += '<div class="word-list">';
+      groups[sec].forEach(e => {
+        const status = progress[entryKey(e)] || "untouched";
+        const statusLabel = { easy: "Stiu", medium: "Mediu", hard: "Repet", untouched: "" }[status];
+        const statusClass = "status-" + status;
+        html += '<div class="word-item">';
+        html += '<div class="word-ro">' + escapeHtml(e.ro) + '</div>';
+        html += '<div class="word-de">' + escapeHtml(e.de) + '</div>';
+        if (statusLabel) html += '<div class="word-status ' + statusClass + '">' + statusLabel + '</div>';
+        else html += '<div></div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+  }
+  document.getElementById("list-content").innerHTML = html;
+}
+
+// === PROGRESS ===
+function renderProgress() {
+  const all = decks[activeDeck] || [];
+  let easy = 0, medium = 0, hard = 0;
+  all.forEach(e => {
+    const s = progress[entryKey(e)];
+    if (s === "easy") easy++;
+    else if (s === "medium") medium++;
+    else if (s === "hard") hard++;
+  });
+  const total = all.length;
+  document.getElementById("prog-total").textContent = total;
+  document.getElementById("prog-easy").textContent = easy;
+  document.getElementById("prog-medium").textContent = medium;
+  document.getElementById("prog-hard").textContent = hard;
+  const pct = total ? (100 * easy / total) : 0;
+  document.getElementById("prog-bar").style.width = pct + "%";
+  document.getElementById("prog-text").textContent = easy + " din " + total + " cuvinte stiute";
+
+  // Per section
+  const sectionStats = {};
+  all.forEach(e => {
+    const sec = e.section_ro || "general";
+    sectionStats[sec] = sectionStats[sec] || { total: 0, easy: 0 };
+    sectionStats[sec].total++;
+    if (progress[entryKey(e)] === "easy") sectionStats[sec].easy++;
+  });
+  let html = '';
+  Object.keys(sectionStats).sort().forEach(sec => {
+    const s = sectionStats[sec];
+    const p = s.total ? Math.round(100 * s.easy / s.total) : 0;
+    html += '<div style="margin-bottom:10px;">';
+    html += '<div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:3px;">';
+    html += '<strong>' + escapeHtml(sec) + '</strong><span>' + s.easy + '/' + s.total + ' (' + p + '%)</span>';
+    html += '</div>';
+    html += '<div class="progress-bar"><div class="progress-fill" style="width:' + p + '%;"></div></div>';
+    html += '</div>';
+  });
+  document.getElementById("prog-sections").innerHTML = html;
+}
+
+function exportProgress() {
+  const data = {
+    decks: Object.keys(decks).map(name => ({ name, count: decks[name].length })),
+    activeDeck,
+    progress,
+    stats,
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "vocab_progress_" + new Date().toISOString().slice(0,10) + ".json";
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Progres exportat", "success");
+}
+
+function resetAllProgress() {
+  if (!confirm("Sigur resetezi tot progresul (nu se sterg deck-urile)?")) return;
+  progress = {};
+  stats = { quiz: { correct: 0, total: 0, streak: 0 }, type: { correct: 0, total: 0 }, match: { rounds: 0, pairs: 0, mistakes: 0 } };
+  saveJSON(STORAGE.progress, progress);
+  saveJSON(STORAGE.stats, stats);
+  updateQuizStats(); updateTypeStats(); updateMatchStats();
+  refreshUI();
+  showToast("Progres resetat", "success");
+}
+
+// === UPLOAD ===
+const uploadZone = document.getElementById("upload-zone");
+["dragenter","dragover"].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); uploadZone.classList.add("dragover"); }));
+["dragleave","drop"].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); uploadZone.classList.remove("dragover"); }));
+uploadZone.addEventListener("drop", (e) => {
+  const files = e.dataTransfer.files;
+  if (files.length) handleFile(files[0]);
+});
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (file) handleFile(file);
+}
+function handleFile(file) {
+  if (file.size > 5 * 1024 * 1024) { showToast("Fisier prea mare (max 5MB)", "error"); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    const entries = parseVocabText(text, file.name);
+    const deckName = file.name.replace(/\.(csv|txt)$/i, "");
+    importDeck(deckName, entries);
+    goTab("flashcards");
+  };
+  reader.readAsText(file, "UTF-8");
+}
+function importPaste() {
+  const text = document.getElementById("paste-area").value;
+  const name = document.getElementById("deck-name-input").value.trim() || "Deck " + new Date().toLocaleDateString();
+  if (!text.trim()) { showToast("Lipeste niste text mai intai", "error"); return; }
+  const entries = parseVocabText(text, name);
+  importDeck(name, entries);
+  document.getElementById("paste-area").value = "";
+  document.getElementById("deck-name-input").value = "";
+  goTab("flashcards");
+}
+
+function renderDeckList() {
+  const div = document.getElementById("deck-list");
+  let html = '<div class="word-list">';
+  Object.keys(decks).forEach(name => {
+    const isActive = name === activeDeck;
+    html += '<div class="word-item" style="grid-template-columns: 1fr auto auto auto;">';
+    html += '<div><strong>' + escapeHtml(name) + '</strong><br><span style="font-size:12px; color:#666;">' + decks[name].length + ' cuvinte</span></div>';
+    if (isActive) html += '<span class="word-status status-easy">Activ</span>';
+    else html += '<button class="btn btn-small btn-primary" onclick="switchDeck(' + JSON.stringify(name) + ')">Activeaza</button>';
+    html += '<button class="btn btn-small btn-secondary" onclick="exportDeck(' + JSON.stringify(name) + ')">CSV</button>';
+    if (name !== "A2 Goethe") {
+      html += '<button class="btn btn-small btn-danger" onclick="deleteDeck(' + JSON.stringify(name) + ')">Sterge</button>';
+    } else {
+      html += '<span></span>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  div.innerHTML = html;
+}
+
+function deleteDeck(name) {
+  if (!confirm("Sterge deck-ul \"" + name + "\"?")) return;
+  delete decks[name];
+  saveJSON(STORAGE.decks, decks);
+  if (activeDeck === name) {
+    activeDeck = Object.keys(decks)[0] || "A2 Goethe";
+    saveJSON(STORAGE.active, activeDeck);
+  }
+  refreshUI();
+  showToast("Deck sters", "success");
+}
+
+function exportDeck(name) {
+  const data = decks[name] || [];
+  let csv = "romana;germana;categorie\n";
+  data.forEach(e => {
+    csv += '"' + (e.ro||"").replace(/"/g,'""') + '";"' + (e.de||"").replace(/"/g,'""') + '";"' + (e.section_ro||"").replace(/"/g,'""') + '"\n';
+  });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name.replace(/[^a-zA-Z0-9]/g, "_") + ".csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function exportCurrentDeck() { exportDeck(activeDeck); }
+
+// === UTILS ===
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// === BOOT ===
+refreshUI();
+updateQuizStats();
+updateTypeStats();
+updateMatchStats();
+</script>
+</body>
+</html>

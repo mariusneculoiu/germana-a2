@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germana A2 - Person, Familie & Eigenschaften</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 30px;
+    text-align: center;
+  }
+  header h1 { font-size: 28px; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 15px; }
+
+  nav {
+    display: flex;
+    background: #f5f5f7;
+    border-bottom: 1px solid #e0e0e0;
+    overflow-x: auto;
+  }
+  nav button {
+    flex: 1;
+    min-width: 120px;
+    padding: 16px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  nav button:hover { background: #ebebed; }
+  nav button.active {
+    color: #2a5298;
+    border-bottom-color: #2a5298;
+    background: white;
+  }
+
+  .panel { padding: 30px; min-height: 500px; }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e8eef4;
+  }
+  .stat-value { font-size: 24px; font-weight: 700; color: #2a5298; }
+  .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+
+  /* Flashcard */
+  .flashcard-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .flashcard {
+    width: 100%;
+    max-width: 600px;
+    height: 320px;
+    perspective: 1500px;
+    cursor: pointer;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .flashcard-front {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+  }
+  .flashcard-back {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+    transform: rotateY(180deg);
+  }
+  .card-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    margin-bottom: 12px;
+  }
+  .card-text {
+    font-size: 22px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  .card-hint {
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: 0.85;
+    font-style: italic;
+  }
+  .card-category {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 11px;
+    background: rgba(255,255,255,0.25);
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  .card-counter {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button.btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: #2a5298; color: white; }
+  .btn-primary:hover { background: #1e3c72; transform: translateY(-1px); }
+  .btn-success { background: #10b981; color: white; }
+  .btn-success:hover { background: #059669; }
+  .btn-warning { background: #f59e0b; color: white; }
+  .btn-warning:hover { background: #d97706; }
+  .btn-danger { background: #ef4444; color: white; }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #e5e7eb; color: #374151; }
+  .btn-secondary:hover { background: #d1d5db; }
+
+  .toggle-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .toggle-row button {
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .toggle-row button.active {
+    background: #2a5298;
+    color: white;
+    border-color: #2a5298;
+  }
+
+  /* Quiz */
+  .quiz-question {
+    background: #f6f9fc;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2a5298;
+  }
+  .quiz-prompt-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .quiz-prompt {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .quiz-option {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 14px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 15px;
+    transition: all 0.15s;
+  }
+  .quiz-option:hover { border-color: #2a5298; background: #f6f9fc; }
+  .quiz-option.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+  .quiz-option.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .quiz-option.disabled { cursor: not-allowed; opacity: 0.7; }
+  .quiz-feedback {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #d1fae5; color: #065f46; }
+  .quiz-feedback.incorrect { background: #fee2e2; color: #991b1b; }
+
+  /* Fill in blank */
+  .fib-sentence {
+    font-size: 19px;
+    line-height: 1.7;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .fib-input {
+    border: none;
+    border-bottom: 2px solid #2a5298;
+    font-size: 19px;
+    padding: 4px 8px;
+    min-width: 140px;
+    text-align: center;
+    background: #f6f9fc;
+    border-radius: 4px 4px 0 0;
+    outline: none;
+  }
+  .fib-input.correct { background: #d1fae5; border-bottom-color: #10b981; }
+  .fib-input.incorrect { background: #fee2e2; border-bottom-color: #ef4444; }
+
+  /* Grammar panel */
+  .grammar-section {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 14px 0;
+  }
+  .grammar-section h4 { color: #92400e; margin-bottom: 8px; font-size: 15px; }
+  .grammar-section p { font-size: 14px; line-height: 1.6; color: #78350f; }
+  .grammar-section code {
+    background: rgba(146, 64, 14, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+  }
+
+  /* List view */
+  .phrases-list { display: flex; flex-direction: column; gap: 12px; }
+  .phrase-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: all 0.2s;
+  }
+  .phrase-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .phrase-category-tag {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .phrase-de { font-size: 16px; font-weight: 500; color: #1e3a8a; margin: 4px 0; }
+  .phrase-ro { font-size: 14px; color: #555; font-style: italic; }
+  .phrase-grammar {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7280;
+    background: #f9fafb;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  .phrase-grammar strong { color: #2a5298; }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 0.3s;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+  }
+  .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+
+  @media (max-width: 600px) {
+    .panel { padding: 20px; }
+    .card-text { font-size: 18px; }
+    nav button { font-size: 12px; padding: 12px 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="background:#0f172a; color:white; padding:10px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-size:13px;">
+    <strong style="color:#60a5fa;">Germana A2</strong>
+    <a href="index.html" style="color:#cbd5e1; text-decoration:none;">Vocabular</a>
+    <a href="fraze.html" style="color:#fbbf24; text-decoration:none; font-weight:600;">Fraze &amp; gramatica</a>
+    <span style="margin-left:auto; color:#94a3b8;">
+      <a href="data/vocabular_a2.csv" download style="color:#94a3b8; text-decoration:none;">CSV</a>
+      &middot;
+      <a href="descarcari/flashcards.xlsx" download style="color:#94a3b8; text-decoration:none;">XLSX</a>
+      &middot;
+      <a href="descarcari/ghid-studiu.docx" download style="color:#94a3b8; text-decoration:none;">DOCX</a>
+    </span>
+  </div>
+  <header>
+    <h1>Germana A2 - Person, Familie &amp; Eigenschaften</h1>
+    <p>14 fraze esentiale - flashcards, quiz si exercitii cu explicatii gramaticale</p>
+  </header>
+
+  <nav>
+    <button class="active" data-tab="flashcards">Flashcards</button>
+    <button data-tab="quiz">Quiz</button>
+    <button data-tab="fillblank">Completeaza</button>
+    <button data-tab="grammar">Gramatica</button>
+    <button data-tab="list">Toate frazele</button>
+    <button data-tab="progress">Progres</button>
+  </nav>
+
+  <div class="panel" id="panel-flashcards">
+    <div class="toggle-row">
+      <span style="align-self:center; margin-right:8px; font-size:13px; color:#666;">Directia:</span>
+      <button class="active" data-direction="de-ro">DE -&gt; RO</button>
+      <button data-direction="ro-de">RO -&gt; DE</button>
+      <button data-direction="random">Aleator</button>
+    </div>
+    <div class="flashcard-area">
+      <div class="flashcard" id="flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="card-counter" id="card-counter">1/14</div>
+            <div class="card-category" id="card-category-front">Familie</div>
+            <div class="card-label">Intrebare</div>
+            <div class="card-text" id="card-front-text">Ich heisse Maria...</div>
+            <div class="card-hint">Click pentru raspuns</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="card-category" id="card-category-back">Familie</div>
+            <div class="card-label">Traducere</div>
+            <div class="card-text" id="card-back-text">Ma numesc Maria...</div>
+            <div class="card-hint" id="card-grammar-hint">weil = deoarece</div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-secondary" onclick="prevCard()">&laquo; Anterior</button>
+        <button class="btn btn-danger" onclick="markCard('hard')">Greu</button>
+        <button class="btn btn-warning" onclick="markCard('medium')">Mediu</button>
+        <button class="btn btn-success" onclick="markCard('easy')">Stiu!</button>
+        <button class="btn btn-primary" onclick="nextCard()">Urmator &raquo;</button>
+      </div>
+      <div style="font-size:13px; color:#666; text-align:center; margin-top:10px;">
+        Tasta SPACE pentru flip - sageti pentru navigare
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-quiz" style="display:none;">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="quiz-correct">0</div>
+        <div class="stat-label">Corecte</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="quiz-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="quiz-percent">0%</div>
+        <div class="stat-label">Acuratete</div>
+      </div>
+    </div>
+    <div id="quiz-content"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="newQuiz()">Intrebare noua</button>
+      <button class="btn btn-secondary" onclick="resetQuiz()">Reseteaza scor</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-fillblank" style="display:none;">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="fib-correct">0</div>
+        <div class="stat-label">Corecte</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="fib-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+    </div>
+    <div id="fib-content"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="newFib()">Exercitiu nou</button>
+      <button class="btn btn-secondary" onclick="resetFib()">Reseteaza</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-grammar" style="display:none;">
+    <h2 style="margin-bottom:16px; color:#1e3c72;">Conjuctii subordonante &amp; propozitii relative</h2>
+
+    <div class="grammar-section">
+      <h4>weil (deoarece, pentru ca)</h4>
+      <p>Conjunctie cauzala. <strong>Verbul merge la sfarsit</strong> in propozitia secundara.</p>
+      <p style="margin-top:6px;"><code>Ich komme aus Rumanien, <strong>weil</strong> ich dort geboren <strong>bin</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">Vin din Romania, <em>deoarece</em> m-am nascut acolo. (geboren bin = nascut sunt -- verbul "bin" la final)</p>
+    </div>
+
+    <div class="grammar-section">
+      <h4>wenn (daca, atunci cand)</h4>
+      <p>Conjunctie conditionala/temporala. Verbul la sfarsit.</p>
+      <p style="margin-top:6px;"><code>Ich muss meine Daten angeben, <strong>wenn</strong> ich ein Formular <strong>ausfulle</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">Trebuie sa imi dau datele, <em>cand</em> completez un formular.</p>
+    </div>
+
+    <div class="grammar-section">
+      <h4>damit (ca sa, pentru ca)</h4>
+      <p>Conjunctie de scop. Verbul la sfarsit. Se foloseste cand subiectele sunt diferite, sau cu modal verbs.</p>
+      <p style="margin-top:6px;"><code>Ich brauche meinen Ausweis, <strong>damit</strong> ich mich identifizieren <strong>kann</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">Am nevoie de buletin, <em>ca sa ma pot</em> identifica.</p>
+    </div>
+
+    <div class="grammar-section">
+      <h4>obwohl (desi, cu toate ca)</h4>
+      <p>Conjunctie concesiva (exprima o contradictie). Verbul la sfarsit.</p>
+      <p style="margin-top:6px;"><code>Er ist freundlich, <strong>obwohl</strong> er manchmal sehr ruhig <strong>ist</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">El este prietenos, <em>desi</em> uneori este foarte tacut.</p>
+    </div>
+
+    <div class="grammar-section">
+      <h4>Pronume relative: der / die / das</h4>
+      <p>Introduc propozitii relative (echivalent cu "care" in romana). Verbul merge la sfarsit. Pronumele se acorda cu genul si cazul substantivului inlocuit.</p>
+      <p style="margin-top:6px;"><code>Ich habe einen Bruder, <strong>der</strong> in Deutschland <strong>arbeitet</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">Am un frate, <em>care</em> lucreaza in Germania. (der = masculin nominativ)</p>
+      <p style="margin-top:6px;"><code>Ich wohne in einer Stadt, <strong>die</strong> sehr ruhig <strong>ist</strong>.</code></p>
+      <p style="margin-top:4px; font-size:13px;">Locuiesc intr-un oras, <em>care</em> este foarte linistit. (die = feminin nominativ -- Stadt e feminin in germana!)</p>
+      <p style="margin-top:6px;"><code>Ich mag Menschen, <strong>die</strong> ehrlich <strong>sind</strong>.</code></p>
+      <p style="margin-top:4px; font-size:13px;">Imi plac oamenii, <em>care</em> sunt sinceri. (die = plural)</p>
+    </div>
+
+    <div class="grammar-section">
+      <h4>wo (unde) - adverb relativ</h4>
+      <p>Inlocuieste o constructie cu prepozitie + pronume relativ pentru locuri.</p>
+      <p style="margin-top:6px;"><code>Meine Eltern wohnen auf dem Land, <strong>wo</strong> es sehr ruhig <strong>ist</strong>.</code></p>
+      <p style="margin-top:6px; font-size:13px;">Parintii mei locuiesc la tara, <em>unde</em> este foarte liniste.</p>
+    </div>
+
+    <h2 style="margin:24px 0 16px; color:#1e3c72;">Tabel rapid -- toate conjunctiile</h2>
+    <table style="width:100%; border-collapse: collapse; font-size:14px;">
+      <thead>
+        <tr style="background:#2a5298; color:white;">
+          <th style="padding:10px; text-align:left;">Germana</th>
+          <th style="padding:10px; text-align:left;">Romana</th>
+          <th style="padding:10px; text-align:left;">Tip</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 10px;"><strong>weil</strong></td><td style="padding:8px 10px;">deoarece, pentru ca</td><td style="padding:8px 10px;">cauza</td></tr>
+        <tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;"><td style="padding:8px 10px;"><strong>wenn</strong></td><td style="padding:8px 10px;">daca, cand</td><td style="padding:8px 10px;">conditie/timp</td></tr>
+        <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 10px;"><strong>damit</strong></td><td style="padding:8px 10px;">ca sa</td><td style="padding:8px 10px;">scop</td></tr>
+        <tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;"><td style="padding:8px 10px;"><strong>obwohl</strong></td><td style="padding:8px 10px;">desi</td><td style="padding:8px 10px;">concesie</td></tr>
+        <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:8px 10px;"><strong>der/die/das</strong></td><td style="padding:8px 10px;">care</td><td style="padding:8px 10px;">relativ</td></tr>
+        <tr style="background:#f9fafb;"><td style="padding:8px 10px;"><strong>wo</strong></td><td style="padding:8px 10px;">unde</td><td style="padding:8px 10px;">relativ - loc</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grammar-section" style="background:#dbeafe; border-left-color:#2a5298; margin-top:20px;">
+      <h4 style="color:#1e3a8a;">Regula de aur</h4>
+      <p style="color:#1e3a8a;">In TOATE aceste propozitii secundare (weil, wenn, damit, obwohl, der/die/das, wo) <strong>verbul conjugat merge la sfarsitul propozitiei</strong>. Aceasta este cea mai importanta regula de la A2.</p>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-list" style="display:none;">
+    <div id="phrases-list-content"></div>
+  </div>
+
+  <div class="panel" id="panel-progress" style="display:none;">
+    <h2 style="margin-bottom:16px; color:#1e3c72;">Progresul tau</h2>
+    <div class="stats" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-value" id="prog-easy">0</div>
+        <div class="stat-label">Stiu bine</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="prog-medium">0</div>
+        <div class="stat-label">Mediu</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="prog-hard">0</div>
+        <div class="stat-label">De repetat</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="prog-untouched">14</div>
+        <div class="stat-label">Neincepute</div>
+      </div>
+    </div>
+    <div id="progress-list"></div>
+    <div style="text-align:center; margin-top:24px;">
+      <button class="btn btn-danger" onclick="resetAllProgress()">Reseteaza tot progresul</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const phrases = [
+  { id: 1, cat: "Nume", de: "Ich heisse Maria und ich komme aus Rumanien, weil ich dort geboren bin.", ro: "Ma numesc Maria si vin din Romania deoarece m-am nascut acolo.", grammar: "weil (deoarece) -> verbul 'bin' la sfarsit" },
+  { id: 2, cat: "Nume", de: "Wie heissen Sie und woher kommen Sie?", ro: "Cum va numiti si de unde veniti?", grammar: "intrebare formala -- Sie (forma de politete)" },
+  { id: 3, cat: "Documente", de: "Ich muss meine Daten angeben, wenn ich ein Formular ausfulle.", ro: "Trebuie sa imi dau datele atunci cand completez un formular.", grammar: "wenn (cand/daca) -> verbul 'ausfulle' la sfarsit" },
+  { id: 4, cat: "Documente", de: "Ich brauche meinen Ausweis, damit ich mich identifizieren kann.", ro: "Am nevoie de buletin/pasaport pentru a ma putea identifica.", grammar: "damit (ca sa) -> verbul modal 'kann' la sfarsit" },
+  { id: 5, cat: "Persoana", de: "Ich bin 30 Jahre alt und arbeite als Arzt, weil ich Menschen helfen mochte.", ro: "Am 30 de ani si lucrez ca medic deoarece vreau sa ajut oamenii.", grammar: "weil + verb modal 'mochte' la sfarsit" },
+  { id: 6, cat: "Persoana", de: "Ich wohne in einer Stadt, die sehr ruhig ist.", ro: "Locuiesc intr-un oras care este foarte linistit.", grammar: "die = pronume relativ (Stadt e feminin in germana!)" },
+  { id: 7, cat: "Familie", de: "Ich habe eine kleine Familie, weil wir nur zu dritt sind.", ro: "Am o familie mica deoarece suntem doar trei persoane.", grammar: "weil + 'zu dritt' = in trei" },
+  { id: 8, cat: "Familie", de: "Am Wochenende besuchen wir unsere Eltern, wenn wir Zeit haben.", ro: "In weekend ne vizitam parintii daca avem timp.", grammar: "Am Wochenende = la sfarsit de saptamana; wenn = daca" },
+  { id: 9, cat: "Rude", de: "Meine Eltern wohnen auf dem Land, wo es sehr ruhig ist.", ro: "Parintii mei locuiesc la tara unde este foarte liniste.", grammar: "wo = unde (loc); auf dem Land = la tara" },
+  { id: 10, cat: "Rude", de: "Ich habe einen Bruder, der in Deutschland arbeitet.", ro: "Am un frate care lucreaza in Germania.", grammar: "der = pronume relativ masculin nominativ" },
+  { id: 11, cat: "Aspect", de: "Er ist gross und hat dunkle Haare, die sehr kurz sind.", ro: "El este inalt si are par inchis la culoare care este foarte scurt.", grammar: "die = pronume relativ plural (Haare e plural)" },
+  { id: 12, cat: "Aspect", de: "Sie tragt oft elegante Kleidung, weil sie im Buro arbeitet.", ro: "Ea poarta des haine elegante deoarece lucreaza la birou.", grammar: "tragen (a purta) -- 3rd p. sg.: tragt; im Buro = la birou" },
+  { id: 13, cat: "Caracter", de: "Er ist freundlich, obwohl er manchmal sehr ruhig ist.", ro: "El este prietenos, desi uneori este foarte tacut.", grammar: "obwohl (desi) -> verbul 'ist' la sfarsit" },
+  { id: 14, cat: "Caracter", de: "Ich mag Menschen, die ehrlich und hilfsbereit sind.", ro: "Imi plac oamenii care sunt sinceri si saritori.", grammar: "die = pronume relativ plural (Menschen e plural)" }
+];
+
+// State persistence
+const STORAGE_KEY = "germana_a2_progress_v1";
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+let state = loadState();
+state.cards = state.cards || {};
+state.quiz = state.quiz || { correct: 0, total: 0 };
+state.fib = state.fib || { correct: 0, total: 0 };
+
+// Tabs
+const tabs = document.querySelectorAll("nav button");
+tabs.forEach(b => b.addEventListener("click", () => {
+  tabs.forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll(".panel").forEach(p => p.style.display = "none");
+  document.getElementById("panel-" + b.dataset.tab).style.display = "block";
+  if (b.dataset.tab === "list") renderList();
+  if (b.dataset.tab === "progress") renderProgress();
+  if (b.dataset.tab === "quiz" && !document.getElementById("quiz-content").innerHTML) newQuiz();
+  if (b.dataset.tab === "fillblank" && !document.getElementById("fib-content").innerHTML) newFib();
+}));
+
+// Flashcards
+let cardIdx = 0;
+let direction = "de-ro";
+const card = document.getElementById("flashcard");
+card.addEventListener("click", () => card.classList.toggle("flipped"));
+
+document.querySelectorAll("[data-direction]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-direction]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  direction = b.dataset.direction;
+  renderCard();
+}));
+
+function renderCard() {
+  card.classList.remove("flipped");
+  const p = phrases[cardIdx];
+  let useDir = direction;
+  if (direction === "random") useDir = Math.random() < 0.5 ? "de-ro" : "ro-de";
+  if (useDir === "de-ro") {
+    document.getElementById("card-front-text").textContent = p.de;
+    document.getElementById("card-back-text").textContent = p.ro;
+  } else {
+    document.getElementById("card-front-text").textContent = p.ro;
+    document.getElementById("card-back-text").textContent = p.de;
+  }
+  document.getElementById("card-category-front").textContent = p.cat;
+  document.getElementById("card-category-back").textContent = p.cat;
+  document.getElementById("card-grammar-hint").textContent = p.grammar;
+  document.getElementById("card-counter").textContent = (cardIdx + 1) + "/" + phrases.length;
+}
+function nextCard() { cardIdx = (cardIdx + 1) % phrases.length; renderCard(); }
+function prevCard() { cardIdx = (cardIdx - 1 + phrases.length) % phrases.length; renderCard(); }
+function markCard(level) {
+  state.cards[phrases[cardIdx].id] = level;
+  saveState(state);
+  nextCard();
+}
+document.addEventListener("keydown", (e) => {
+  if (document.getElementById("panel-flashcards").style.display === "none") return;
+  if (e.code === "Space") { e.preventDefault(); card.classList.toggle("flipped"); }
+  if (e.code === "ArrowRight") nextCard();
+  if (e.code === "ArrowLeft") prevCard();
+});
+renderCard();
+
+// Quiz
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+function newQuiz() {
+  const correct = phrases[Math.floor(Math.random() * phrases.length)];
+  const askDe = Math.random() < 0.5;
+  const wrongs = shuffle(phrases.filter(p => p.id !== correct.id)).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+  const promptText = askDe ? correct.de : correct.ro;
+  const promptLabel = askDe ? "Tradu in romana:" : "Tradu in germana:";
+  const answerKey = askDe ? "ro" : "de";
+
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">' + promptLabel + ' (' + correct.cat + ')</div>';
+  html += '<div class="quiz-prompt">' + promptText + '</div>';
+  html += '</div>';
+  html += '<div class="quiz-options">';
+  options.forEach((o, i) => {
+    html += '<button class="quiz-option" data-correct="' + (o.id === correct.id) + '" data-id="' + o.id + '">' + o[answerKey] + '</button>';
+  });
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="quiz-feedback"></div>';
+  document.getElementById("quiz-content").innerHTML = html;
+
+  document.querySelectorAll(".quiz-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const isCorrect = btn.dataset.correct === "true";
+      document.querySelectorAll(".quiz-option").forEach(x => {
+        x.classList.add("disabled");
+        if (x.dataset.correct === "true") x.classList.add("correct");
+        else if (x === btn) x.classList.add("incorrect");
+      });
+      const fb = document.getElementById("quiz-feedback");
+      fb.classList.add("show");
+      if (isCorrect) {
+        fb.classList.add("correct");
+        fb.innerHTML = "Corect! <br><small><strong>Gramatica:</strong> " + correct.grammar + "</small>";
+        state.quiz.correct++;
+      } else {
+        fb.classList.add("incorrect");
+        fb.innerHTML = "Aproape! Raspunsul corect e marcat verde.<br><small><strong>Gramatica:</strong> " + correct.grammar + "</small>";
+      }
+      state.quiz.total++;
+      saveState(state);
+      updateQuizStats();
+    });
+  });
+}
+function updateQuizStats() {
+  document.getElementById("quiz-correct").textContent = state.quiz.correct;
+  document.getElementById("quiz-total").textContent = state.quiz.total;
+  const pct = state.quiz.total ? Math.round(100 * state.quiz.correct / state.quiz.total) : 0;
+  document.getElementById("quiz-percent").textContent = pct + "%";
+}
+function resetQuiz() {
+  state.quiz = { correct: 0, total: 0 };
+  saveState(state);
+  updateQuizStats();
+  newQuiz();
+}
+updateQuizStats();
+
+// Fill in the blank
+let fibCurrent = null;
+function newFib() {
+  const p = phrases[Math.floor(Math.random() * phrases.length)];
+  // Pick a key word from the German sentence to blank out
+  // Prioritize conjunctions/relative pronouns for grammar practice
+  const targets = ["weil", "wenn", "damit", "obwohl", "die", "der", "das", "wo"];
+  let blank = null;
+  for (const t of targets) {
+    const re = new RegExp("\\b" + t + "\\b");
+    if (re.test(p.de)) { blank = t; break; }
+  }
+  if (!blank) {
+    // Fallback: blank a random meaningful word
+    const words = p.de.split(/\s+/).filter(w => w.length > 3);
+    blank = words[Math.floor(Math.random() * words.length)].replace(/[.,!?;]/g, "");
+  }
+  fibCurrent = { phrase: p, blank: blank };
+
+  const escaped = blank.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const sentence = p.de.replace(new RegExp("\\b" + escaped + "\\b"), '<input class="fib-input" id="fib-input" autocomplete="off" />');
+
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">Completeaza in germana (' + p.cat + ')</div>';
+  html += '<div class="quiz-prompt" style="font-size:14px; font-style:italic; color:#666;">Hint romana: ' + p.ro + '</div>';
+  html += '</div>';
+  html += '<div class="fib-sentence">' + sentence + '</div>';
+  html += '<div style="text-align:center;">';
+  html += '<button class="btn btn-primary" onclick="checkFib()">Verifica</button>';
+  html += '<button class="btn btn-secondary" onclick="showFibHint()">Indiciu</button>';
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="fib-feedback" style="margin-top:16px;"></div>';
+  document.getElementById("fib-content").innerHTML = html;
+  setTimeout(() => document.getElementById("fib-input").focus(), 50);
+
+  const inp = document.getElementById("fib-input");
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") checkFib(); });
+}
+function checkFib() {
+  const inp = document.getElementById("fib-input");
+  const fb = document.getElementById("fib-feedback");
+  const userAns = (inp.value || "").trim().toLowerCase();
+  const correct = fibCurrent.blank.toLowerCase();
+  fb.classList.add("show");
+  if (userAns === correct) {
+    inp.classList.add("correct");
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Corect! <br><small><strong>Gramatica:</strong> " + fibCurrent.phrase.grammar + "</small>";
+    state.fib.correct++;
+  } else {
+    inp.classList.add("incorrect");
+    fb.classList.add("incorrect"); fb.classList.remove("correct");
+    fb.innerHTML = "Raspunsul corect: <strong>" + fibCurrent.blank + "</strong><br><small><strong>Gramatica:</strong> " + fibCurrent.phrase.grammar + "</small>";
+  }
+  state.fib.total++;
+  saveState(state);
+  updateFibStats();
+}
+function showFibHint() {
+  const fb = document.getElementById("fib-feedback");
+  fb.classList.add("show");
+  fb.style.background = "#fef3c7";
+  fb.style.color = "#92400e";
+  fb.innerHTML = "Prima litera: <strong>" + fibCurrent.blank[0] + "</strong> (" + fibCurrent.blank.length + " litere)";
+}
+function updateFibStats() {
+  document.getElementById("fib-correct").textContent = state.fib.correct;
+  document.getElementById("fib-total").textContent = state.fib.total;
+}
+function resetFib() {
+  state.fib = { correct: 0, total: 0 };
+  saveState(state);
+  updateFibStats();
+  newFib();
+}
+updateFibStats();
+
+// List
+function renderList() {
+  const cats = {};
+  phrases.forEach(p => { (cats[p.cat] = cats[p.cat] || []).push(p); });
+  let html = "";
+  Object.keys(cats).forEach(cat => {
+    html += '<h3 style="margin:20px 0 10px; color:#1e3c72;">' + cat + '</h3>';
+    html += '<div class="phrases-list">';
+    cats[cat].forEach(p => {
+      const status = state.cards[p.id] || "untouched";
+      const statusEmoji = { easy: "[stiu]", medium: "[mediu]", hard: "[de repetat]", untouched: "" }[status];
+      const statusColor = { easy: "#10b981", medium: "#f59e0b", hard: "#ef4444", untouched: "#9ca3af" }[status];
+      html += '<div class="phrase-item">';
+      html += '<span class="phrase-category-tag">' + p.cat + ' #' + p.id + '</span>';
+      if (statusEmoji) html += '<span style="float:right; font-size:11px; color:' + statusColor + '; font-weight:600;">' + statusEmoji + '</span>';
+      html += '<div class="phrase-de">' + p.de + '</div>';
+      html += '<div class="phrase-ro">' + p.ro + '</div>';
+      html += '<div class="phrase-grammar"><strong>Gramatica:</strong> ' + p.grammar + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById("phrases-list-content").innerHTML = html;
+}
+
+// Progress
+function renderProgress() {
+  let easy = 0, medium = 0, hard = 0, untouched = 0;
+  phrases.forEach(p => {
+    const s = state.cards[p.id];
+    if (s === "easy") easy++;
+    else if (s === "medium") medium++;
+    else if (s === "hard") hard++;
+    else untouched++;
+  });
+  document.getElementById("prog-easy").textContent = easy;
+  document.getElementById("prog-medium").textContent = medium;
+  document.getElementById("prog-hard").textContent = hard;
+  document.getElementById("prog-untouched").textContent = untouched;
+
+  const total = phrases.length;
+  let html = '<div style="margin-bottom:20px;">';
+  html += '<div style="font-size:14px; margin-bottom:6px; color:#666;">Progres general</div>';
+  html += '<div class="progress-bar"><div class="progress-fill" style="width:' + (100 * easy / total) + '%;"></div></div>';
+  html += '<div style="font-size:12px; color:#666;">' + easy + ' din ' + total + ' fraze stiute bine</div>';
+  html += '</div>';
+  html += '<h3 style="margin:16px 0 10px; color:#1e3c72;">Detalii pe fraze</h3>';
+  html += '<div class="phrases-list">';
+  phrases.forEach(p => {
+    const status = state.cards[p.id] || "untouched";
+    const label = { easy: "Stiu bine", medium: "Mediu", hard: "De repetat", untouched: "Neinceput" }[status];
+    const color = { easy: "#10b981", medium: "#f59e0b", hard: "#ef4444", untouched: "#9ca3af" }[status];
+    html += '<div class="phrase-item" style="border-left:4px solid ' + color + ';">';
+    html += '<span class="phrase-category-tag">' + p.cat + '</span>';
+    html += '<span style="float:right; font-size:12px; color:' + color + '; font-weight:600;">' + label + '</span>';
+    html += '<div class="phrase-de" style="font-size:14px;">' + p.de + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById("progress-list").innerHTML = html;
+}
+
+function resetAllProgress() {
+  if (!confirm("Sigur vrei sa resetezi tot progresul?")) return;
+  state = { cards: {}, quiz: { correct: 0, total: 0 }, fib: { correct: 0, total: 0 } };
+  saveState(state);
+  updateQuizStats();
+  updateFibStats();
+  renderProgress();
+  renderList();
+}
+</script>
+</body>
+</html>
