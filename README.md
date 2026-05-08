@@ -18,11 +18,15 @@ Aplicatie web pentru invatarea vocabularului si frazelor de germana nivel A2 (Go
 
 ## Topicuri de gramatica acoperite
 
+Total: **16 topicuri, 710 exercitii** (cate 40 fiecare, plus 110 la Verbe cu prepozitii)
+
 **A1 (5):** Pronume personale, sein/haben, Verbe modale, Akkusativ, Dativ
 
-**A2 (7):** Perfekt (haben/sein), Verbe reflexive, Verbe separabile, **Verbe cu prepozitii fixe (40 exercitii in 5 tipuri)**, Wechselpräpositionen, Subordonate (weil/dass/wenn/obwohl), Declinarea adjectivelor
+**A2 (7):** Perfekt (haben/sein), Verbe reflexive, Verbe separabile, **Verbe cu prepozitii fixe (110 exercitii)**, Wechselpräpositionen, Subordonate (weil/dass/wenn/obwohl), Declinarea adjectivelor
 
 **B1 (4):** Präteritum, Konjunktiv 2, Pasiv (werden), Propozitii relative
+
+Fiecare topic are 5 tipuri de exercitii (Lückentext, Multiple Choice, Satzbau, Fehlerkorrektur, Umformung) cu progresie de dificultate Usor / Mediu / Greu.
 
 ## Cum se foloseste
 
