@@ -10,7 +10,8 @@ Aplicatie web pentru invatarea vocabularului si frazelor de germana nivel A2 (Go
 |--------|-----------|
 | `index.html` | Aplicatia principala de vocabular: 1254 cuvinte A2 preincarcate, 4 moduri (flashcards, quiz alegere, quiz scriere, matching), import CSV/TXT, filtrare pe sectiuni, tracking progres |
 | `fraze.html` | Quiz pentru fraze A2 (14 fraze pe tema Person/Familie/Eigenschaften) cu explicatii gramaticale (weil, wenn, damit, obwohl, der/die/das, wo) |
-| `gramatica.html` | **Modul de gramatica nou:** 15 topicuri esentiale (5 A1 + 6 A2 + 4 B1) cu teorie in romana si 90 exercitii (fill-in, alegere, transformari, ordonare cuvinte). Filtrare pe nivel si categorie. |
+| `gramatica.html` | **Modul de gramatica:** 16 topicuri (5 A1 + 7 A2 + 4 B1) cu teorie in romana si 130 exercitii. Suporta 5 tipuri (Lückentext, Satzbau, Fehlerkorrektur, Umformung, Multiple Choice) si dificultate Usor/Mediu/Greu. Filtrare pe nivel si categorie. |
+| `data/verben_praepositionen.json` | Cele 40 exercitii pentru "Verbe cu prepozitii" in format JSON pur (id, type, difficulty, question, options, correctAnswer, explanationRomanian) - poti edita direct si re-importa |
 | `data/vocabular_a2.csv` | Vocabularul complet ca CSV editabil in Excel |
 | `descarcari/flashcards.xlsx` | Flashcards in Excel cu auto-color si formule de progres |
 | `descarcari/ghid-studiu.docx` | Ghid Word de 7 pagini cu fraze, gramatica detaliata si mnemonice |
@@ -19,7 +20,7 @@ Aplicatie web pentru invatarea vocabularului si frazelor de germana nivel A2 (Go
 
 **A1 (5):** Pronume personale, sein/haben, Verbe modale, Akkusativ, Dativ
 
-**A2 (6):** Perfekt (haben/sein), Verbe reflexive, Verbe separabile, Wechselpräpositionen, Subordonate (weil/dass/wenn/obwohl), Declinarea adjectivelor
+**A2 (7):** Perfekt (haben/sein), Verbe reflexive, Verbe separabile, **Verbe cu prepozitii fixe (40 exercitii in 5 tipuri)**, Wechselpräpositionen, Subordonate (weil/dass/wenn/obwohl), Declinarea adjectivelor
 
 **B1 (4):** Präteritum, Konjunktiv 2, Pasiv (werden), Propozitii relative
 

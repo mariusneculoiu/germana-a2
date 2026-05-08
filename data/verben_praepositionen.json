@@ -1,0 +1,1259 @@
+[
+  {
+    "id": "vp-1",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich warte ___ den Bus.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "Verbul 'warten' merge cu prepozitia 'auf' + Akkusativ. Astepti orientat SPRE ceva care urmeaza. Capcana frecventa: in romana zicem 'astept autobuzul', dar in germana e 'astept AUF autobuzul'."
+  },
+  {
+    "id": "vp-2",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich danke dir ___ das schöne Geschenk.",
+    "options": null,
+    "correctAnswer": "für",
+    "explanationRomanian": "'danken FÜR' + Akkusativ = a multumi PENTRU ceva. La fel ca in romana ('multumesc pentru') si engleza ('thank you for')."
+  },
+  {
+    "id": "vp-3",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich denke oft ___ meine Familie.",
+    "options": null,
+    "correctAnswer": "an",
+    "explanationRomanian": "'denken AN' + Akkusativ = a se gandi la. In germana NU se foloseste 'auf' aici. Truc: gandul tau este orientat 'AN' (catre) cineva."
+  },
+  {
+    "id": "vp-4",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Sie freut sich ___ den Urlaub im August. (eveniment viitor)",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "Cand bucuria e pentru ceva DIN VIITOR (vacanta care urmeaza) -> 'sich freuen AUF' + Akkusativ. Acesta e una din cele mai importante perechi A2!"
+  },
+  {
+    "id": "vp-5",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich freue mich ___ das schöne Geschenk, das ich gestern bekommen habe.",
+    "options": null,
+    "correctAnswer": "über",
+    "explanationRomanian": "Cand bucuria e pentru ceva CARE DEJA S-A INTAMPLAT (cadoul primit ieri) -> 'sich freuen ÜBER' + Akkusativ. Cuvantul 'gestern' iti spune ca e in trecut."
+  },
+  {
+    "id": "vp-6",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Das Team besteht ___ zehn Spielern.",
+    "options": null,
+    "correctAnswer": "aus",
+    "explanationRomanian": "'bestehen AUS' + Dativ = a fi compus DIN. Atentie: NU confunda cu 'bestehen AUF' + Dativ care inseamna 'a insista PE ceva'."
+  },
+  {
+    "id": "vp-7",
+    "type": "Lückentext",
+    "difficulty": "Greu",
+    "question": "Ich beschwere mich ___ den schlechten Service. (despre ce ma plang)",
+    "options": null,
+    "correctAnswer": "über",
+    "explanationRomanian": "'sich beschweren ÜBER' + Akk. = a se plange DE (subiectul plangerii). NOTA: 'sich beschweren BEI' + Dativ = a te plange LA cineva (persoana). Doua prepozitii diferite, doua roluri diferite."
+  },
+  {
+    "id": "vp-8",
+    "type": "Lückentext",
+    "difficulty": "Greu",
+    "question": "Es geht ___ ein wichtiges Problem in unserer Firma.",
+    "options": null,
+    "correctAnswer": "um",
+    "explanationRomanian": "'es geht UM' + Akk. = este vorba DESPRE. Expresie idiomatica fixa, foarte frecventa in conversatie. Truc: 'um' = in jurul, deci subiectul 'se invarte in jurul' acelei probleme."
+  },
+  {
+    "id": "vp-9",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Hilfe",
+      "dich",
+      "um",
+      "bitte",
+      "Ich"
+    ],
+    "correctAnswer": "Ich bitte dich um Hilfe",
+    "explanationRomanian": "Topica: Subiect (Ich) + Verb conjugat pe pozitia 2 (bitte) + obiect direct (dich) + prepozitie (um) + obiect (Hilfe). 'bitten UM' = a cere/ruga pentru ceva."
+  },
+  {
+    "id": "vp-10",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele:",
+    "options": [
+      "Bus",
+      "Ich",
+      "den",
+      "warte",
+      "auf"
+    ],
+    "correctAnswer": "Ich warte auf den Bus",
+    "explanationRomanian": "Verbul mereu pe pozitia 2: Ich (S) + warte (V) + auf (prep.) + den Bus (Akk., m.). 'warten auf' + Akkusativ."
+  },
+  {
+    "id": "vp-11",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele:",
+    "options": [
+      "einem",
+      "Er",
+      "arbeitet",
+      "Projekt",
+      "an",
+      "neuen"
+    ],
+    "correctAnswer": "Er arbeitet an einem neuen Projekt",
+    "explanationRomanian": "'arbeiten AN' + Dativ. Topica: Er (S) + arbeitet (V poz.2) + an (prep.) + einem neuen Projekt (Dat. neutru cu adjectiv 'neu' declinat -en)."
+  },
+  {
+    "id": "vp-12",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele:",
+    "options": [
+      "zum",
+      "dir",
+      "Geburtstag",
+      "Ich",
+      "gratuliere"
+    ],
+    "correctAnswer": "Ich gratuliere dir zum Geburtstag",
+    "explanationRomanian": "'gratulieren ZU' + Dativ. 'zum' = zu+dem (contractie). Topica: S + V + obiect Dat. (dir) + prepozitie + obiect Dat. (zum Geburtstag)."
+  },
+  {
+    "id": "vp-13",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele:",
+    "options": [
+      "mich",
+      "dir",
+      "bei",
+      "Ich",
+      "für",
+      "bedanke",
+      "Hilfe",
+      "die"
+    ],
+    "correctAnswer": "Ich bedanke mich bei dir für die Hilfe",
+    "explanationRomanian": "Doua perechi cu 'bedanken': BEI dir (la cine = persoana, Dativ) + FÜR die Hilfe (pentru ce = Akk.). Reflexiv 'mich' vine imediat dupa verbul conjugat."
+  },
+  {
+    "id": "vp-14",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza cuvintele (atentie la Perfekt):",
+    "options": [
+      "gewartet",
+      "lange",
+      "Wir",
+      "Spiel",
+      "haben",
+      "auf",
+      "das"
+    ],
+    "correctAnswer": "Wir haben lange auf das Spiel gewartet",
+    "explanationRomanian": "Perfekt: haben + ... + Partizip (gewartet) la sfarsit. 'warten auf' + Akkusativ (das Spiel). Adverbul 'lange' (mult timp) intre auxiliar si complement."
+  },
+  {
+    "id": "vp-15",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza (Perfekt + verb reflexiv):",
+    "options": [
+      "sich",
+      "verliebt",
+      "Bruder",
+      "in",
+      "Mein",
+      "hat",
+      "sie"
+    ],
+    "correctAnswer": "Mein Bruder hat sich in sie verliebt",
+    "explanationRomanian": "'sich verlieben IN' + Akkusativ. La Perfekt: hat + sich (reflexiv) + in sie (Akk.) + verliebt (Partizip la sfarsit). Pronumele 'sie' (in ea) e Akkusativ feminin singular."
+  },
+  {
+    "id": "vp-16",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza (subordonata cu weil):",
+    "options": [
+      "weil",
+      "Ich",
+      "ich",
+      "müde",
+      "schlafen",
+      "gehe",
+      "bin"
+    ],
+    "correctAnswer": "Ich gehe schlafen weil ich müde bin",
+    "explanationRomanian": "Propozitie principala (Ich gehe schlafen) + subordonata cu 'weil' unde verbul 'bin' merge la sfarsit. 'müde sein' nu are prepozitie (e adjectiv predicativ)."
+  },
+  {
+    "id": "vp-17",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Usor",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich warte für den Bus.\"",
+    "options": null,
+    "correctAnswer": "Ich warte auf den Bus",
+    "explanationRomanian": "Greseala: 'für' in loc de 'auf'. Verbul 'warten' merge cu 'auf', NU 'für'. 'warten auf' + Akkusativ. Capcana clasica pentru romani."
+  },
+  {
+    "id": "vp-18",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Usor",
+    "question": "Greseala. Scrie corect:\n\"Ich denke auf dich.\"",
+    "options": null,
+    "correctAnswer": "Ich denke an dich",
+    "explanationRomanian": "Greseala: 'auf' in loc de 'an'. 'denken AN' + Akkusativ. Truc: gandul e orientat 'AN' (catre), nu 'AUF' (deasupra)."
+  },
+  {
+    "id": "vp-19",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala. Scrie corect:\n\"Wir sprechen mit das Wetter.\"",
+    "options": null,
+    "correctAnswer": "Wir sprechen über das Wetter",
+    "explanationRomanian": "Greseala: 'mit' in loc de 'über'. Vremea e SUBIECT, nu interlocutor. 'sprechen MIT' = vorbesti CU CINEVA (persoana). 'sprechen ÜBER' = vorbesti DESPRE CEVA (subiect)."
+  },
+  {
+    "id": "vp-20",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala. Scrie corect:\n\"Ich freue mich auf das Geschenk, das ich gestern bekommen habe.\"",
+    "options": null,
+    "correctAnswer": "Ich freue mich über das Geschenk, das ich gestern bekommen habe",
+    "explanationRomanian": "Greseala: 'auf' in loc de 'über'. Cuvantul 'gestern' arata ca e TRECUT -> 'sich freuen ÜBER' (nu 'auf' care e pentru viitor)."
+  },
+  {
+    "id": "vp-21",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala. Scrie corect:\n\"Ich erinnere mich an meiner Schule.\"",
+    "options": null,
+    "correctAnswer": "Ich erinnere mich an meine Schule",
+    "explanationRomanian": "Greseala in caz: 'meiner' (Dativ) in loc de 'meine' (Akkusativ). 'sich erinnern AN' cere ACUZATIV, nu Dativ. Femininul ramane neschimbat la Akk: meine Schule."
+  },
+  {
+    "id": "vp-22",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Greu",
+    "question": "Greseala. Scrie corect:\n\"Sie hat mich gegen die Idee entschieden.\"",
+    "options": null,
+    "correctAnswer": "Sie hat sich gegen die Idee entschieden",
+    "explanationRomanian": "Greseala in pronume reflexiv: 'mich' (eu) in loc de 'sich' (ea). 'sich entscheiden' e reflexiv: pers. 3 -> 'sich'. La Perfekt: sie hat sich + ... + entschieden (Partizip la sfarsit)."
+  },
+  {
+    "id": "vp-23",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Greu",
+    "question": "Greseala. Scrie corect:\n\"Es handelt sich für ein wichtiges Problem.\"",
+    "options": null,
+    "correctAnswer": "Es handelt sich um ein wichtiges Problem",
+    "explanationRomanian": "Greseala: 'für' in loc de 'um'. 'es handelt sich UM' = este vorba DESPRE. Expresie fixa, capcana frecventa pentru ca in romana zicem 'pentru'/'despre'."
+  },
+  {
+    "id": "vp-24",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Greu",
+    "question": "Greseala. Scrie corect:\n\"Sie kämpft auf ihre Rechte.\"",
+    "options": null,
+    "correctAnswer": "Sie kämpft für ihre Rechte",
+    "explanationRomanian": "Greseala: 'auf' in loc de 'für'. 'kämpfen FÜR' + Akk. = a lupta PENTRU o cauza/idee. Atentie la trio: kämpfen FÜR (cauza) / UM (a obtine) / GEGEN (impotriva)."
+  },
+  {
+    "id": "vp-25",
+    "type": "Umformung",
+    "difficulty": "Usor",
+    "question": "Inlocuieste numele cu pronume:\n\"Ich denke an Maria.\"",
+    "options": null,
+    "correctAnswer": "Ich denke an sie",
+    "explanationRomanian": "Maria (femeie singular) -> 'sie' (ea). Prepozitia 'an' ramane. Pentru OAMENI se foloseste pronumele normal dupa prepozitie (an sie/ihn/uns/euch)."
+  },
+  {
+    "id": "vp-26",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Inlocuieste obiectul cu da-cuvant (pentru lucruri):\n\"Ich erinnere mich an die Schule.\"",
+    "options": null,
+    "correctAnswer": "Ich erinnere mich daran",
+    "explanationRomanian": "Pentru LUCRURI (nu persoane), 'an + lucru' devine 'daran' (da+r+an, cu 'r' de legatura caci 'an' incepe cu vocala). Pattern: da+(r)+prepozitie."
+  },
+  {
+    "id": "vp-27",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Adauga negatie 'nicht':\n\"Ich rechne mit Problemen.\"",
+    "options": null,
+    "correctAnswer": "Ich rechne nicht mit Problemen",
+    "explanationRomanian": "Pentru a nega o constructie cu prepozitie, 'nicht' se pune INAINTE de prepozitie (nu inainte de obiect). 'rechnen MIT' + Dat. = a se astepta la."
+  },
+  {
+    "id": "vp-28",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Pune la trecut (Perfekt):\n\"Ich freue mich über das Geschenk.\"",
+    "options": null,
+    "correctAnswer": "Ich habe mich über das Geschenk gefreut",
+    "explanationRomanian": "Verbele reflexive iau auxiliar 'haben'. Schema Perfekt: ich habe + reflexiv (mich) + ... + Partizip (gefreut) la sfarsit. 'sich freuen' e regulat -> gefreut."
+  },
+  {
+    "id": "vp-29",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Conjuga la pers. 3 sg.:\n\"sich freuen auf / das Wochenende / sie (ea)\"",
+    "options": null,
+    "correctAnswer": "Sie freut sich auf das Wochenende",
+    "explanationRomanian": "'sich freuen auf' + Akk. La pers. 3 sg.: sie freut sich auf + Akk. 'das Wochenende' (n.) ramane neschimbat la Akk."
+  },
+  {
+    "id": "vp-30",
+    "type": "Umformung",
+    "difficulty": "Greu",
+    "question": "Formuleaza intrebarea (cu 'wo+prep'):\n\"Ich warte auf den Bus.\"",
+    "options": null,
+    "correctAnswer": "Worauf wartest du",
+    "explanationRomanian": "Pentru intrebari despre LUCRURI cu prepozitie, folosesti 'wo + prepozitie'. wo+auf = worauf (cu 'r' de legatura). Pattern: wo+(r)+prep + verb + subiect."
+  },
+  {
+    "id": "vp-31",
+    "type": "Umformung",
+    "difficulty": "Greu",
+    "question": "Pune la trecut (Perfekt) - atentie verb neregulat:\n\"Wir sprechen mit dem Lehrer.\"",
+    "options": null,
+    "correctAnswer": "Wir haben mit dem Lehrer gesprochen",
+    "explanationRomanian": "'sprechen' e neregulat -> Partizip 'gesprochen'. Auxiliar 'haben'. Topica: Wir haben + complement (mit dem Lehrer) + Partizip (gesprochen) la sfarsit."
+  },
+  {
+    "id": "vp-32",
+    "type": "Umformung",
+    "difficulty": "Greu",
+    "question": "Inlocuieste numele cu da-cuvant:\n\"Ich denke oft an die Sommerferien.\"",
+    "options": null,
+    "correctAnswer": "Ich denke oft daran",
+    "explanationRomanian": "'die Sommerferien' = lucru/eveniment, NU persoana -> da-cuvant 'daran' (da+r+an). Daca era persoana ('an Maria') am fi pus 'an sie'."
+  },
+  {
+    "id": "vp-33",
+    "type": "Multiple Choice",
+    "difficulty": "Usor",
+    "question": "Ich freue mich ___ die Sommerferien (vacanta de vara, in viitor).",
+    "options": [
+      "auf",
+      "über",
+      "für",
+      "an"
+    ],
+    "correctAnswer": "auf",
+    "explanationRomanian": "Pentru evenimente VIITOARE -> 'sich freuen AUF'. Capcana: 'für' (in romana zicem 'pentru') NU merge in germana - regula e clara: auf=viitor, über=trecut. 'an' si 'über' nu se folosesc pentru 'sich freuen' la viitor."
+  },
+  {
+    "id": "vp-34",
+    "type": "Multiple Choice",
+    "difficulty": "Usor",
+    "question": "Wir sprechen ___ unserer Mutter. (CU mama)",
+    "options": [
+      "über",
+      "mit",
+      "von",
+      "an"
+    ],
+    "correctAnswer": "mit",
+    "explanationRomanian": "Cand vorbim CU O PERSOANA (interlocutorul) folosim 'sprechen MIT' + Dat. Capcane: 'über' = despre subiect; 'von' = mai indirect (a mentiona); 'an' nu se foloseste niciodata cu 'sprechen'."
+  },
+  {
+    "id": "vp-35",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Sie kümmert sich ___ ihre kleinen Kinder.",
+    "options": [
+      "um",
+      "für",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "um",
+    "explanationRomanian": "'sich kümmern UM' + Akk. = a se ocupa de cineva (cu grija activa). Capcana: 'für' suna apropiat (in romana 'pentru copii') si exista 'sorgen für', dar verbul 'kümmern' cere strict 'um'."
+  },
+  {
+    "id": "vp-36",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Worauf wartest du? Ich warte ___",
+    "options": [
+      "über das Wetter",
+      "auf den Bus",
+      "mit dem Wetter",
+      "an die Wahl"
+    ],
+    "correctAnswer": "auf den Bus",
+    "explanationRomanian": "Intrebarea 'worauf' contine deja prepozitia 'auf', deci raspunsul incepe cu 'auf' + Akk. 'auf den Bus' (m. Akk: der Bus -> den Bus). Celelalte folosesc prepozitii gresite."
+  },
+  {
+    "id": "vp-37",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich interessiere mich ___ Sport. (sport in general, ca domeniu)",
+    "options": [
+      "für",
+      "an",
+      "auf",
+      "über"
+    ],
+    "correctAnswer": "für",
+    "explanationRomanian": "Pentru un domeniu GENERAL (sport, muzica) -> 'sich interessieren FÜR' + Akk. 'AN' se foloseste rar, doar pentru un lucru SPECIFIC ('an diesem Auto'). La A2, FÜR e mereu raspunsul corect."
+  },
+  {
+    "id": "vp-38",
+    "type": "Multiple Choice",
+    "difficulty": "Greu",
+    "question": "___ wem hast du das gehört? (de la cine ai auzit asta?)",
+    "options": [
+      "Von",
+      "Mit",
+      "Um",
+      "An"
+    ],
+    "correctAnswer": "Von",
+    "explanationRomanian": "'hören VON' + Dativ = a auzi DE LA cineva (sursa informatiei). 'wem' = forma Dativ a lui 'wer'. Combinatia: Von wem? = de la cine? (Dat.). 'mit' inseamna 'cu', 'um' = despre/in jur, 'an' nu merge cu 'hören'."
+  },
+  {
+    "id": "vp-39",
+    "type": "Multiple Choice",
+    "difficulty": "Greu",
+    "question": "Welche Form ist richtig? Er ___ für seine Verspätung.",
+    "options": [
+      "entschuldigt mich",
+      "entschuldigt",
+      "entschuldigt sich",
+      "sich entschuldigt"
+    ],
+    "correctAnswer": "entschuldigt sich",
+    "explanationRomanian": "'sich entschuldigen' este reflexiv. Pers. 3 sg: er entschuldigt sich (reflexivul 'sich'). Verbul conjugat sta pe pozitia 2, pronumele reflexiv imediat dupa verbul conjugat. 'mich' ar fi gresit pentru 'er' (mich = eu)."
+  },
+  {
+    "id": "vp-40",
+    "type": "Multiple Choice",
+    "difficulty": "Greu",
+    "question": "Was bedeutet 'Es hängt von dir ab'?",
+    "options": [
+      "Atarna pe tine",
+      "Depinde de tine",
+      "Vine de la tine",
+      "Iese din tine"
+    ],
+    "correctAnswer": "Depinde de tine",
+    "explanationRomanian": "'abhängen VON' + Dat. = a depinde de. Verb separabil: 'ab' merge la sfarsit la prezent. Sensul vine din imaginea unui tablou care 'atarna DE' un cui - daca dispare cuiul, cade tabloul."
+  },
+  {
+    "id": "vp-41",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich warte ___ den Bus.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'warten auf' = a astepta. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-42",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich freue mich ___ den Urlaub.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'sich freuen auf' = a abia astepta (viitor). Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-43",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich hoffe ___ gutes Wetter.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'hoffen auf' = a spera la. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-44",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich achte ___ die Autos.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'achten auf' = a fi atent la. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-45",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich passe ___ den Hund auf.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'aufpassen auf' = a supraveghea. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-46",
+    "type": "Lückentext",
+    "difficulty": "Usor",
+    "question": "Ich antworte ___ die Frage.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'antworten auf' = a raspunde la. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-47",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich bereite mich ___ die Pruefung vor.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'sich vorbereiten auf' = a se pregati pentru. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-48",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich verlasse mich ___ meinen Freund.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'sich verlassen auf' = a se baza pe. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-49",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich reagiere ___ die Nachricht.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'reagieren auf' = a reactiona la. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-50",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich verzichte ___ den Zucker.",
+    "options": null,
+    "correctAnswer": "auf",
+    "explanationRomanian": "'verzichten auf' = a renunta la. Combinatie fixa, prepozitia 'auf' nu se schimba (auf + Akk)."
+  },
+  {
+    "id": "vp-51",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich bestehe ___ drei Teilen.",
+    "options": null,
+    "correctAnswer": "aus",
+    "explanationRomanian": "'bestehen aus' = a fi compus din. Combinatie fixa, prepozitia 'aus' nu se schimba (aus + Dat)."
+  },
+  {
+    "id": "vp-52",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich stamme ___ Rumaenien.",
+    "options": null,
+    "correctAnswer": "aus",
+    "explanationRomanian": "'stammen aus' = a proveni din. Combinatie fixa, prepozitia 'aus' nu se schimba (aus + Dat)."
+  },
+  {
+    "id": "vp-53",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich helfe ___ den Hausaufgaben.",
+    "options": null,
+    "correctAnswer": "bei",
+    "explanationRomanian": "'helfen bei' = a ajuta la. Combinatie fixa, prepozitia 'bei' nu se schimba (bei + Dat)."
+  },
+  {
+    "id": "vp-54",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich bedanke mich ___ dem Lehrer.",
+    "options": null,
+    "correctAnswer": "bei",
+    "explanationRomanian": "'sich bedanken bei' = a multumi cuiva (persoanei). Combinatie fixa, prepozitia 'bei' nu se schimba (bei + Dat)."
+  },
+  {
+    "id": "vp-55",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich beschwere mich ___ dem Chef.",
+    "options": null,
+    "correctAnswer": "bei",
+    "explanationRomanian": "'sich beschweren bei' = a se plange la (cineva). Combinatie fixa, prepozitia 'bei' nu se schimba (bei + Dat)."
+  },
+  {
+    "id": "vp-56",
+    "type": "Lückentext",
+    "difficulty": "Mediu",
+    "question": "Ich entschuldige mich ___ der Mutter.",
+    "options": null,
+    "correctAnswer": "bei",
+    "explanationRomanian": "'sich entschuldigen bei' = a-si cere scuze fata de. Combinatie fixa, prepozitia 'bei' nu se schimba (bei + Dat)."
+  },
+  {
+    "id": "vp-57",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich freue mich ___ den Urlaub naechste Woche.",
+    "options": [
+      "auf",
+      "über",
+      "für",
+      "an"
+    ],
+    "correctAnswer": "auf",
+    "explanationRomanian": "Eveniment VIITOR (vacanta urmatoare) -> 'sich freuen AUF'. 'über' e pentru trecut."
+  },
+  {
+    "id": "vp-58",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich freue mich ___ deinen Brief von gestern.",
+    "options": [
+      "auf",
+      "über",
+      "für",
+      "an"
+    ],
+    "correctAnswer": "über",
+    "explanationRomanian": "Eveniment TRECUT (scrisoare deja primita) -> 'sich freuen ÜBER'."
+  },
+  {
+    "id": "vp-59",
+    "type": "Multiple Choice",
+    "difficulty": "Usor",
+    "question": "Wir sprechen ___ unserem Lehrer.",
+    "options": [
+      "mit",
+      "über",
+      "von",
+      "an"
+    ],
+    "correctAnswer": "mit",
+    "explanationRomanian": "'sprechen MIT' = vorbim CU O PERSOANA (interlocutor) + Dativ."
+  },
+  {
+    "id": "vp-60",
+    "type": "Multiple Choice",
+    "difficulty": "Usor",
+    "question": "Wir sprechen ___ die Pruefung.",
+    "options": [
+      "mit",
+      "über",
+      "von",
+      "an"
+    ],
+    "correctAnswer": "über",
+    "explanationRomanian": "'sprechen ÜBER' = vorbim DESPRE UN SUBIECT + Akkusativ."
+  },
+  {
+    "id": "vp-61",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Oma erzaehlt ___ ihrer Jugend. (amintiri personale)",
+    "options": [
+      "von",
+      "über",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "von",
+    "explanationRomanian": "'erzaehlen VON' + Dat. = ceva personal, amintiri trăite. 'über' e pentru subiect general."
+  },
+  {
+    "id": "vp-62",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Der Reporter berichtet ___ den Krieg. (subiect general)",
+    "options": [
+      "über",
+      "von",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "über",
+    "explanationRomanian": "'berichten ÜBER' + Akk. = a raporta despre un subiect (analitic, general)."
+  },
+  {
+    "id": "vp-63",
+    "type": "Multiple Choice",
+    "difficulty": "Usor",
+    "question": "Ich danke dir ___ deine Hilfe.",
+    "options": [
+      "für",
+      "bei",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "für",
+    "explanationRomanian": "'danken FÜR' + Akk. = multumesti PENTRU lucrul primit."
+  },
+  {
+    "id": "vp-64",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich bedanke mich ___ dir.",
+    "options": [
+      "für",
+      "bei",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "bei",
+    "explanationRomanian": "'bedanken BEI' + Dat. = multumesti FATA DE persoana."
+  },
+  {
+    "id": "vp-65",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Er kaempft ___ die Ungerechtigkeit (impotriva).",
+    "options": [
+      "für",
+      "gegen",
+      "um",
+      "mit"
+    ],
+    "correctAnswer": "gegen",
+    "explanationRomanian": "'kaempfen GEGEN' + Akk. = a lupta impotriva."
+  },
+  {
+    "id": "vp-66",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Sie kaempft ___ den ersten Platz (a obtine).",
+    "options": [
+      "für",
+      "gegen",
+      "um",
+      "mit"
+    ],
+    "correctAnswer": "um",
+    "explanationRomanian": "'kaempfen UM' + Akk. = a lupta pentru a obtine ceva concret."
+  },
+  {
+    "id": "vp-67",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Er kaempft ___ die Freiheit (cauza).",
+    "options": [
+      "für",
+      "gegen",
+      "um",
+      "mit"
+    ],
+    "correctAnswer": "für",
+    "explanationRomanian": "'kaempfen FÜR' + Akk. = a lupta pentru o cauza/idee."
+  },
+  {
+    "id": "vp-68",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Das Team besteht ___ zehn Spielern.",
+    "options": [
+      "aus",
+      "auf",
+      "mit",
+      "von"
+    ],
+    "correctAnswer": "aus",
+    "explanationRomanian": "'bestehen AUS' + Dat. = compus DIN. Diferit de 'bestehen AUF' (a insista)."
+  },
+  {
+    "id": "vp-69",
+    "type": "Multiple Choice",
+    "difficulty": "Greu",
+    "question": "Er besteht ___ seinem Recht.",
+    "options": [
+      "aus",
+      "auf",
+      "mit",
+      "von"
+    ],
+    "correctAnswer": "auf",
+    "explanationRomanian": "'bestehen AUF' + Dat. = a insista pe ceva. Diferit de 'bestehen AUS' (compus din)."
+  },
+  {
+    "id": "vp-70",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich sorge ___ meine Familie (am grija).",
+    "options": [
+      "für",
+      "um",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "für",
+    "explanationRomanian": "'sorgen FÜR' + Akk. = a se ingriji activ. Diferit de 'sich sorgen UM' (a fi ingrijorat)."
+  },
+  {
+    "id": "vp-71",
+    "type": "Multiple Choice",
+    "difficulty": "Greu",
+    "question": "Ich sorge mich ___ dich (sunt ingrijorat).",
+    "options": [
+      "für",
+      "um",
+      "mit",
+      "an"
+    ],
+    "correctAnswer": "um",
+    "explanationRomanian": "'sich sorgen UM' + Akk. = a fi ingrijorat. Diferit de 'sorgen FÜR' (a se ingriji)."
+  },
+  {
+    "id": "vp-72",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Sie interessiert sich ___ Sport (general).",
+    "options": [
+      "für",
+      "an",
+      "auf",
+      "über"
+    ],
+    "correctAnswer": "für",
+    "explanationRomanian": "'sich interessieren FÜR' + Akk. = interes general (sport, muzica). 'AN' = interes specific."
+  },
+  {
+    "id": "vp-73",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Wovon traeumst du? - Ich traeume ___ einem Haus.",
+    "options": [
+      "von",
+      "an",
+      "über",
+      "mit"
+    ],
+    "correctAnswer": "von",
+    "explanationRomanian": "'traeumen VON' + Dat. Intrebarea 'wovon' contine deja 'von'."
+  },
+  {
+    "id": "vp-74",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Es geht ___ ein wichtiges Problem.",
+    "options": [
+      "um",
+      "auf",
+      "über",
+      "an"
+    ],
+    "correctAnswer": "um",
+    "explanationRomanian": "'es geht UM' = este vorba DESPRE. Expresie idiomatica fixa."
+  },
+  {
+    "id": "vp-75",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Ich rechne ___ Problemen.",
+    "options": [
+      "mit",
+      "auf",
+      "an",
+      "für"
+    ],
+    "correctAnswer": "mit",
+    "explanationRomanian": "'rechnen MIT' + Dat. = a se astepta la (literalmente 'a calcula cu')."
+  },
+  {
+    "id": "vp-76",
+    "type": "Multiple Choice",
+    "difficulty": "Mediu",
+    "question": "Es haengt ___ dir ab.",
+    "options": [
+      "von",
+      "auf",
+      "an",
+      "über"
+    ],
+    "correctAnswer": "von",
+    "explanationRomanian": "'abhaengen VON' + Dat. = a depinde de. Verb separabil ('haengt ... ab')."
+  },
+  {
+    "id": "vp-77",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Bus",
+      "den",
+      "warte",
+      "Ich",
+      "auf"
+    ],
+    "correctAnswer": "Ich warte auf den Bus",
+    "explanationRomanian": "S + V poz.2 + prep + Akk. 'warten auf' + Akk."
+  },
+  {
+    "id": "vp-78",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Geschenk",
+      "danke",
+      "das",
+      "Ich",
+      "fuer",
+      "dir"
+    ],
+    "correctAnswer": "Ich danke dir fuer das Geschenk",
+    "explanationRomanian": "S + V + Dat. (dir) + fuer + Akk. (das Geschenk)."
+  },
+  {
+    "id": "vp-79",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "mich",
+      "Mutter",
+      "freue",
+      "auf",
+      "ich",
+      "meine"
+    ],
+    "correctAnswer": "Ich freue mich auf meine Mutter",
+    "explanationRomanian": "Reflexiv 'mich' dupa verbul conjugat. 'freuen auf' + Akk."
+  },
+  {
+    "id": "vp-80",
+    "type": "Satzbau",
+    "difficulty": "Usor",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Geschichte",
+      "die",
+      "lacht",
+      "ueber",
+      "Er"
+    ],
+    "correctAnswer": "Er lacht ueber die Geschichte",
+    "explanationRomanian": "'lachen ÜBER' + Akk. S + V + prep + Akk."
+  },
+  {
+    "id": "vp-81",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "mit",
+      "Bruder",
+      "spreche",
+      "Ich",
+      "meinem"
+    ],
+    "correctAnswer": "Ich spreche mit meinem Bruder",
+    "explanationRomanian": "'sprechen MIT' + Dat. (mit meinem Bruder)."
+  },
+  {
+    "id": "vp-82",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Hilfe",
+      "bittet",
+      "Sie",
+      "um",
+      "uns"
+    ],
+    "correctAnswer": "Sie bittet uns um Hilfe",
+    "explanationRomanian": "'bitten UM' + Akk. (Hilfe). Plus obiect direct (uns)."
+  },
+  {
+    "id": "vp-83",
+    "type": "Satzbau",
+    "difficulty": "Mediu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "aus",
+      "besteht",
+      "drei",
+      "Teilen",
+      "Buch",
+      "das"
+    ],
+    "correctAnswer": "Das Buch besteht aus drei Teilen",
+    "explanationRomanian": "'bestehen AUS' + Dat. plural (Teilen)."
+  },
+  {
+    "id": "vp-84",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Pruefung",
+      "die",
+      "auf",
+      "vor",
+      "bereiten",
+      "Wir",
+      "uns"
+    ],
+    "correctAnswer": "Wir bereiten uns auf die Pruefung vor",
+    "explanationRomanian": "Verb separabil 'sich vorbereiten auf'. Reflexiv 'uns' + 'auf die Pruefung' (Akk.) + 'vor' la sfarsit."
+  },
+  {
+    "id": "vp-85",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "Geschenk",
+      "haben",
+      "uns",
+      "wir",
+      "ueber",
+      "gefreut",
+      "das"
+    ],
+    "correctAnswer": "Wir haben uns ueber das Geschenk gefreut",
+    "explanationRomanian": "Perfekt: haben + reflexiv + ÜBER + Akk + Partizip la sfarsit."
+  },
+  {
+    "id": "vp-86",
+    "type": "Satzbau",
+    "difficulty": "Greu",
+    "question": "Ordoneaza cuvintele intr-o propozitie corecta:",
+    "options": [
+      "sich",
+      "verliebt",
+      "Bruder",
+      "in",
+      "hat",
+      "sie",
+      "Mein"
+    ],
+    "correctAnswer": "Mein Bruder hat sich in sie verliebt",
+    "explanationRomanian": "Perfekt: hat + sich + IN + Akk (sie) + Partizip 'verliebt' la sfarsit."
+  },
+  {
+    "id": "vp-87",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich denke an dir.\"",
+    "options": null,
+    "correctAnswer": "Ich denke an dich",
+    "explanationRomanian": "'denken AN' cere ACUZATIV, nu Dativ. 'dir' (Dat.) -> 'dich' (Akk.)."
+  },
+  {
+    "id": "vp-88",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Usor",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich warte fuer den Zug.\"",
+    "options": null,
+    "correctAnswer": "Ich warte auf den Zug",
+    "explanationRomanian": "'warten AUF' (nu 'fuer'). Capcana din traducere RO 'astept pentru'."
+  },
+  {
+    "id": "vp-89",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich freue mich auf den Brief, den ich gestern bekommen habe.\"",
+    "options": null,
+    "correctAnswer": "Ich freue mich ueber den Brief, den ich gestern bekommen habe",
+    "explanationRomanian": "'gestern' = trecut, deci 'sich freuen ÜBER' (nu 'auf' care e pentru viitor)."
+  },
+  {
+    "id": "vp-90",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Wir sprechen mit das Wetter.\"",
+    "options": null,
+    "correctAnswer": "Wir sprechen ueber das Wetter",
+    "explanationRomanian": "Vremea = subiect, nu interlocutor. 'sprechen MIT' = cu cineva; 'sprechen ÜBER' = despre ceva."
+  },
+  {
+    "id": "vp-91",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Greu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Sie bedankt sich fuer dem Lehrer.\"",
+    "options": null,
+    "correctAnswer": "Sie bedankt sich beim Lehrer",
+    "explanationRomanian": "'bedanken BEI' + Dat. (la persoana). 'fuer' merge cu 'danken' nu 'bedanken'."
+  },
+  {
+    "id": "vp-92",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Er kaempft auf seine Rechte.\"",
+    "options": null,
+    "correctAnswer": "Er kaempft fuer seine Rechte",
+    "explanationRomanian": "'kaempfen FÜR' + Akk. = pentru o cauza. 'auf' nu merge."
+  },
+  {
+    "id": "vp-93",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich gewoehne mich auf das Wetter.\"",
+    "options": null,
+    "correctAnswer": "Ich gewoehne mich an das Wetter",
+    "explanationRomanian": "'sich gewoehnen AN' + Akk. (nu 'auf'). Te 'lipesti AN' noul obicei."
+  },
+  {
+    "id": "vp-94",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Usor",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Es geht auf Geld.\"",
+    "options": null,
+    "correctAnswer": "Es geht um Geld",
+    "explanationRomanian": "Expresie fixa: 'es geht UM' = este vorba despre. Niciodata 'auf'."
+  },
+  {
+    "id": "vp-95",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich erinnere mich an meiner Schule.\"",
+    "options": null,
+    "correctAnswer": "Ich erinnere mich an meine Schule",
+    "explanationRomanian": "'sich erinnern AN' + ACUZATIV (nu Dativ). 'meiner' (Dat.) -> 'meine' (Akk.)."
+  },
+  {
+    "id": "vp-96",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Sie hat sich fuer ihn verliebt.\"",
+    "options": null,
+    "correctAnswer": "Sie hat sich in ihn verliebt",
+    "explanationRomanian": "'sich verlieben IN' + Akk. (nu 'fuer'). Intri IN starea/persoana."
+  },
+  {
+    "id": "vp-97",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Greu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Das Team besteht aus zehn Spieler.\"",
+    "options": null,
+    "correctAnswer": "Das Team besteht aus zehn Spielern",
+    "explanationRomanian": "'aus' + Dat. La plural Dat. substantivul ia '-n': Spieler -> Spielern."
+  },
+  {
+    "id": "vp-98",
+    "type": "Fehlerkorrektur",
+    "difficulty": "Mediu",
+    "question": "Greseala in propozitie. Scrie versiunea corecta:\n\"Ich entschuldige mich an dir.\"",
+    "options": null,
+    "correctAnswer": "Ich entschuldige mich bei dir",
+    "explanationRomanian": "'sich entschuldigen BEI' + Dat. (la persoana). Niciodata 'an'."
+  },
+  {
+    "id": "vp-99",
+    "type": "Umformung",
+    "difficulty": "Usor",
+    "question": "Inlocuieste cu pronume personal:\n\"Ich denke an Maria.\"",
+    "options": null,
+    "correctAnswer": "Ich denke an sie",
+    "explanationRomanian": "Maria = singular feminin -> 'sie'. Pentru oameni se foloseste pronumele direct dupa prepozitie."
+  },
+  {
+    "id": "vp-100",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Inlocuieste cu da-cuvant (lucru):\n\"Ich erinnere mich an die Reise.\"",
+    "options": null,
+    "correctAnswer": "Ich erinnere mich daran",
+    "explanationRomanian": "'an + lucru' -> 'daran' (cu r de legatura caci 'an' incepe cu vocala)."
+  },
+  {
+    "id": "vp-101",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Inlocuieste cu da-cuvant:\n\"Wir warten auf den Bus.\"",
+    "options": null,
+    "correctAnswer": "Wir warten darauf",
+    "explanationRomanian": "'auf + lucru' -> 'darauf'. Pentru lucruri se foloseste 'da+(r)+prepozitie'."
+  },
+  {
+    "id": "vp-102",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Inlocuieste cu da-cuvant:\n\"Sie spricht ueber das Wetter.\"",
+    "options": null,
+    "correctAnswer": "Sie spricht darueber",
+    "explanationRomanian": "'ueber + lucru' -> 'darueber'. r de legatura."
+  },
+  {
+    "id": "vp-103",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Pune la trecut (Perfekt):\n\"Ich freue mich ueber den Brief.\"",
+    "options": null,
+    "correctAnswer": "Ich habe mich ueber den Brief gefreut",
+    "explanationRomanian": "Reflexive iau 'haben'. Schema: ich habe + mich + complement + Partizip la sfarsit."
+  },
+  {
+    "id": "vp-104",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Pune la trecut (Perfekt):\n\"Wir sprechen mit dem Lehrer.\"",
+    "options": null,
+    "correctAnswer": "Wir haben mit dem Lehrer gesprochen",
+    "explanationRomanian": "'sprechen' neregulat -> Partizip 'gesprochen'. haben + complement + Partizip la sfarsit."
+  },
+  {
+    "id": "vp-105",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Pune la trecut (Perfekt):\n\"Sie wartet auf den Bus.\"",
+    "options": null,
+    "correctAnswer": "Sie hat auf den Bus gewartet",
+    "explanationRomanian": "'warten' regulat -> 'gewartet'. haben + ... + Partizip la sfarsit."
+  },
+  {
+    "id": "vp-106",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Pune la trecut (Perfekt):\n\"Er denkt an seine Familie.\"",
+    "options": null,
+    "correctAnswer": "Er hat an seine Familie gedacht",
+    "explanationRomanian": "'denken' neregulat -> Partizip 'gedacht'. haben + ... + Partizip la sfarsit."
+  },
+  {
+    "id": "vp-107",
+    "type": "Umformung",
+    "difficulty": "Greu",
+    "question": "Formuleaza intrebarea cu 'wo+prep':\n\"Ich warte auf den Bus.\"",
+    "options": null,
+    "correctAnswer": "Worauf wartest du",
+    "explanationRomanian": "Pentru lucruri: wo + prep -> wo+r+auf = worauf."
+  },
+  {
+    "id": "vp-108",
+    "type": "Umformung",
+    "difficulty": "Greu",
+    "question": "Formuleaza intrebarea cu 'wo+prep':\n\"Sie traeumt von Italien.\"",
+    "options": null,
+    "correctAnswer": "Wovon traeumst du",
+    "explanationRomanian": "wo+von = wovon (fara r caci 'von' incepe cu consoana)."
+  },
+  {
+    "id": "vp-109",
+    "type": "Umformung",
+    "difficulty": "Mediu",
+    "question": "Conjuga la pers. 3 sg.:\n\"sich kuemmern um / der Hund / sie (ea)\"",
+    "options": null,
+    "correctAnswer": "Sie kuemmert sich um den Hund",
+    "explanationRomanian": "Pers. 3 sg.: sie kuemmert sich. 'um den Hund' (m. Akk.: der Hund -> den Hund)."
+  },
+  {
+    "id": "vp-110",
+    "type": "Umformung",
+    "difficulty": "Usor",
+    "question": "Schimba subiectul la pers. 1 plural (wir):\n\"Er traeumt von einem Haus.\"",
+    "options": null,
+    "correctAnswer": "Wir traeumen von einem Haus",
+    "explanationRomanian": "Wir + traeumen (terminatie -en). 'von einem Haus' (Dat. neutru) ramane neschimbat."
+  }
+]
