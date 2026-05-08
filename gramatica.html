@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gramatica - Germana A1/A2/B1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 24px 30px;
+  }
+  header h1 { font-size: 24px; margin-bottom: 4px; }
+  header p { opacity: 0.85; font-size: 13px; }
+
+  .filter-bar {
+    background: #f5f5f7;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-bar label { font-size: 13px; color: #555; font-weight: 600; }
+  .filter-bar select, .filter-bar button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .filter-bar button:hover { background: #f3f4f6; }
+  .info-pill {
+    margin-left: auto;
+    font-size: 13px;
+    color: #555;
+    background: #dbeafe;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+  }
+
+  .level-A1 { background: #d1fae5 !important; color: #065f46 !important; }
+  .level-A2 { background: #fef3c7 !important; color: #92400e !important; }
+  .level-B1 { background: #dbeafe !important; color: #1e40af !important; }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    padding: 24px;
+  }
+  .topic-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .topic-card:hover { border-color: #2a5298; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .topic-card .level-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .topic-card .category { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .topic-card h3 { font-size: 16px; color: #1e3c72; margin-bottom: 4px; }
+  .topic-card .subtitle { font-size: 13px; color: #555; }
+  .topic-card .summary { font-size: 12px; color: #6b7280; line-height: 1.4; margin-top: 8px; }
+  .topic-card .progress-mini {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 11px;
+    color: #555;
+  }
+  .topic-card .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .topic-card .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 0.3s;
+  }
+
+  .topic-detail {
+    display: none;
+  }
+  .topic-detail.visible { display: block; }
+
+  .topic-header {
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    padding: 24px 30px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .back-btn {
+    background: none;
+    border: 1px solid #d1d5db;
+    padding: 6px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 12px;
+    font-family: inherit;
+  }
+  .back-btn:hover { background: #f3f4f6; }
+
+  .topic-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  .topic-tabs button {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .topic-tabs button.active {
+    color: #2a5298;
+    border-bottom-color: #2a5298;
+    background: white;
+  }
+  .topic-tabs button:hover:not(.active) { background: #f3f4f6; }
+
+  .panel-content { padding: 28px 30px; min-height: 400px; }
+
+  /* Theory styling */
+  .theory h3 { color: #1e3c72; font-size: 18px; margin: 18px 0 10px; }
+  .theory h4 { color: #2a5298; font-size: 15px; margin: 14px 0 8px; }
+  .theory p { font-size: 14px; line-height: 1.6; margin-bottom: 10px; color: #374151; }
+  .theory ul, .theory ol { margin: 8px 0 14px 24px; }
+  .theory li { font-size: 14px; line-height: 1.6; margin-bottom: 4px; }
+  .theory strong { color: #1e3c72; }
+  .theory em { color: #555; font-style: italic; }
+  .gram-example {
+    background: #eff6ff;
+    border-left: 4px solid #2a5298;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .gram-tip {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #78350f;
+  }
+  .gram-tip strong { color: #92400e; }
+  .gram-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .gram-table th, .gram-table td {
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .gram-table th {
+    background: #2a5298;
+    color: white;
+    font-weight: 600;
+  }
+  .gram-table tr:nth-child(even) { background: #f9fafb; }
+
+  /* Exercise styling */
+  .ex-progress-bar {
+    margin-bottom: 14px;
+    background: #e5e7eb;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .ex-progress-fill {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .ex-counter {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+  .ex-card {
+    background: #f6f9fc;
+    border-left: 4px solid #2a5298;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+  }
+  .ex-type {
+    display: inline-block;
+    font-size: 10px;
+    background: #2a5298;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .ex-prompt {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .ex-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+  }
+  .ex-input:focus { border-color: #2a5298; }
+  .ex-input.correct { background: #d1fae5; border-color: #10b981; }
+  .ex-input.incorrect { background: #fee2e2; border-color: #ef4444; }
+
+  .ex-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ex-option {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 11px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .ex-option:hover:not(.disabled) { border-color: #2a5298; background: #f6f9fc; }
+  .ex-option.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+  .ex-option.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .ex-option.disabled { cursor: not-allowed; opacity: 0.85; }
+
+  .ex-feedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+  .ex-feedback.show { display: block; }
+  .ex-feedback.correct { background: #d1fae5; color: #065f46; }
+  .ex-feedback.incorrect { background: #fee2e2; color: #991b1b; }
+  .ex-feedback strong { font-weight: 700; }
+  .ex-feedback small { display: block; margin-top: 4px; opacity: 0.85; }
+
+  .ex-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  button.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: #2a5298; color: white; }
+  .btn-primary:hover { background: #1e3c72; }
+  .btn-secondary { background: #e5e7eb; color: #374151; }
+  .btn-secondary:hover { background: #d1d5db; }
+  .btn-success { background: #10b981; color: white; }
+  .btn-success:hover { background: #059669; }
+  .btn-warning { background: #f59e0b; color: white; }
+  .btn-warning:hover { background: #d97706; }
+
+  .topic-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat {
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e8eef4;
+  }
+  .stat-value { font-size: 22px; font-weight: 700; color: #2a5298; }
+  .stat-label { font-size: 11px; color: #666; }
+
+  .complete-banner {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .complete-banner h3 { margin-bottom: 8px; }
+
+  /* Word order exercise */
+  .word-pool, .word-built {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 50px;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  .word-pool { background: white; border: 2px dashed #d1d5db; }
+  .word-built { background: #eff6ff; border: 2px solid #2a5298; }
+  .word-chip {
+    background: #2a5298;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    border: none;
+    transition: all 0.15s;
+  }
+  .word-chip:hover { background: #1e3c72; transform: translateY(-1px); }
+  .word-chip.placed { background: #10b981; }
+  .word-built-empty { color: #9ca3af; font-style: italic; font-size: 13px; }
+
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .panel-content { padding: 20px; }
+    .topic-grid { padding: 16px; gap: 10px; grid-template-columns: 1fr; }
+    .filter-bar { padding: 12px; }
+    header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="background:#0f172a; color:white; padding:10px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-size:13px;">
+    <strong style="color:#60a5fa;">Germana A2</strong>
+    <a href="index.html" style="color:#cbd5e1; text-decoration:none;">Vocabular</a>
+    <a href="fraze.html" style="color:#cbd5e1; text-decoration:none;">Fraze</a>
+    <a href="gramatica.html" style="color:#fbbf24; text-decoration:none; font-weight:600;">Gramatica</a>
+    <span style="margin-left:auto; color:#94a3b8;">
+      <a href="data/vocabular_a2.csv" download style="color:#94a3b8; text-decoration:none;">CSV</a>
+      &middot;
+      <a href="descarcari/flashcards.xlsx" download style="color:#94a3b8; text-decoration:none;">XLSX</a>
+      &middot;
+      <a href="descarcari/ghid-studiu.docx" download style="color:#94a3b8; text-decoration:none;">DOCX</a>
+    </span>
+  </div>
+  <header>
+    <h1>Gramatica - Germana A1/A2/B1</h1>
+    <p>Teorie + 90 exercitii pe 15 topicuri esentiale (continut original, in romana)</p>
+  </header>
+
+  <!-- TOPIC LIST VIEW -->
+  <div id="view-list">
+    <div class="filter-bar">
+      <label>Nivel:</label>
+      <button data-level="all" class="active">Toate</button>
+      <button data-level="A1">A1</button>
+      <button data-level="A2">A2</button>
+      <button data-level="B1">B1</button>
+      <label style="margin-left:14px;">Categorie:</label>
+      <select id="cat-select" onchange="renderTopicList()"></select>
+      <span class="info-pill" id="topic-count">0 topicuri</span>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <!-- TOPIC DETAIL VIEW -->
+  <div id="view-detail" class="topic-detail">
+    <div class="topic-header">
+      <button class="back-btn" onclick="goBackToList()">&laquo; Inapoi la topicuri</button>
+      <span class="level-badge" id="detail-level"></span>
+      <span style="font-size:11px; color:#888; text-transform:uppercase; letter-spacing:0.5px;" id="detail-cat"></span>
+      <h1 id="detail-title-de" style="font-size:22px; color:#1e3c72; margin-top:8px;"></h1>
+      <p id="detail-title-ro" style="font-size:14px; color:#555; margin-top:4px;"></p>
+    </div>
+    <div class="topic-tabs">
+      <button class="active" data-detail-tab="theory">Teorie</button>
+      <button data-detail-tab="exercises">Exercitii</button>
+    </div>
+    <div class="panel-content" id="panel-theory">
+      <div class="theory" id="theory-content"></div>
+    </div>
+    <div class="panel-content" id="panel-exercises" style="display:none;">
+      <div class="topic-stats">
+        <div class="stat"><div class="stat-value" id="ex-correct">0</div><div class="stat-label">Corecte</div></div>
+        <div class="stat"><div class="stat-value" id="ex-total">0</div><div class="stat-label">Rezolvate</div></div>
+        <div class="stat"><div class="stat-value" id="ex-acc">0%</div><div class="stat-label">Acuratete</div></div>
+      </div>
+      <div class="ex-progress-bar"><div class="ex-progress-fill" id="ex-progress-fill"></div></div>
+      <div class="ex-counter" id="ex-counter">Exercitiul 1 din 6</div>
+      <div id="ex-content"></div>
+      <div class="ex-controls" id="ex-controls"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOPICS = [{"id":"akkusativ","level":"A1","category":"Cazuri","title_de":"Akkusativ","title_ro":"Cazul Acuzativ","summary":"Akkusativul indica obiectul direct (pe cine? ce?). Numai articolul masculin se schimba: der -> den.","theory":"\n<h3>Cand folosim Akkusativ?</h3>\n<p>Pentru <strong>obiectul direct</strong> al verbului -- cine sau ce primeste actiunea direct.</p>\n<p>Intrebari de control: <strong>Wen?</strong> (pe cine?) sau <strong>Was?</strong> (ce?)</p>\n<p class=\"gram-example\">Ich sehe <strong>den Mann</strong>. (Il vad pe barbat.)<br>\nVerbul \"sehen\" + cine? -> den Mann (Akkusativ).</p>\n\n<h3>Articolele la Akkusativ</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Gen</th><th>Nominativ</th><th>Akkusativ</th><th>Schimbare?</th></tr></thead>\n  <tbody>\n    <tr><td>masculin</td><td>der / ein / kein / mein</td><td><strong>den / einen / keinen / meinen</strong></td><td><strong>DA - adauga -en</strong></td></tr>\n    <tr><td>feminin</td><td>die / eine / keine / meine</td><td>die / eine / keine / meine</td><td>NU</td></tr>\n    <tr><td>neutru</td><td>das / ein / kein / mein</td><td>das / ein / kein / mein</td><td>NU</td></tr>\n    <tr><td>plural</td><td>die / -- / keine / meine</td><td>die / -- / keine / meine</td><td>NU</td></tr>\n  </tbody>\n</table>\n\n<h3>Vesti bune!</h3>\n<p>Numai <strong>masculinul</strong> se schimba. Femininul, neutrul si pluralul raman la fel ca la Nominativ.</p>\n\n<h3>Exemple pe genuri</h3>\n<ul>\n  <li><strong>m.:</strong> der Tisch -> Ich kaufe <strong>den</strong> Tisch. (Cumpar masa.)</li>\n  <li><strong>f.:</strong> die Lampe -> Ich kaufe <strong>die</strong> Lampe. (Cumpar lampa - fara schimbare!)</li>\n  <li><strong>n.:</strong> das Buch -> Ich kaufe <strong>das</strong> Buch. (Cumpar cartea - fara schimbare!)</li>\n  <li><strong>pl.:</strong> die Bücher -> Ich kaufe <strong>die</strong> Bücher. (Cumpar cartile.)</li>\n</ul>\n\n<h3>Verbe care cer Akkusativ (cele mai uzuale)</h3>\n<p>haben, kaufen, sehen, lesen, essen, trinken, brauchen, suchen, mögen, lieben, finden, fragen, besuchen, treffen, machen, schreiben.</p>\n\n<div class=\"gram-tip\">\n<strong>Truc de memorare:</strong> \"Akkusativ = den\". Daca trebuie sa zic \"Cumpar UN ____\", la masculin spun \"einen Tisch\", pentru altele \"eine Lampe / ein Buch\". Doar masculinul are 'n' in plus.\n</div>\n","exercises":[{"type":"fill","prompt":"Ich kaufe ___ Tisch. (un)","answer":"einen","hint":"der Tisch e masculin -> Akkusativ","explanation":"Tisch = masculin. La Akk masculin: ein -> einen."},{"type":"fill","prompt":"Ich sehe ___ Lampe. (lampa - articol definit)","answer":"die","hint":"Lampe = feminin","explanation":"Lampa e feminin. Femininul nu se schimba: die -> die."},{"type":"choice","prompt":"Wir essen ___ Apfel.","options":["der","den","die","das"],"answer":"den","explanation":"der Apfel = masculin. La Akk: der -> den."},{"type":"choice","prompt":"Sie hat ___ Bruder.","options":["ein","einen","eine","kein"],"answer":"einen","explanation":"der Bruder = masculin. ein -> einen la Akk."},{"type":"fill","prompt":"Ich liebe ___ Mutter. (mama mea)","answer":"meine","hint":"Mutter = feminin","explanation":"die Mutter = feminin. La Akk feminin: meine -> meine (fara schimbare)."},{"type":"fill","prompt":"Hast du ___ Stift? (un)","answer":"einen","hint":"der Stift = masculin","explanation":"der Stift e masculin. ein -> einen."}]},{"id":"dativ","level":"A1","category":"Cazuri","title_de":"Dativ","title_ro":"Cazul Dativ","summary":"Dativul = obiectul indirect (cui?). Toate genurile se schimba (der/das/die -> dem/dem/der).","theory":"\n<h3>Cand folosim Dativ?</h3>\n<p>Pentru <strong>obiectul indirect</strong> -- cine primeste sau cui i se face ceva.</p>\n<p>Intrebare de control: <strong>Wem?</strong> (cui?)</p>\n<p class=\"gram-example\">Ich gebe <strong>dem Mann</strong> ein Buch.<br>\n(eu) (dau) (barbatului) (o carte) -- Cui dau cartea? -> dem Mann (Dativ).</p>\n\n<h3>Articolele la Dativ -- TOATE se schimba</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Gen</th><th>Nominativ</th><th>Dativ</th></tr></thead>\n  <tbody>\n    <tr><td>masculin</td><td>der / ein / kein</td><td><strong>dem / einem / keinem</strong></td></tr>\n    <tr><td>feminin</td><td>die / eine / keine</td><td><strong>der / einer / keiner</strong></td></tr>\n    <tr><td>neutru</td><td>das / ein / kein</td><td><strong>dem / einem / keinem</strong></td></tr>\n    <tr><td>plural</td><td>die / -- / keine</td><td><strong>den + n / -- / keinen</strong></td></tr>\n  </tbody>\n</table>\n\n<h3>Atentie la pluralul Dativ</h3>\n<p>La plural Dativ, substantivul primeste un <strong>-n in plus</strong> (daca nu il are deja):</p>\n<ul>\n  <li>die Kinder (Nom.) -> <strong>den Kindern</strong> (Dativ pl.)</li>\n  <li>die Männer (Nom.) -> <strong>den Männern</strong></li>\n  <li>die Frauen (Nom.) -> <strong>den Frauen</strong> (deja are -n)</li>\n</ul>\n\n<h3>Cand apare Dativul</h3>\n<ol>\n  <li><strong>Verbe specifice:</strong> helfen, danken, gehören, gefallen, antworten, glauben, gratulieren, schmecken.<br>\n    \"Ich helfe <strong>dem Bruder</strong>.\" (Il ajut pe frate. Atentie: in germana e Dativ!)</li>\n  <li><strong>Verbe cu 2 obiecte (dare/oferire):</strong> geben, schenken, zeigen, bringen, schicken, schreiben, kaufen.<br>\n    Persoana = Dativ, lucrul = Akkusativ.<br>\n    \"Ich gebe <strong>dem Mann</strong> (Dat.) <strong>ein Buch</strong> (Akk.).\"</li>\n  <li><strong>Prepozitii cu Dativ:</strong> aus, bei, mit, nach, seit, von, zu (urmatorul topic).</li>\n</ol>\n\n<div class=\"gram-tip\">\n<strong>Trucul: \"in 5 minute\"</strong> -- la Dativ, articolul are intotdeauna un 'm' (masculin/neutru) sau 'r' (feminin) sau 'n' (plural). Asta e diferit de Akk care are 'n' doar la masculin.\n</div>\n","exercises":[{"type":"fill","prompt":"Ich helfe ___ Mutter. (mama)","answer":"der","hint":"Mutter = feminin, helfen + Dativ","explanation":"die Mutter (Nom.) -> der Mutter (Dativ). 'helfen' cere Dativ in germana, desi in romana zicem 'o ajut'."},{"type":"fill","prompt":"Wir geben ___ Kind ein Geschenk. (copilului)","answer":"dem","hint":"das Kind = neutru -> Dativ","explanation":"das Kind (Nom.) -> dem Kind (Dativ neutru)."},{"type":"choice","prompt":"Das Buch gehört ___ Lehrer.","options":["der","den","dem","des"],"answer":"dem","explanation":"der Lehrer = masculin. La Dativ: der -> dem. 'gehören' cere Dativ."},{"type":"choice","prompt":"Ich danke ___ Freunden.","options":["der","den","die","dem"],"answer":"den","explanation":"die Freunde = plural. La Dativ pl.: die -> den + substantivul ia 'n' (Freunden)."},{"type":"fill","prompt":"Sie schreibt ___ Vater einen Brief. (tatalui)","answer":"dem","hint":"Vater = masculin, schreiben + Dat. (cui)","explanation":"der Vater -> dem Vater. Schimbarea de la 'der' la 'dem' la Dativ masculin."},{"type":"fill","prompt":"Das gefällt ___ Frau. (femeii)","answer":"der","hint":"Frau = feminin -> Dativ","explanation":"die Frau (Nom.) -> der Frau (Dativ feminin). 'gefallen' cere Dativ."}]},{"id":"personalpronomen","level":"A1","category":"Pronume","title_de":"Personalpronomen","title_ro":"Pronumele personal","summary":"Pronumele care inlocuiesc o persoana sau un lucru: ich, du, er/sie/es, wir, ihr, sie, Sie.","theory":"\n<h3>Cele 7 pronume personale</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Persoana</th><th>Singular</th><th>Plural</th></tr></thead>\n  <tbody>\n    <tr><td>1</td><td><strong>ich</strong> (eu)</td><td><strong>wir</strong> (noi)</td></tr>\n    <tr><td>2 (informal)</td><td><strong>du</strong> (tu)</td><td><strong>ihr</strong> (voi)</td></tr>\n    <tr><td>2 (formal)</td><td><strong>Sie</strong> (dvs.)</td><td><strong>Sie</strong> (dvs.)</td></tr>\n    <tr><td>3</td><td><strong>er</strong> / <strong>sie</strong> / <strong>es</strong></td><td><strong>sie</strong> (ei/ele)</td></tr>\n  </tbody>\n</table>\n\n<h3>Atentie la cele 4 forme \"sie/Sie\"</h3>\n<ul>\n  <li><strong>sie</strong> (cu litera mica) = <em>ea</em> (singular feminin) -- \"Sie ist meine Mutter.\"</li>\n  <li><strong>sie</strong> (cu litera mica) = <em>ei/ele</em> (plural) -- \"Sie sind meine Eltern.\"</li>\n  <li><strong>Sie</strong> (cu litera MARE) = <em>dvs.</em> (forma formala) -- \"Wie heissen Sie?\"</li>\n</ul>\n<p>Diferenta intre singular si plural se vede din verb: <em>sie ist</em> (ea este) vs <em>sie sind</em> (ei sunt).</p>\n\n<h3>Pronume pentru lucruri</h3>\n<p>In germana, lucrurile au gen (m./f./n.) si pronumele se acorda cu genul:</p>\n<ul>\n  <li><strong>der Tisch</strong> (masa, masculin) -> <strong>er</strong> (literal \"el\"). \"Wo ist der Tisch? -- Er ist hier.\"</li>\n  <li><strong>die Lampe</strong> (lampa, feminin) -> <strong>sie</strong>. \"Wo ist die Lampe? -- Sie ist hier.\"</li>\n  <li><strong>das Buch</strong> (cartea, neutru) -> <strong>es</strong>. \"Wo ist das Buch? -- Es ist hier.\"</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> Romana foloseste \"el/ea\" doar pentru oameni, dar in germana si lucrurile sunt \"er/sie/es\" in functie de gen. Asta se invata cu fiecare cuvant nou, nu exista regula sigura.\n</div>\n","exercises":[{"type":"fill","prompt":"Complete: Das ist Maria. ___ kommt aus Berlin.","answer":"Sie","hint":"Maria = ea, deci pronume feminin","explanation":"Maria este o femeie (singular feminin) -> sie."},{"type":"fill","prompt":"Complete: Wo sind Anna und Tom? ___ sind im Park.","answer":"Sie","hint":"doi oameni = plural","explanation":"Doua persoane impreuna = plural -> sie (cu litera mica)."},{"type":"choice","prompt":"Wie heissen ___, Herr Schmidt?","options":["du","Sie","ihr","er"],"answer":"Sie","explanation":"Adresare formala (cu Herr) -> Sie cu litera mare. 'Du' ar fi prea familiar."},{"type":"choice","prompt":"Das Auto ist neu. ___ ist rot.","options":["Er","Sie","Es","Ihr"],"answer":"Es","explanation":"das Auto este neutru -> pronumele este 'es'."},{"type":"choice","prompt":"Marie und ich gehen ins Kino. ___ haben Zeit.","options":["Sie","Wir","Ihr","Ich"],"answer":"Wir","explanation":"Marie + ich = noi (persoana 1 plural) -> wir."},{"type":"fill","prompt":"Complete: Die Lampe ist neu. ___ ist sehr schon.","answer":"Sie","hint":"die Lampe = feminin","explanation":"die Lampe e feminin -> pronumele este 'sie' (literal 'ea')."}]},{"id":"modalverben","level":"A1","category":"Verbe","title_de":"Modalverben","title_ro":"Verbele modale","summary":"können, müssen, wollen, sollen, dürfen, mögen/möchten -- 6 verbe care exprima posibilitate, obligatie, dorinta. Verbul principal merge la INFINITIV la sfarsit.","theory":"\n<h3>Cele 6 verbe modale + traducerea</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Verb</th><th>Sens</th><th>Exemplu</th></tr></thead>\n  <tbody>\n    <tr><td><strong>können</strong></td><td>a putea, a sti</td><td>Ich kann schwimmen. (Pot/stiu sa inot.)</td></tr>\n    <tr><td><strong>müssen</strong></td><td>a trebui (obligatie)</td><td>Ich muss arbeiten. (Trebuie sa lucrez.)</td></tr>\n    <tr><td><strong>wollen</strong></td><td>a vrea (puternic)</td><td>Ich will lernen. (Vreau sa invat.)</td></tr>\n    <tr><td><strong>sollen</strong></td><td>a trebui (recomandare)</td><td>Du sollst schlafen. (Ar trebui sa dormi.)</td></tr>\n    <tr><td><strong>dürfen</strong></td><td>a avea voie</td><td>Ich darf rauchen. (Am voie sa fumez.)</td></tr>\n    <tr><td><strong>möchten</strong></td><td>as dori (politicos)</td><td>Ich möchte Kaffee. (As dori cafea.)</td></tr>\n  </tbody>\n</table>\n\n<h3>Conjugare la prezent -- regula speciala</h3>\n<p>Verbele modale au 2 trasaturi unice:</p>\n<ol>\n  <li><strong>Schimbare de vocala in singular</strong> (cu exceptia 'sollen').</li>\n  <li><strong>Persoana 1 si 3 singular sunt IDENTICE</strong> (fara terminatie).</li>\n</ol>\n\n<table class=\"gram-table\">\n  <thead><tr><th></th><th>können</th><th>müssen</th><th>wollen</th><th>möchten</th></tr></thead>\n  <tbody>\n    <tr><td>ich</td><td>k<strong>a</strong>nn</td><td>m<strong>u</strong>ss</td><td>w<strong>i</strong>ll</td><td>möchte</td></tr>\n    <tr><td>du</td><td>k<strong>a</strong>nnst</td><td>m<strong>u</strong>sst</td><td>w<strong>i</strong>llst</td><td>möchtest</td></tr>\n    <tr><td>er/sie/es</td><td>k<strong>a</strong>nn</td><td>m<strong>u</strong>ss</td><td>w<strong>i</strong>ll</td><td>möchte</td></tr>\n    <tr><td>wir</td><td>können</td><td>müssen</td><td>wollen</td><td>möchten</td></tr>\n    <tr><td>ihr</td><td>könnt</td><td>müsst</td><td>wollt</td><td>möchtet</td></tr>\n    <tr><td>sie/Sie</td><td>können</td><td>müssen</td><td>wollen</td><td>möchten</td></tr>\n  </tbody>\n</table>\n\n<h3>Pozitia in propozitie</h3>\n<p>Verbul modal este pe pozitia 2 (al doilea), iar verbul principal merge la <strong>INFINITIV la sfarsit</strong>:</p>\n<p class=\"gram-example\">Ich <strong>muss</strong> heute viel <strong>arbeiten</strong>.<br>\n(eu) (trebuie) (azi) (mult) (a lucra) -- Trebuie sa lucrez mult azi.</p>\n<p class=\"gram-example\">Wir <strong>wollen</strong> nach Berlin <strong>fahren</strong>.<br>\nVrem sa mergem la Berlin.</p>\n\n<div class=\"gram-tip\">\n<strong>möchten vs wollen:</strong> ambele = \"a vrea\". \"möchten\" e mult mai politicos (ca un conditional). La restaurant zici intotdeauna \"Ich möchte...\" nu \"Ich will...\".\n</div>\n","exercises":[{"type":"fill","prompt":"Ich ___ heute nicht arbeiten. (a putea)","answer":"kann","hint":"ich + können -> ?","explanation":"Ich kann = pot. Vocala se schimba: kann (nu könne)."},{"type":"fill","prompt":"Du ___ jetzt schlafen. (a trebui - obligatie)","answer":"musst","hint":"du + müssen -> ?","explanation":"du musst (cu 2 'ss')."},{"type":"choice","prompt":"Wir ___ ins Kino gehen. (a vrea - puternic)","options":["wollt","wollen","willst","will"],"answer":"wollen","explanation":"wir wollen = vrem. La plural fara schimbare de vocala."},{"type":"choice","prompt":"Cum se zice politicos 'Vreau o cafea, va rog' la cafenea?","options":["Ich will Kaffee","Ich möchte Kaffee","Ich kann Kaffee","Ich darf Kaffee"],"answer":"Ich möchte Kaffee","explanation":"möchte = as dori (politicos). 'Ich will' suna brutal."},{"type":"order","prompt":"Ordoneaza: lernen / heute / muss / Ich / Deutsch","answer":"Ich muss heute Deutsch lernen","hint":"Modal pe pozitia 2, infinitiv la sfarsit","explanation":"Schema: Subiect + Modal + complement + INFINITIV. Trebuie sa invat germana azi."},{"type":"fill","prompt":"Ihr ___ rauchen? (a avea voie)","answer":"dürft","hint":"ihr + dürfen","explanation":"ihr dürft = voi aveti voie."}]},{"id":"sein-haben","level":"A1","category":"Verbe","title_de":"Sein und haben (Präsens)","title_ro":"A fi si a avea (prezent)","summary":"Verbele 'sein' (a fi) si 'haben' (a avea) -- cele mai importante verbe din germana, ambele neregulate.","theory":"\n<h3>SEIN (a fi) -- complet neregulat</h3>\n<table class=\"gram-table\">\n  <tbody>\n    <tr><td>ich</td><td><strong>bin</strong></td><td>eu sunt</td></tr>\n    <tr><td>du</td><td><strong>bist</strong></td><td>tu esti</td></tr>\n    <tr><td>er/sie/es</td><td><strong>ist</strong></td><td>el/ea este</td></tr>\n    <tr><td>wir</td><td><strong>sind</strong></td><td>noi suntem</td></tr>\n    <tr><td>ihr</td><td><strong>seid</strong></td><td>voi sunteti</td></tr>\n    <tr><td>sie/Sie</td><td><strong>sind</strong></td><td>ei sunt / dvs. sunteti</td></tr>\n  </tbody>\n</table>\n\n<h3>HABEN (a avea) -- aproape regulat</h3>\n<table class=\"gram-table\">\n  <tbody>\n    <tr><td>ich</td><td><strong>habe</strong></td><td>eu am</td></tr>\n    <tr><td>du</td><td><strong>hast</strong></td><td>tu ai (pierde 'b')</td></tr>\n    <tr><td>er/sie/es</td><td><strong>hat</strong></td><td>el are (pierde 'b')</td></tr>\n    <tr><td>wir</td><td><strong>haben</strong></td><td>noi avem</td></tr>\n    <tr><td>ihr</td><td><strong>habt</strong></td><td>voi aveti (pierde 'e')</td></tr>\n    <tr><td>sie/Sie</td><td><strong>haben</strong></td><td>ei au</td></tr>\n  </tbody>\n</table>\n\n<h3>Cand folosim sein vs haben</h3>\n<ul>\n  <li><strong>sein</strong> = pentru identitate, locatie, stare: \"Ich bin Marius. Ich bin in Berlin. Ich bin mude.\"</li>\n  <li><strong>haben</strong> = pentru posesie, varsta, foame/sete: \"Ich habe ein Auto. Ich habe 30 Jahre. Ich habe Hunger.\"</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Diferenta importanta vs romana:</strong> in germana <em>\"am 30 de ani\"</em> = <em>\"ich bin 30 Jahre alt\"</em> (literal: \"sunt 30 de ani batran\"). NU se zice \"ich habe 30 Jahre\".\nDar pentru foame/sete: <em>\"mi-e foame\"</em> = <em>\"ich habe Hunger\"</em> (literal: \"am foame\").\n</div>\n","exercises":[{"type":"fill","prompt":"Ich ___ Lehrer.","answer":"bin","hint":"ich + sein","explanation":"ich bin = eu sunt."},{"type":"fill","prompt":"Wir ___ aus Rumanien.","answer":"sind","hint":"wir + sein","explanation":"wir sind = noi suntem."},{"type":"fill","prompt":"Du ___ einen Bruder?","answer":"hast","hint":"du + haben","explanation":"du hast = tu ai (forma neregulata, pierde 'b')."},{"type":"choice","prompt":"Sie ___ 25 Jahre alt. (ea)","options":["bin","bist","ist","sind"],"answer":"ist","explanation":"In germana, varsta se exprima cu 'sein' nu 'haben'. sie ist = ea este."},{"type":"choice","prompt":"Ich ___ Hunger.","options":["bin","habe","hat","haben"],"answer":"habe","explanation":"Foame se exprima cu 'haben' (a avea) -> ich habe Hunger = mi-e foame."},{"type":"fill","prompt":"Ihr ___ Studenten?","answer":"seid","hint":"ihr + sein (e dificil!)","explanation":"ihr seid = voi sunteti. Forma 'seid' este unica, doar pentru ihr+sein."}]},{"id":"adjective-deklination","level":"A2","category":"Adjective","title_de":"Adjektivdeklination (Nominativ + Akkusativ)","title_ro":"Declinarea adjectivelor","summary":"Cand adjectivul sta INAINTEA substantivului, primeste o terminatie. Trei tipuri de declinare in functie de articol.","theory":"\n<h3>Cand declinam adjectivul?</h3>\n<p>Numai cand vine <strong>inaintea</strong> substantivului. Cand este predicat (dupa \"ist\", \"wird\"), NU se declina:</p>\n<ul>\n  <li>Predicat: \"Das Auto ist <strong>neu</strong>.\" (Masina e noua. -- fara terminatie)</li>\n  <li>Atribut: \"Das ist ein <strong>neues</strong> Auto.\" (Este o masina noua. -- cu terminatie)</li>\n</ul>\n\n<h3>Cele 3 tipuri de declinare</h3>\n<p>Terminatia depinde de ce articol e in fata:</p>\n<ol>\n  <li><strong>Cu articol definit (der/die/das)</strong> -- declinare slaba</li>\n  <li><strong>Cu articol nedefinit (ein/eine/kein/mein)</strong> -- declinare mixta</li>\n  <li><strong>Fara articol</strong> -- declinare tare (nu o tratam acum)</li>\n</ol>\n\n<h3>1. Cu articol definit (der/die/das/die)</h3>\n<table class=\"gram-table\">\n  <thead><tr><th></th><th>Nominativ</th><th>Akkusativ</th></tr></thead>\n  <tbody>\n    <tr><td>m.</td><td>der nett<strong>e</strong> Mann</td><td>den nett<strong>en</strong> Mann</td></tr>\n    <tr><td>f.</td><td>die nett<strong>e</strong> Frau</td><td>die nett<strong>e</strong> Frau</td></tr>\n    <tr><td>n.</td><td>das nett<strong>e</strong> Kind</td><td>das nett<strong>e</strong> Kind</td></tr>\n    <tr><td>pl.</td><td>die nett<strong>en</strong> Leute</td><td>die nett<strong>en</strong> Leute</td></tr>\n  </tbody>\n</table>\n<p><strong>Pattern simplu:</strong> majoritatea sunt -e. Doar masculin Akkusativ si pluralul = -en.</p>\n\n<h3>2. Cu articol nedefinit (ein/eine + kein/mein)</h3>\n<table class=\"gram-table\">\n  <thead><tr><th></th><th>Nominativ</th><th>Akkusativ</th></tr></thead>\n  <tbody>\n    <tr><td>m.</td><td>ein nett<strong>er</strong> Mann</td><td>einen nett<strong>en</strong> Mann</td></tr>\n    <tr><td>f.</td><td>eine nett<strong>e</strong> Frau</td><td>eine nett<strong>e</strong> Frau</td></tr>\n    <tr><td>n.</td><td>ein nett<strong>es</strong> Kind</td><td>ein nett<strong>es</strong> Kind</td></tr>\n    <tr><td>pl.</td><td>-- nett<strong>e</strong> Leute</td><td>-- nett<strong>e</strong> Leute</td></tr>\n  </tbody>\n</table>\n<p><strong>Pattern:</strong> adjectivul \"imprumuta\" terminatia care lipseste de la articol (ein nu are terminatie clara, deci adjectivul ia -er pentru masculin etc.).</p>\n\n<h3>Logica simplificata</h3>\n<p>Daca articolul iti spune CLAR genul (der, die, das), atunci adjectivul are doar -e sau -en (slab).</p>\n<p>Daca articolul NU iti spune clar (ein), adjectivul preia \"munca\" si arata genul prin terminatie (-er, -e, -es).</p>\n\n<h3>Exemple practice</h3>\n<ul>\n  <li>Nom. m.: <em>Der <strong>kleine</strong> Hund / Ein <strong>kleiner</strong> Hund</em> bellt. (Cainele mic latra.)</li>\n  <li>Akk. m.: Ich sehe <em>den <strong>kleinen</strong> Hund / einen <strong>kleinen</strong> Hund</em>.</li>\n  <li>Nom. f.: <em>Die <strong>schöne</strong> Frau / Eine <strong>schöne</strong> Frau</em> singt.</li>\n  <li>Akk. f.: Ich sehe <em>die <strong>schöne</strong> Frau / eine <strong>schöne</strong> Frau</em>.</li>\n  <li>Nom. n.: <em>Das <strong>neue</strong> Auto / Ein <strong>neues</strong> Auto</em> ist rot.</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> Cu articol definit, regula este \"-e majoritar, -en doar la m.Akk si plural\". Cu articol nedefinit, gandeste-te ce litera lipseste de la 'der/die/das' si pune ea pe adjectiv.\n</div>\n","exercises":[{"type":"fill","prompt":"Das ist ein ___ Mann. (nett, m. Nom.)","answer":"netter","hint":"ein + adjectiv -> -er la m. Nom.","explanation":"ein nu arata genul, adjectivul preia -er (de la 'der')."},{"type":"fill","prompt":"Ich sehe den ___ Mann. (nett, m. Akk.)","answer":"netten","hint":"den arata clar Akk -> -en","explanation":"Cu articol definit, m. Akk = -en."},{"type":"choice","prompt":"Das ist ein ___ Kind. (klein)","options":["klein","kleines","kleiner","kleinen"],"answer":"kleines","explanation":"ein la neutru -> adjectivul ia -es (de la 'das')."},{"type":"choice","prompt":"Wir haben einen ___ Hund. (gross)","options":["gross","grosse","grossen","grosser"],"answer":"grossen","explanation":"einen = m. Akk + adjectiv -en (declinare mixta, m. Akk)."},{"type":"fill","prompt":"Die ___ Lampe ist neu. (alt, f. Nom.)","answer":"alte","hint":"die + adjectiv -> -e","explanation":"Cu articol definit, f. Nom = -e."},{"type":"fill","prompt":"Ich kaufe eine ___ Tasche. (rot, f. Akk.)","answer":"rote","hint":"eine + adjectiv -> -e","explanation":"Cu articol nedefinit, f. Akk = -e (acelasi ca Nom.)."}]},{"id":"wechselpraepositionen","level":"A2","category":"Prepozitii","title_de":"Wechselpräpositionen","title_ro":"Prepozitii care 'isi schimba' cazul","summary":"9 prepozitii care iau Akkusativ pentru directie (wohin?) si Dativ pentru loc (wo?).","theory":"\n<h3>Cele 9 prepozitii Wechsel</h3>\n<p><strong>an, auf, hinter, in, neben, über, unter, vor, zwischen</strong></p>\n<p>Aceste prepozitii pot lua DOUA cazuri, in functie de inteles.</p>\n\n<h3>Regula de aur</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Caz</th><th>Intrebare</th><th>Sens</th></tr></thead>\n  <tbody>\n    <tr>\n      <td><strong>Akkusativ</strong></td>\n      <td><strong>Wohin?</strong> (incotro?)</td>\n      <td>directia, miscarea catre un loc</td>\n    </tr>\n    <tr>\n      <td><strong>Dativ</strong></td>\n      <td><strong>Wo?</strong> (unde?)</td>\n      <td>locul, pozitia statica</td>\n    </tr>\n  </tbody>\n</table>\n\n<h3>Comparatia clasica</h3>\n<p class=\"gram-example\"><strong>Directie (Akk):</strong> Ich gehe <strong>in die Schule</strong>. (Merg la scoala.)<br>\n<strong>Loc (Dat):</strong> Ich bin <strong>in der Schule</strong>. (Sunt la scoala.)</p>\n\n<p class=\"gram-example\"><strong>Directie (Akk):</strong> Ich lege das Buch <strong>auf den Tisch</strong>. (Pun cartea pe masa.)<br>\n<strong>Loc (Dat):</strong> Das Buch liegt <strong>auf dem Tisch</strong>. (Cartea sta pe masa.)</p>\n\n<h3>Verbe-cheie pentru fiecare grup</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Cu Akkusativ (directie)</th><th>Cu Dativ (loc)</th></tr></thead>\n  <tbody>\n    <tr>\n      <td>gehen, fahren, fliegen, kommen<br>legen (a aseza orizontal)<br>stellen (a aseza vertical)<br>setzen (a aseza, a pune jos)<br>hängen (a atarna, a agata)</td>\n      <td>sein, bleiben<br>liegen (a sta culcat)<br>stehen (a sta in picioare)<br>sitzen (a sta jezand)<br>hängen (a atarna pasiv)<br>wohnen, leben</td>\n    </tr>\n  </tbody>\n</table>\n\n<h3>Articolele schimbate</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Gen</th><th>Akkusativ (wohin)</th><th>Dativ (wo)</th></tr></thead>\n  <tbody>\n    <tr><td>m.</td><td>auf <strong>den</strong> Tisch</td><td>auf <strong>dem</strong> Tisch</td></tr>\n    <tr><td>f.</td><td>in <strong>die</strong> Stadt</td><td>in <strong>der</strong> Stadt</td></tr>\n    <tr><td>n.</td><td>in <strong>das/ins</strong> Kino</td><td>in <strong>dem/im</strong> Kino</td></tr>\n    <tr><td>pl.</td><td>auf <strong>die</strong> Berge</td><td>auf <strong>den</strong> Bergen</td></tr>\n  </tbody>\n</table>\n\n<h3>Contractii frecvente</h3>\n<ul>\n  <li>in dem -> <strong>im</strong> (im Kino, im Park)</li>\n  <li>in das -> <strong>ins</strong> (ins Kino, ins Bett)</li>\n  <li>an dem -> <strong>am</strong> (am Strand, am Sonntag)</li>\n  <li>an das -> <strong>ans</strong> (ans Meer)</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Truc sigur:</strong> intreaba-te \"Cum ar suna intrebarea: WO sau WOHIN?\" -- Wo? -> Dativ. Wohin? -> Akkusativ. Daca ai indoieli, gandeste-te daca subiectul se misca (Akk) sau e static (Dat).\n</div>\n","exercises":[{"type":"fill","prompt":"Wohin gehst du? -- Ich gehe in ___ Park. (m. directie)","answer":"den","hint":"wohin = Akkusativ","explanation":"wohin = directie = Akk. der Park -> in den Park."},{"type":"fill","prompt":"Wo bist du? -- Ich bin in ___ Park. (m. loc)","answer":"dem","hint":"wo = Dativ","explanation":"wo = loc = Dat. der Park -> in dem Park (sau im Park, contractie)."},{"type":"choice","prompt":"Das Buch liegt auf ___ Tisch.","options":["den","dem","der","die"],"answer":"dem","explanation":"liegen (a sta culcat) = static = Dat. der Tisch -> auf dem Tisch."},{"type":"choice","prompt":"Ich lege das Buch auf ___ Tisch.","options":["den","dem","der","die"],"answer":"den","explanation":"legen (a pune) = miscare/directie = Akk. der Tisch -> auf den Tisch."},{"type":"fill","prompt":"Wir fahren in ___ Stadt. (f.)","answer":"die","hint":"fahren = miscare = Akk","explanation":"fahren in + Akk. die Stadt -> in die Stadt."},{"type":"fill","prompt":"Maria wohnt in ___ Stadt. (f.)","answer":"der","hint":"wohnen = static = Dat","explanation":"wohnen = a locui (static) = Dat. die Stadt -> in der Stadt."}]},{"id":"nebensaetze","level":"A2","category":"Propozitii","title_de":"Nebensätze (weil, dass, wenn, obwohl)","title_ro":"Propozitii subordonate","summary":"Conjuctii care introduc o propozitie secundara unde verbul merge la SFARSIT.","theory":"\n<h3>Cele 4 conjuctii principale la A2</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Conjuctie</th><th>Sens</th><th>Tip</th></tr></thead>\n  <tbody>\n    <tr><td><strong>weil</strong></td><td>deoarece, pentru ca</td><td>cauza</td></tr>\n    <tr><td><strong>dass</strong></td><td>ca, faptul ca</td><td>completiva</td></tr>\n    <tr><td><strong>wenn</strong></td><td>daca, atunci cand</td><td>conditie/timp</td></tr>\n    <tr><td><strong>obwohl</strong></td><td>desi</td><td>concesie</td></tr>\n  </tbody>\n</table>\n\n<h3>Regula de aur: VERBUL LA SFARSIT</h3>\n<p>In propozitia secundara introdusa de aceste conjuctii, <strong>verbul conjugat merge la sfarsitul absolut</strong>:</p>\n\n<p class=\"gram-example\">Ich bleibe zu Hause, <strong>weil</strong> ich krank <strong>bin</strong>.<br>\n(Stau acasa pentru ca sunt bolnav.) -- 'bin' la sfarsit.</p>\n\n<p class=\"gram-example\">Ich glaube, <strong>dass</strong> er morgen <strong>kommt</strong>.<br>\n(Cred ca el vine maine.) -- 'kommt' la sfarsit.</p>\n\n<p class=\"gram-example\">Ich rufe dich an, <strong>wenn</strong> ich Zeit <strong>habe</strong>.<br>\n(Te sun daca am timp.) -- 'habe' la sfarsit.</p>\n\n<p class=\"gram-example\">Sie kommt, <strong>obwohl</strong> sie müde <strong>ist</strong>.<br>\n(Vine, desi e obosita.) -- 'ist' la sfarsit.</p>\n\n<h3>Cu verbe modale</h3>\n<p>Modal + infinitiv = modalul (conjugat) merge la sfarsit, dupa infinitiv:</p>\n<p class=\"gram-example\">Ich lerne, <strong>weil</strong> ich die Prüfung <em>bestehen</em> <strong>will</strong>.<br>\n(Invat pentru ca vreau sa trec examenul.)</p>\n\n<h3>Cu Perfekt</h3>\n<p>Auxiliarul (haben/sein) merge la sfarsit, DUPA Partizip:</p>\n<p class=\"gram-example\">Ich bin müde, <strong>weil</strong> ich gestern viel <em>gearbeitet</em> <strong>habe</strong>.<br>\n(Sunt obosit pentru ca am muncit mult ieri.)</p>\n\n<h3>Cu verbe separabile</h3>\n<p>Verbul separabil ramane intreg (nedespartit) la sfarsit:</p>\n<p class=\"gram-example\">Ich kann nicht, <strong>weil</strong> ich um 6 <strong>aufstehe</strong>.<br>\n(Nu pot pentru ca ma scol la 6.) -- aufstehen ramane intreg, nu se desparte.</p>\n\n<h3>Inversiune cand subordonata vine prima</h3>\n<p>Daca subordonata e prima, verbul principal vine imediat dupa virgula:</p>\n<p class=\"gram-example\"><strong>Wenn</strong> es regnet, <strong>bleibe</strong> ich zu Hause.<br>\n(Daca ploua, raman acasa.)<br>\nNU: \"Wenn es regnet, ich bleibe zu Hause.\"</p>\n\n<div class=\"gram-tip\">\n<strong>Diferenta wenn vs als:</strong><br>\n<strong>als</strong> = O DATA in trecut: \"Als ich ein Kind war...\" (Cand eram copil).<br>\n<strong>wenn</strong> = repetat sau viitor: \"Wenn ich Zeit habe...\" (Cand am timp).\n</div>\n","exercises":[{"type":"fill","prompt":"Ich bleibe zu Hause, weil ich krank ___.","answer":"bin","hint":"verb la sfarsit dupa weil","explanation":"weil + verb la sfarsit. ich bin = sunt."},{"type":"transform","prompt":"Combina cu 'weil': Ich lerne. Ich will gut sprechen.","answer":"Ich lerne, weil ich gut sprechen will.","hint":"modal la sfarsit dupa infinitiv","explanation":"Cu modal: ... infinitiv + modal la sfarsit."},{"type":"transform","prompt":"Combina cu 'dass': Sie sagt: Ich komme morgen.","answer":"Sie sagt, dass sie morgen kommt.","hint":"verb la sfarsit","explanation":"dass + verb la sfarsit. 'kommt' la final."},{"type":"order","prompt":"Ordoneaza: bin / weil / muede / ich / Ich gehe schlafen,","answer":"Ich gehe schlafen, weil ich muede bin","hint":"verb la sfarsit","explanation":"Subordonata cu weil: weil + subiect + ... + verb."},{"type":"fill","prompt":"Wenn es ___, gehe ich nicht aus. (a ploua = regnen, prezent)","answer":"regnet","hint":"wenn + verb la sfarsit","explanation":"wenn + es + verb la sfarsit. regnen -> regnet."},{"type":"transform","prompt":"Combina cu 'obwohl': Sie kommt. Sie ist krank.","answer":"Sie kommt, obwohl sie krank ist.","hint":"verb la sfarsit","explanation":"obwohl + ... + ist la final."}]},{"id":"perfekt","level":"A2","category":"Verbe","title_de":"Perfekt (haben/sein + Partizip II)","title_ro":"Timpul Perfect","summary":"Timpul trecut cel mai folosit in germana vorbita. Format din auxiliar (haben/sein) + participiu trecut.","theory":"\n<h3>Formula generala</h3>\n<p class=\"gram-example\"><strong>Subiect + haben/sein (poz. 2) + ... + Partizip II (la sfarsit)</strong></p>\n<p>Exemplu: <em>Ich <strong>habe</strong> gestern Pizza <strong>gegessen</strong>.</em> (Am mancat pizza ieri.)</p>\n\n<h3>haben sau sein? -- regula simpla</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Folosesti SEIN cand...</th><th>Folosesti HABEN in rest</th></tr></thead>\n  <tbody>\n    <tr>\n      <td>\n        <ul>\n          <li>verb de <strong>miscare</strong> (gehen, fahren, kommen, fliegen, laufen, schwimmen)</li>\n          <li>verb de <strong>schimbare de stare</strong> (aufstehen, einschlafen, sterben, werden, aufwachen)</li>\n          <li><strong>sein</strong> insusi (ich bin gewesen)</li>\n          <li><strong>bleiben</strong> (a ramane), <strong>passieren</strong> (a se intampla)</li>\n        </ul>\n      </td>\n      <td>\n        Aproape toate celelalte verbe.<br>\n        Verbe tranzitive (cu obiect direct): essen, trinken, kaufen, sehen, lesen.<br>\n        Verbe modale: ich habe gemusst.<br>\n        Verbe reflexive: ich habe mich gefreut.\n      </td>\n    </tr>\n  </tbody>\n</table>\n\n<h3>Cum formez Partizip II?</h3>\n<h4>Verbe regulate (slabe): ge- + radacina + -t</h4>\n<ul>\n  <li>spielen -> <strong>gespielt</strong>: Ich habe Fussball gespielt.</li>\n  <li>kaufen -> <strong>gekauft</strong>: Ich habe Brot gekauft.</li>\n  <li>arbeiten -> <strong>gearbeitet</strong>: Ich habe gearbeitet.</li>\n</ul>\n\n<h4>Verbe neregulate (tari): ge- + radacina (modificata) + -en</h4>\n<p>Trebuie invatate pe de rost! Cele mai frecvente:</p>\n<table class=\"gram-table\">\n  <thead><tr><th>Infinitiv</th><th>Partizip II</th><th>Auxiliar</th></tr></thead>\n  <tbody>\n    <tr><td>gehen (a merge)</td><td>gegangen</td><td><strong>sein</strong></td></tr>\n    <tr><td>fahren (a calatori)</td><td>gefahren</td><td><strong>sein</strong></td></tr>\n    <tr><td>kommen (a veni)</td><td>gekommen</td><td><strong>sein</strong></td></tr>\n    <tr><td>essen (a manca)</td><td>gegessen</td><td>haben</td></tr>\n    <tr><td>trinken (a bea)</td><td>getrunken</td><td>haben</td></tr>\n    <tr><td>sehen (a vedea)</td><td>gesehen</td><td>haben</td></tr>\n    <tr><td>lesen (a citi)</td><td>gelesen</td><td>haben</td></tr>\n    <tr><td>sein (a fi)</td><td>gewesen</td><td><strong>sein</strong></td></tr>\n    <tr><td>haben (a avea)</td><td>gehabt</td><td>haben</td></tr>\n    <tr><td>schreiben</td><td>geschrieben</td><td>haben</td></tr>\n  </tbody>\n</table>\n\n<h4>Verbe cu prefixe inseparabile (be-, er-, ver-, ge-, ent-, emp-, zer-, miss-)</h4>\n<p>NU primesc \"ge-\": besuchen -> <strong>besucht</strong>, verstehen -> <strong>verstanden</strong>, bekommen -> <strong>bekommen</strong>.</p>\n\n<h4>Verbe terminate in -ieren</h4>\n<p>NU primesc \"ge-\": studieren -> <strong>studiert</strong>, telefonieren -> <strong>telefoniert</strong>.</p>\n\n<h3>Verbe separabile la Perfect</h3>\n<p>Prefixul ramane lipit de Partizip, iar \"ge-\" se baga intre prefix si radacina:</p>\n<ul>\n  <li>einkaufen -> <strong>eingekauft</strong>: Ich habe eingekauft.</li>\n  <li>aufstehen -> <strong>aufgestanden</strong>: Ich bin aufgestanden.</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> In germana vorbita, oamenii folosesc Perfekt pentru aproape orice trecut, chiar pentru \"yesterday I had breakfast\". Präteritum (ich ass = am mancat) e folosit mai mult la sein/haben/modale si in scris.\n</div>\n","exercises":[{"type":"fill","prompt":"Gestern ___ ich Pizza gegessen.","answer":"habe","hint":"essen = verb cu obiect = haben","explanation":"Pizza este obiect direct -> haben. Forma: ich habe gegessen."},{"type":"fill","prompt":"Ich ___ nach Berlin gefahren.","answer":"bin","hint":"fahren = miscare = sein","explanation":"fahren e verb de miscare -> sein. Forma: ich bin gefahren."},{"type":"transform","prompt":"Trecut: Ich kaufe Brot.","answer":"Ich habe Brot gekauft.","hint":"kaufen + haben + Partizip","explanation":"kaufen (regulat) -> gekauft. Cu haben."},{"type":"transform","prompt":"Trecut: Wir gehen ins Kino.","answer":"Wir sind ins Kino gegangen.","hint":"gehen = miscare = sein, neregulat","explanation":"gehen e neregulat -> gegangen. Cu sein (miscare)."},{"type":"choice","prompt":"Maria ___ gestern in Italien gewesen.","options":["hat","ist","war","hatte"],"answer":"ist","explanation":"Verbul 'sein' la Perfect ia tot 'sein' ca auxiliar: sie ist gewesen."},{"type":"fill","prompt":"Wir ___ einen Film gesehen.","answer":"haben","hint":"sehen + obiect direct = haben","explanation":"sehen + einen Film (Akk) -> haben. Forma: wir haben gesehen."}]},{"id":"reflexive","level":"A2","category":"Verbe","title_de":"Reflexive Verben","title_ro":"Verbe reflexive (sich)","summary":"Verbe care au pronume reflexiv 'sich' (= pe sine, isi). Pronumele se schimba cu fiecare persoana.","theory":"\n<h3>Ce sunt verbele reflexive?</h3>\n<p>Verbe care exprima ca actiunea se intoarce catre subiect. In dictionar apar cu <strong>sich</strong>:</p>\n<ul>\n  <li><strong>sich freuen</strong> = a se bucura</li>\n  <li><strong>sich waschen</strong> = a se spala</li>\n  <li><strong>sich anziehen</strong> = a se imbraca</li>\n  <li><strong>sich treffen</strong> = a se intalni</li>\n  <li><strong>sich erinnern</strong> = a-si aminti</li>\n  <li><strong>sich beeilen</strong> = a se grabi</li>\n</ul>\n\n<h3>Pronumele reflexiv -- la Akkusativ</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Persoana</th><th>Pronume reflexiv</th></tr></thead>\n  <tbody>\n    <tr><td>ich</td><td><strong>mich</strong></td></tr>\n    <tr><td>du</td><td><strong>dich</strong></td></tr>\n    <tr><td>er/sie/es</td><td><strong>sich</strong></td></tr>\n    <tr><td>wir</td><td><strong>uns</strong></td></tr>\n    <tr><td>ihr</td><td><strong>euch</strong></td></tr>\n    <tr><td>sie/Sie</td><td><strong>sich</strong></td></tr>\n  </tbody>\n</table>\n\n<h3>Pozitia in propozitie</h3>\n<p>Pronumele reflexiv vine <strong>imediat dupa verbul conjugat</strong>:</p>\n<p class=\"gram-example\">Ich freue <strong>mich</strong> sehr.<br>(Ma bucur foarte mult.)</p>\n<p class=\"gram-example\">Wir treffen <strong>uns</strong> um 19 Uhr.<br>(Ne intalnim la ora 19.)</p>\n\n<h3>Conjugare completa: sich freuen</h3>\n<table class=\"gram-table\">\n  <tbody>\n    <tr><td>ich freue mich</td><td>ma bucur</td></tr>\n    <tr><td>du freust dich</td><td>te bucuri</td></tr>\n    <tr><td>er/sie/es freut sich</td><td>se bucura</td></tr>\n    <tr><td>wir freuen uns</td><td>ne bucuram</td></tr>\n    <tr><td>ihr freut euch</td><td>va bucurati</td></tr>\n    <tr><td>sie/Sie freuen sich</td><td>se bucura</td></tr>\n  </tbody>\n</table>\n\n<h3>La Perfekt</h3>\n<p>Verbele reflexive folosesc <strong>haben</strong> ca auxiliar, iar pronumele reflexiv vine inainte:</p>\n<p class=\"gram-example\">Ich <strong>habe mich</strong> gefreut. (M-am bucurat.)<br>\nDu <strong>hast dich</strong> gewaschen. (Te-ai spalat.)</p>\n\n<h3>Reflexiv la Dativ -- partile corpului</h3>\n<p>Cand spalam o parte din corp (\"imi spal mainile\"), folosim Dativ + obiect direct la Akk:</p>\n<p class=\"gram-example\">Ich wasche <strong>mir</strong> (Dat.) <strong>die Hände</strong> (Akk.).<br>(Imi spal mainile.)</p>\n<p>Pronumele reflexiv la Dativ: mir, dir, sich, uns, euch, sich.</p>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> in romana spunem \"ma bucur\" cu un cuvant + pronume. In germana e identic ca structura, doar ca scrii \"ich freue mich\" -- gandeste-te ca \"mich\" inseamna \"(pe) mine\".\n</div>\n","exercises":[{"type":"fill","prompt":"Ich freue ___ auf das Wochenende.","answer":"mich","hint":"ich + reflexiv Akk","explanation":"ich -> mich. (Ma bucur de weekend.)"},{"type":"fill","prompt":"Wir treffen ___ um 18 Uhr.","answer":"uns","hint":"wir + reflexiv","explanation":"wir -> uns. (Ne intalnim la 18.)"},{"type":"choice","prompt":"Er erinnert ___ an die Reise.","options":["mich","dich","sich","uns"],"answer":"sich","explanation":"er/sie/es -> sich. (El isi aminteste de calatorie.)"},{"type":"fill","prompt":"Ihr beeilt ___, der Bus kommt!","answer":"euch","hint":"ihr + reflexiv","explanation":"ihr -> euch. (Va grabiti, vine autobuzul!)"},{"type":"transform","prompt":"Trecut (Perfekt): Ich freue mich.","answer":"Ich habe mich gefreut.","hint":"haben + mich + gefreut","explanation":"Reflexive iau 'haben'. Forma: subiect + haben + reflexiv + Partizip."},{"type":"fill","prompt":"Du wäschst ___ die Hände.","answer":"dir","hint":"Dativ! pentru ca die Hände e obiect direct","explanation":"Cand obiectul direct (Hände) e prezent, reflexivul merge la Dativ: du -> dir."}]},{"id":"trennbare","level":"A2","category":"Verbe","title_de":"Trennbare Verben","title_ro":"Verbe separabile","summary":"Verbe cu prefix care 'se desprinde' la prezent si Imperfekt, dar revine la sfarsitul propozitiei.","theory":"\n<h3>Ce sunt verbele separabile?</h3>\n<p>Verbe germane formate dintr-un prefix + verb baza. La prezent, prefixul se DESPRINDE si zboara la sfarsit:</p>\n<p class=\"gram-example\">Infinitiv: <strong>ein</strong>kaufen (a face cumparaturi)<br>\nConjugat: Ich <strong>kaufe</strong> jeden Tag <strong>ein</strong>. (Fac cumparaturi in fiecare zi.)</p>\n\n<h3>Cele mai frecvente prefixe separabile</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Prefix</th><th>Sens</th><th>Exemplu</th></tr></thead>\n  <tbody>\n    <tr><td><strong>an-</strong></td><td>spre, la</td><td>anrufen (a suna), ankommen (a sosi)</td></tr>\n    <tr><td><strong>auf-</strong></td><td>sus, deschis</td><td>aufstehen (a se ridica), aufmachen (a deschide)</td></tr>\n    <tr><td><strong>aus-</strong></td><td>din, afara</td><td>ausgehen (a iesi), ausziehen (a se dezbraca)</td></tr>\n    <tr><td><strong>ein-</strong></td><td>in, inauntru</td><td>einkaufen, einsteigen (a urca in)</td></tr>\n    <tr><td><strong>mit-</strong></td><td>impreuna</td><td>mitkommen (a veni cu), mitnehmen (a lua cu)</td></tr>\n    <tr><td><strong>weg-</strong></td><td>departe</td><td>weggehen (a pleca), wegfahren</td></tr>\n    <tr><td><strong>zurück-</strong></td><td>inapoi</td><td>zurückkommen (a se intoarce)</td></tr>\n    <tr><td><strong>fern-</strong></td><td>departe</td><td>fernsehen (a se uita la TV)</td></tr>\n  </tbody>\n</table>\n\n<h3>Cum stiu ca un prefix e separabil?</h3>\n<p>Regula: <strong>daca accentul cade pe prefix, e separabil</strong>. <em>'AN</em>rufen, <em>'EIN</em>kaufen, <em>'AUF</em>stehen.</p>\n<p>Inseparabile (NU se separa): be-, er-, ver-, ge-, ent-, emp-, zer-, miss-. Aici accentul cade pe radacina: be<em>'SU</em>chen.</p>\n\n<h3>Cele 4 contexte cu schimbari diferite</h3>\n\n<h4>1. Prezent (separat)</h4>\n<p class=\"gram-example\">Ich <strong>rufe</strong> dich morgen <strong>an</strong>. (Te sun maine.)</p>\n\n<h4>2. Cu verb modal (NEseparat, la sfarsit)</h4>\n<p class=\"gram-example\">Ich muss morgen früh <strong>aufstehen</strong>. (Trebuie sa ma scol devreme maine.)</p>\n<p>Cu modal, infinitivul ramane intreg la sfarsit.</p>\n\n<h4>3. Perfekt (Partizip II are 'ge' la mijloc)</h4>\n<p class=\"gram-example\">Ich habe gestern <strong>eingekauft</strong>. (Am facut cumparaturi ieri.)</p>\n<p>einkaufen -> ein + ge + kauf + t = eingekauft.</p>\n\n<h4>4. Subordonata (NEseparat la sfarsit)</h4>\n<p class=\"gram-example\">Ich glaube, dass er morgen <strong>ankommt</strong>.<br>(Cred ca soseste maine.)</p>\n\n<div class=\"gram-tip\">\n<strong>Mnemonic:</strong> \"ein-kauf-ein\" -- prefixul ein se desparte si zboara la sfarsit ca un boomerang. La Perfekt se reuneste in 'eingekauft'.\n</div>\n","exercises":[{"type":"transform","prompt":"Conjuga la prezent: anrufen / ich / dich","answer":"Ich rufe dich an","hint":"prefixul 'an' la sfarsit","explanation":"anrufen -> ich rufe ... an. Prefixul zboara la final."},{"type":"fill","prompt":"Ich ___ jeden Morgen um 7 Uhr ___ . (aufstehen)","answer":"stehe ... auf","hint":"doua parti","explanation":"aufstehen -> ich stehe auf. Verbul se desparte la prezent."},{"type":"transform","prompt":"Perfekt: Ich kaufe ein.","answer":"Ich habe eingekauft.","hint":"ein + ge + kauft","explanation":"Verb separabil la Perfekt: prefixul + ge + radacina + t = eingekauft."},{"type":"fill","prompt":"Wann ___ der Zug ___? (ankommen - sosi)","answer":"kommt ... an","hint":"intrebare cu prefix la sfarsit","explanation":"Wann kommt der Zug an? La intrebare verbul e pe pozitia 1, prefixul la sfarsit."},{"type":"choice","prompt":"Ich muss morgen früh ___.","options":["stehe auf","aufstehen","stand auf","aufgestanden"],"answer":"aufstehen","explanation":"Cu verb modal (muss), verbul principal ramane infinitiv intreg la sfarsit."},{"type":"order","prompt":"Ordoneaza: an / die / Tür / mache / ich","answer":"Ich mache die Tür an","hint":"prefixul la sfarsit","explanation":"Subiect + verb + obiect + prefix. Note: aufmachen e mai natural pentru deschis usa, aici e doar exercitiu."}]},{"id":"relativsaetze","level":"B1","category":"Propozitii","title_de":"Relativsätze (der/die/das)","title_ro":"Propozitii relative","summary":"Subordonate care descriu un substantiv. Pronumele relativ se acorda cu genul (din substantiv) si cazul (din rol).","theory":"\n<h3>Ce este o propozitie relativa?</h3>\n<p>O propozitie care descrie sau aduce mai multe informatii despre un substantiv din propozitia principala. In romana = \"care\".</p>\n<p class=\"gram-example\">Der Mann, <strong>der</strong> dort steht, ist mein Bruder.<br>\n(Barbatul care sta acolo este fratele meu.)</p>\n\n<h3>Pronumele relativ</h3>\n<p>In germana, pronumele relativ se acorda dupa 2 reguli:</p>\n<ul>\n  <li><strong>GENUL si numarul</strong> = de la substantivul din propozitia principala</li>\n  <li><strong>CAZUL</strong> = depinde de rolul lui in propozitia secundara</li>\n</ul>\n\n<h3>Tabel complet (echivalent cu der/die/das)</h3>\n<table class=\"gram-table\">\n  <thead><tr><th>Caz</th><th>m.</th><th>f.</th><th>n.</th><th>pl.</th></tr></thead>\n  <tbody>\n    <tr><td>Nominativ</td><td><strong>der</strong></td><td><strong>die</strong></td><td><strong>das</strong></td><td><strong>die</strong></td></tr>\n    <tr><td>Akkusativ</td><td><strong>den</strong></td><td><strong>die</strong></td><td><strong>das</strong></td><td><strong>die</strong></td></tr>\n    <tr><td>Dativ</td><td><strong>dem</strong></td><td><strong>der</strong></td><td><strong>dem</strong></td><td><strong>denen</strong></td></tr>\n    <tr><td>Genitiv</td><td><strong>dessen</strong></td><td><strong>deren</strong></td><td><strong>dessen</strong></td><td><strong>deren</strong></td></tr>\n  </tbody>\n</table>\n<p>Aproape totul e identic cu articolul definit, cu 2 exceptii: <strong>denen</strong> (Dat. pl.) si <strong>dessen/deren</strong> (Genitiv).</p>\n\n<h3>Exemple pe cazuri</h3>\n\n<h4>Nominativ -- pronumele este SUBIECTUL secundarei</h4>\n<p class=\"gram-example\">Der Mann, <strong>der</strong> Klavier spielt, ist mein Bruder.<br>\n(Cine canta? = der Mann, deci pronumele e subiect = Nominativ.)</p>\n\n<h4>Akkusativ -- pronumele este OBIECTUL DIRECT al secundarei</h4>\n<p class=\"gram-example\">Der Mann, <strong>den</strong> ich sehe, ist mein Bruder.<br>\n(Pe cine vad? = den Mann, deci Akkusativ.)</p>\n\n<h4>Dativ -- pronumele este OBIECTUL INDIRECT</h4>\n<p class=\"gram-example\">Der Mann, <strong>dem</strong> ich helfe, ist mein Bruder.<br>\n(Cui ajut? = dem Mann, deci Dativ.)</p>\n\n<h4>Cu prepozitie</h4>\n<p>Prepozitia merge IMPREUNA cu pronumele relativ la inceputul subordonatei:</p>\n<p class=\"gram-example\">Das ist die Frau, <strong>mit der</strong> ich gestern gesprochen habe.<br>\n(Cu cine am vorbit? = mit der Frau. mit + Dativ.)</p>\n\n<h3>Verbul mereu la sfarsit</h3>\n<p>Ca in toate subordonatele, verbul conjugat al subordonatei merge la SFARSIT:</p>\n<p class=\"gram-example\">Das Buch, das ich lese, <strong>ist</strong> super. (Cartea pe care o citesc e super.)<br>\nDas Auto, <strong>das</strong> du gestern <strong>gekauft hast</strong>, ist neu.</p>\n\n<div class=\"gram-tip\">\n<strong>Strategia in 3 pasi pentru a alege pronumele:</strong><br>\n1. Care e <strong>genul si numarul</strong> substantivului in principala? (m./f./n./pl.)<br>\n2. Ce <strong>rol</strong> joaca pronumele in subordonata? (subiect / obiect direct / indirect)<br>\n3. Combina: gen + caz = pronume.\n</div>\n","exercises":[{"type":"fill","prompt":"Der Mann, ___ dort wohnt, ist Lehrer.","answer":"der","hint":"Mann = m. + e SUBIECTUL subordonatei = Nom.","explanation":"der Mann (m.) + subiect in subordonata (cine locuieste? -> der) = der."},{"type":"fill","prompt":"Die Frau, ___ ich kenne, ist Italienerin.","answer":"die","hint":"Frau = f. + obiect direct (cine?) = Akk","explanation":"die Frau (f.) + Akkusativ (pe cine cunosc?) = die."},{"type":"choice","prompt":"Das Kind, ___ ich helfe, ist krank.","options":["das","den","dem","der"],"answer":"dem","explanation":"das Kind (n.) + Dativ (cui ajut? helfen + Dat.) -> dem."},{"type":"choice","prompt":"Die Bücher, ___ auf dem Tisch liegen, sind alt.","options":["der","die","das","dem"],"answer":"die","explanation":"die Bücher (pl.) + subiect (care stau? -> die) = die (Nom. pl.)."},{"type":"fill","prompt":"Das ist der Freund, mit ___ ich gespielt habe.","answer":"dem","hint":"Freund (m.) + mit cere Dativ","explanation":"der Freund (m.) + prepozitia 'mit' (Dat.) -> mit dem."},{"type":"transform","prompt":"Combina cu propozitie relativa: Ich kenne den Mann. Der Mann arbeitet hier.","answer":"Ich kenne den Mann, der hier arbeitet.","hint":"der = m. Nom.","explanation":"der Mann + subiect in subordonata -> der. Verbul 'arbeitet' la sfarsit."}]},{"id":"konjunktiv-2","level":"B1","category":"Verbe","title_de":"Konjunktiv 2 (Conditional)","title_ro":"Conditional / Optativ","summary":"Pentru situatii ireale, dorinte si politete: 'as merge', 'mi-as dori', 'ai putea'.","theory":"\n<h3>Cand folosim Konjunktiv 2?</h3>\n<ol>\n  <li><strong>Dorinte ireale:</strong> \"Wenn ich reich <strong>wäre</strong>, ...\" (Daca as fi bogat...)</li>\n  <li><strong>Politete:</strong> \"<strong>Könnten</strong> Sie mir helfen?\" (Ati putea sa ma ajutati?)</li>\n  <li><strong>Sfaturi:</strong> \"Du <strong>solltest</strong> mehr schlafen.\" (Ar trebui sa dormi mai mult.)</li>\n  <li><strong>Conditii ireale:</strong> \"Wenn ich Zeit <strong>hätte</strong>, würde ich ...\" (Daca as avea timp, as...)</li>\n</ol>\n\n<h3>Cele 2 forme: würde + Infinitiv vs forma proprie</h3>\n<p>In germana moderna sunt 2 cai de a forma Konjunktiv 2:</p>\n\n<h4>Forma 1: würde + infinitiv (cea mai folosita)</h4>\n<p>Functioneaza pentru aproape orice verb. Ca \"would\" in engleza:</p>\n<table class=\"gram-table\">\n  <tbody>\n    <tr><td>ich würde gehen</td><td>as merge</td></tr>\n    <tr><td>du würdest gehen</td><td>ai merge</td></tr>\n    <tr><td>er würde gehen</td><td>el ar merge</td></tr>\n    <tr><td>wir würden gehen</td><td>am merge</td></tr>\n    <tr><td>ihr würdet gehen</td><td>ati merge</td></tr>\n    <tr><td>sie würden gehen</td><td>ei ar merge</td></tr>\n  </tbody>\n</table>\n<p>Pattern: <strong>würd-</strong> + terminatii ca la prezent + infinitiv la sfarsit.</p>\n\n<h4>Forma 2: forma proprie (pentru cateva verbe importante)</h4>\n<p>Pentru sein, haben, modale si cateva alte verbe se folosesc forme proprii:</p>\n<table class=\"gram-table\">\n  <thead><tr><th>Infinitiv</th><th>Konjunktiv 2 (ich)</th><th>Sens</th></tr></thead>\n  <tbody>\n    <tr><td>sein</td><td><strong>wäre</strong></td><td>as fi</td></tr>\n    <tr><td>haben</td><td><strong>hätte</strong></td><td>as avea</td></tr>\n    <tr><td>können</td><td><strong>könnte</strong></td><td>as putea</td></tr>\n    <tr><td>müssen</td><td><strong>müsste</strong></td><td>ar trebui</td></tr>\n    <tr><td>sollen</td><td><strong>sollte</strong></td><td>ar trebui (sfat)</td></tr>\n    <tr><td>dürfen</td><td><strong>dürfte</strong></td><td>as avea voie</td></tr>\n    <tr><td>wollen</td><td><strong>wollte</strong></td><td>as vrea</td></tr>\n    <tr><td>mögen</td><td><strong>möchte</strong></td><td>as dori</td></tr>\n  </tbody>\n</table>\n\n<h3>Conjugare wäre si hätte</h3>\n<table class=\"gram-table\">\n  <thead><tr><th></th><th>sein -> wäre</th><th>haben -> hätte</th></tr></thead>\n  <tbody>\n    <tr><td>ich</td><td>wäre</td><td>hätte</td></tr>\n    <tr><td>du</td><td>wärst</td><td>hättest</td></tr>\n    <tr><td>er/sie/es</td><td>wäre</td><td>hätte</td></tr>\n    <tr><td>wir</td><td>wären</td><td>hätten</td></tr>\n    <tr><td>ihr</td><td>wärt</td><td>hättet</td></tr>\n    <tr><td>sie</td><td>wären</td><td>hätten</td></tr>\n  </tbody>\n</table>\n\n<h3>Constructia ireala 'wenn ... wäre/hätte, würde ...'</h3>\n<p class=\"gram-example\"><strong>Wenn</strong> ich Zeit <strong>hätte</strong>, <strong>würde</strong> ich nach Rom <strong>fahren</strong>.<br>\n(Daca as avea timp, as merge la Roma.)</p>\n\n<p class=\"gram-example\"><strong>Wenn</strong> ich reicher <strong>wäre</strong>, <strong>würde</strong> ich ein Haus <strong>kaufen</strong>.<br>\n(Daca as fi mai bogat, as cumpara o casa.)</p>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> in propozitia \"wenn\", folosesti hätte/wäre/könnte... In propozitia principala folosesti würde + infinitiv (mai usor). Asa eviti formele ciudate ca \"ginge\" sau \"läse\".\n</div>\n","exercises":[{"type":"fill","prompt":"Wenn ich Zeit ___, würde ich kommen. (a avea, ich - Konj. 2)","answer":"hätte","hint":"haben -> ?","explanation":"haben -> hätte (as avea)."},{"type":"fill","prompt":"Ich ___ gerne ein Glas Wasser. (a-mi dori - politicos)","answer":"möchte","hint":"Konj. 2 de la mögen","explanation":"möchte = as dori (forma standard pentru politete)."},{"type":"choice","prompt":"___ Sie mir bitte helfen?","options":["Können","Konnten","Könnten","Konnten"],"answer":"Könnten","explanation":"Politete -> Konjunktiv 2: Könnten (ati putea)."},{"type":"transform","prompt":"Konjunktiv 2: Ich gehe ins Kino.","answer":"Ich würde ins Kino gehen.","hint":"würde + infinitiv","explanation":"Konj. 2 cu würde: ich würde + infinitiv la sfarsit."},{"type":"fill","prompt":"Wenn ich reich ___, würde ich nicht arbeiten. (a fi)","answer":"wäre","hint":"sein -> ?","explanation":"sein -> wäre. (Daca as fi bogat...)"},{"type":"transform","prompt":"Sfat politicos: Du musst mehr schlafen.","answer":"Du solltest mehr schlafen.","hint":"Konj. 2 al lui sollen","explanation":"Pentru sfat -> sollte. Du solltest = ar trebui sa."}]},{"id":"passiv","level":"B1","category":"Verbe","title_de":"Passiv (werden + Partizip II)","title_ro":"Diateza pasiva","summary":"Pentru a sublinia ACTIUNEA, nu cine o face. werden conjugat + Partizip II la sfarsit.","theory":"\n<h3>Activ vs Pasiv -- ce schimba</h3>\n<p>La <strong>activ</strong> -- subiectul face actiunea: \"Der Mann <strong>kauft</strong> das Auto.\"<br>\nLa <strong>pasiv</strong> -- subiectul primeste actiunea: \"Das Auto <strong>wird</strong> (vom Mann) <strong>gekauft</strong>.\"</p>\n\n<p>Pasivul focalizeaza pe rezultat sau actiune, nu pe persoana. Foarte comun in stiri, instructiuni, proceduri.</p>\n\n<h3>Formula la prezent</h3>\n<p class=\"gram-example\"><strong>Subiect + werden (poz. 2) + ... + Partizip II (la sfarsit)</strong></p>\n\n<table class=\"gram-table\">\n  <thead><tr><th>Persoana</th><th>werden</th></tr></thead>\n  <tbody>\n    <tr><td>ich</td><td>werde</td></tr>\n    <tr><td>du</td><td>wirst</td></tr>\n    <tr><td>er/sie/es</td><td>wird</td></tr>\n    <tr><td>wir</td><td>werden</td></tr>\n    <tr><td>ihr</td><td>werdet</td></tr>\n    <tr><td>sie</td><td>werden</td></tr>\n  </tbody>\n</table>\n\n<h3>Exemple</h3>\n<ul>\n  <li>\"Das Buch <strong>wird</strong> heute <strong>gelesen</strong>.\" (Cartea e citita azi.)</li>\n  <li>\"Hier <strong>werden</strong> Brötchen <strong>gebacken</strong>.\" (Aici se coc cornuri.)</li>\n  <li>\"Das Haus <strong>wurde</strong> 2020 <strong>gebaut</strong>.\" (Casa a fost construita in 2020. -- Präteritum)</li>\n</ul>\n\n<h3>Pasiv la Präteritum (cu wurde)</h3>\n<p>wurde + Partizip II</p>\n<ul>\n  <li>\"Das Telefon <strong>wurde</strong> <strong>erfunden</strong>.\" (Telefonul a fost inventat.)</li>\n</ul>\n\n<h3>Pasiv la Perfekt (cu sein + Partizip II + worden)</h3>\n<p>worden = Partizip de la werden, fara 'ge-' in fata. Atentie: NU 'geworden' (acela e altceva).</p>\n<ul>\n  <li>\"Das Buch <strong>ist</strong> gestern <strong>geschrieben worden</strong>.\" (Cartea a fost scrisa ieri.)</li>\n</ul>\n\n<h3>Cum transform Activ -> Pasiv</h3>\n<ol>\n  <li>Obiectul direct (Akk.) la activ devine subiect (Nom.) la pasiv.</li>\n  <li>Verbul activ devine \"werden + Partizip II\".</li>\n  <li>Subiectul activ devine optional, cu \"von + Dativ\" sau dispare.</li>\n</ol>\n\n<p class=\"gram-example\">Activ: <em>Der Lehrer (Subj.) korrigiert <strong>den Test</strong> (Akk.).</em><br>\nPasiv: <em><strong>Der Test</strong> (Subj.) wird (vom Lehrer) korrigiert.</em></p>\n\n<h3>Pasiv cu modal</h3>\n<p>Modal + Infinitiv pasiv (Partizip + werden)</p>\n<ul>\n  <li>\"Das Auto <strong>muss</strong> <strong>repariert werden</strong>.\" (Masina trebuie reparata.)</li>\n  <li>\"Das Buch <strong>kann</strong> hier <strong>gekauft werden</strong>.\" (Cartea poate fi cumparata aici.)</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Atentie:</strong> doar verbele tranzitive (cu obiect direct/Akk) pot forma pasiv. Verbe ca \"schlafen\", \"gehen\" nu au pasiv personal.\n</div>\n","exercises":[{"type":"transform","prompt":"Activ -> Pasiv: Der Mann kauft das Auto.","answer":"Das Auto wird (vom Mann) gekauft.","hint":"Akk -> Nom + werden + Partizip","explanation":"das Auto trece la subiect, verbul devine 'wird gekauft'."},{"type":"fill","prompt":"Hier ___ Pizza gemacht. (a se face - prezent)","answer":"wird","hint":"es/das + werden","explanation":"Pizza (singular) -> wird gemacht."},{"type":"choice","prompt":"Das Haus ___ 1990 gebaut. (a fi construit - trecut)","options":["wird","wurde","wurden","ist"],"answer":"wurde","explanation":"Pasiv la Präteritum: wurde + Partizip. das Haus -> wurde gebaut."},{"type":"transform","prompt":"Activ -> Pasiv (prezent): Sie schreibt einen Brief.","answer":"Ein Brief wird (von ihr) geschrieben.","hint":"obiect Akk -> subiect","explanation":"einen Brief -> ein Brief la Nominativ. wird + geschrieben."},{"type":"fill","prompt":"Das Auto muss ___ ___. (sa fie reparat - reparieren)","answer":"repariert werden","hint":"Partizip + werden","explanation":"Pasiv cu modal: muss + repariert werden (Partizip + werden infinitiv)."},{"type":"choice","prompt":"Die Briefe ___ heute geschickt. (sunt trimise)","options":["wird","werden","wurden","ist"],"answer":"werden","explanation":"die Briefe (plural) -> werden geschickt."}]},{"id":"praeteritum","level":"B1","category":"Verbe","title_de":"Präteritum (Imperfekt)","title_ro":"Imperfectul (timpul trecut scris)","summary":"Trecut folosit in scris (carti, presa). In vorbire se foloseste mai ales pentru sein, haben, modale.","theory":"\n<h3>Cand folosim Präteritum?</h3>\n<p>In contrast cu Perfekt (folosit in vorbire), Präteritum apare:</p>\n<ul>\n  <li>In <strong>scris</strong>: carti, articole, povesti, cv-uri.</li>\n  <li>In <strong>vorbire</strong>: pentru <em>sein, haben, es gab, modalele</em> (acolo unde Perfekt suna ciudat).</li>\n</ul>\n<p>\"Ich war in Berlin\" e mai natural decat \"Ich bin in Berlin gewesen\".</p>\n\n<h3>Verbe regulate -- adauga -te</h3>\n<p>Pattern: radacina + <strong>-te</strong> + terminatie</p>\n<table class=\"gram-table\">\n  <thead><tr><th></th><th>spielen</th><th>arbeiten</th></tr></thead>\n  <tbody>\n    <tr><td>ich</td><td>spiel<strong>te</strong></td><td>arbeit<strong>ete</strong></td></tr>\n    <tr><td>du</td><td>spiel<strong>test</strong></td><td>arbeit<strong>etest</strong></td></tr>\n    <tr><td>er/sie/es</td><td>spiel<strong>te</strong></td><td>arbeit<strong>ete</strong></td></tr>\n    <tr><td>wir</td><td>spiel<strong>ten</strong></td><td>arbeit<strong>eten</strong></td></tr>\n    <tr><td>ihr</td><td>spiel<strong>tet</strong></td><td>arbeit<strong>etet</strong></td></tr>\n    <tr><td>sie</td><td>spiel<strong>ten</strong></td><td>arbeit<strong>eten</strong></td></tr>\n  </tbody>\n</table>\n<p>Atentie: dupa -t, -d, -m, -n se baga \"e\" in plus (arbeit-e-te).</p>\n\n<h3>Verbe neregulate -- schimba radacina</h3>\n<p>Tre' invatat tabelul. Cele mai uzuale:</p>\n<table class=\"gram-table\">\n  <thead><tr><th>Infinitiv</th><th>Pratium (ich/er)</th><th>Sens</th></tr></thead>\n  <tbody>\n    <tr><td>sein</td><td><strong>war</strong></td><td>am fost</td></tr>\n    <tr><td>haben</td><td><strong>hatte</strong></td><td>aveam</td></tr>\n    <tr><td>gehen</td><td><strong>ging</strong></td><td>am mers</td></tr>\n    <tr><td>kommen</td><td><strong>kam</strong></td><td>am venit</td></tr>\n    <tr><td>fahren</td><td><strong>fuhr</strong></td><td>am calatorit</td></tr>\n    <tr><td>sehen</td><td><strong>sah</strong></td><td>am vazut</td></tr>\n    <tr><td>essen</td><td><strong>ass</strong></td><td>am mancat</td></tr>\n    <tr><td>trinken</td><td><strong>trank</strong></td><td>am baut</td></tr>\n    <tr><td>lesen</td><td><strong>las</strong></td><td>am citit</td></tr>\n    <tr><td>sprechen</td><td><strong>sprach</strong></td><td>am vorbit</td></tr>\n    <tr><td>schreiben</td><td><strong>schrieb</strong></td><td>am scris</td></tr>\n    <tr><td>finden</td><td><strong>fand</strong></td><td>am gasit</td></tr>\n    <tr><td>geben</td><td><strong>gab</strong></td><td>am dat</td></tr>\n    <tr><td>nehmen</td><td><strong>nahm</strong></td><td>am luat</td></tr>\n  </tbody>\n</table>\n\n<h3>Conjugare neregulat: sein</h3>\n<table class=\"gram-table\">\n  <tbody>\n    <tr><td>ich war</td><td>du warst</td><td>er war</td></tr>\n    <tr><td>wir waren</td><td>ihr wart</td><td>sie waren</td></tr>\n  </tbody>\n</table>\n\n<h3>Modal verbs la Präteritum</h3>\n<p>Pierd umlautul si adauga -te:</p>\n<ul>\n  <li>können -> <strong>konnte</strong> (puteam)</li>\n  <li>müssen -> <strong>musste</strong> (trebuia)</li>\n  <li>wollen -> <strong>wollte</strong> (voiam)</li>\n  <li>sollen -> <strong>sollte</strong> (ar fi trebuit)</li>\n  <li>dürfen -> <strong>durfte</strong> (aveam voie)</li>\n  <li>mögen -> <strong>mochte</strong> (imi placea)</li>\n</ul>\n\n<div class=\"gram-tip\">\n<strong>Sfat:</strong> persoana 1 si 3 singular sunt mereu identice la Präteritum (ich war = er war, ich ging = er ging). Asta e o trasatura unica a acestui timp.\n</div>\n","exercises":[{"type":"transform","prompt":"Präteritum: Ich bin in Berlin.","answer":"Ich war in Berlin.","hint":"sein -> war","explanation":"ich bin -> ich war (eu eram/am fost)."},{"type":"transform","prompt":"Präteritum: Wir gehen ins Kino.","answer":"Wir gingen ins Kino.","hint":"gehen -> ging","explanation":"gehen e neregulat -> ging. wir gingen."},{"type":"fill","prompt":"Als Kind ___ ich oft Fussball. (spielen, ich)","answer":"spielte","hint":"regulat: -te","explanation":"spielen e regulat. ich spielte = jucam."},{"type":"fill","prompt":"Er ___ gestern krank. (sein, er)","answer":"war","hint":"sein -> ?","explanation":"sein e neregulat. ich/er war."},{"type":"choice","prompt":"Ich ___ nicht kommen. (nu puteam)","options":["kann","konnte","kannte","können"],"answer":"konnte","explanation":"können la Präteritum -> konnte (pierde umlaut, adauga -te)."},{"type":"transform","prompt":"Präteritum: Sie hat ein Auto.","answer":"Sie hatte ein Auto.","hint":"haben -> hatte","explanation":"haben -> hatte (avea)."}]}];
+
+const STORAGE = {
+  progress: "gramatica_progress_v1",
+  stats: "gramatica_stats_v1"
+};
+function loadJSON(k, fb) { try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch(e) { return fb; } }
+function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+let progress = loadJSON(STORAGE.progress, {}); // { topicId: { exIdx: "correct"|"incorrect"|"skipped" } }
+let stats = loadJSON(STORAGE.stats, {}); // { topicId: { correct, total } }
+
+// Filter state
+let activeLevel = "all";
+let activeCategory = "all";
+let currentTopic = null;
+let currentExIdx = 0;
+
+// === TOPIC LIST ===
+function getCategories() {
+  const cats = new Set();
+  TOPICS.forEach(t => { if (matchesLevel(t)) cats.add(t.category); });
+  return Array.from(cats).sort();
+}
+
+function matchesLevel(t) {
+  return activeLevel === "all" || t.level === activeLevel;
+}
+function matchesCategory(t) {
+  return activeCategory === "all" || t.category === activeCategory;
+}
+
+function populateCategorySelect() {
+  const sel = document.getElementById("cat-select");
+  const cats = getCategories();
+  const cur = sel.value;
+  sel.innerHTML = '<option value="all">Toate categoriile</option>';
+  cats.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  sel.value = cats.includes(cur) ? cur : "all";
+  activeCategory = sel.value;
+}
+
+document.querySelectorAll("[data-level]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-level]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  activeLevel = b.dataset.level;
+  activeCategory = "all";
+  populateCategorySelect();
+  renderTopicList();
+}));
+
+function renderTopicList() {
+  activeCategory = document.getElementById("cat-select").value;
+  const filtered = TOPICS.filter(t => matchesLevel(t) && matchesCategory(t));
+  document.getElementById("topic-count").textContent = filtered.length + " topicuri";
+  const grid = document.getElementById("topic-grid");
+  grid.innerHTML = "";
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#6b7280;">Niciun topic in acest filtru.</div>';
+    return;
+  }
+  filtered.forEach(t => {
+    const s = stats[t.id] || { correct: 0, total: 0 };
+    const exDone = (progress[t.id] && Object.keys(progress[t.id]).length) || 0;
+    const pct = t.exercises.length ? Math.round(100 * exDone / t.exercises.length) : 0;
+    const card = document.createElement("div");
+    card.className = "topic-card";
+    card.innerHTML = `
+      <span class="level-badge level-${t.level}">${t.level}</span>
+      <div class="category">${escapeHtml(t.category)}</div>
+      <h3>${escapeHtml(t.title_de)}</h3>
+      <div class="subtitle">${escapeHtml(t.title_ro)}</div>
+      <div class="summary">${escapeHtml(t.summary)}</div>
+      <div class="progress-mini">
+        <span>${exDone}/${t.exercises.length}</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div>
+        <span>${pct}%</span>
+      </div>
+    `;
+    card.addEventListener("click", () => openTopic(t.id));
+    grid.appendChild(card);
+  });
+}
+
+function openTopic(id) {
+  currentTopic = TOPICS.find(t => t.id === id);
+  if (!currentTopic) return;
+  currentExIdx = 0;
+  document.getElementById("view-list").style.display = "none";
+  document.getElementById("view-detail").classList.add("visible");
+  document.getElementById("detail-level").textContent = currentTopic.level;
+  document.getElementById("detail-level").className = "level-badge level-" + currentTopic.level;
+  document.getElementById("detail-cat").textContent = currentTopic.category;
+  document.getElementById("detail-title-de").textContent = currentTopic.title_de;
+  document.getElementById("detail-title-ro").textContent = currentTopic.title_ro;
+  document.getElementById("theory-content").innerHTML = currentTopic.theory;
+  // Default to theory tab
+  document.querySelectorAll("[data-detail-tab]").forEach(x => {
+    x.classList.toggle("active", x.dataset.detailTab === "theory");
+  });
+  document.getElementById("panel-theory").style.display = "block";
+  document.getElementById("panel-exercises").style.display = "none";
+  window.scrollTo(0, 0);
+  updateExStats();
+  renderExercise();
+}
+
+function goBackToList() {
+  document.getElementById("view-list").style.display = "block";
+  document.getElementById("view-detail").classList.remove("visible");
+  renderTopicList();
+}
+
+document.querySelectorAll("[data-detail-tab]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-detail-tab]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  const tab = b.dataset.detailTab;
+  document.getElementById("panel-theory").style.display = tab === "theory" ? "block" : "none";
+  document.getElementById("panel-exercises").style.display = tab === "exercises" ? "block" : "none";
+  if (tab === "exercises") renderExercise();
+}));
+
+// === EXERCISE LOGIC ===
+function updateExStats() {
+  if (!currentTopic) return;
+  const s = stats[currentTopic.id] || { correct: 0, total: 0 };
+  document.getElementById("ex-correct").textContent = s.correct;
+  document.getElementById("ex-total").textContent = s.total;
+  document.getElementById("ex-acc").textContent = (s.total ? Math.round(100 * s.correct / s.total) : 0) + "%";
+  const totalEx = currentTopic.exercises.length;
+  const done = (progress[currentTopic.id] && Object.keys(progress[currentTopic.id]).length) || 0;
+  document.getElementById("ex-progress-fill").style.width = (totalEx ? (100 * done / totalEx) : 0) + "%";
+  document.getElementById("ex-counter").textContent = `Exercitiul ${currentExIdx + 1} din ${totalEx}`;
+}
+
+function renderExercise() {
+  if (!currentTopic) return;
+  const total = currentTopic.exercises.length;
+  if (currentExIdx >= total) {
+    showCompletionBanner();
+    return;
+  }
+  const ex = currentTopic.exercises[currentExIdx];
+  const content = document.getElementById("ex-content");
+  const controls = document.getElementById("ex-controls");
+  controls.innerHTML = "";
+
+  const typeLabel = {
+    fill: "Completeaza",
+    choice: "Alegere",
+    transform: "Transforma",
+    order: "Ordoneaza",
+    translate: "Traduce"
+  }[ex.type] || ex.type;
+
+  let html = `<div class="ex-card">
+    <span class="ex-type">${typeLabel}</span>
+    <div class="ex-prompt">${escapeHtml(ex.prompt)}</div>`;
+
+  if (ex.type === "fill" || ex.type === "transform" || ex.type === "translate") {
+    html += `<input class="ex-input" id="ex-input" autocomplete="off" placeholder="Scrie raspunsul..." />`;
+  } else if (ex.type === "choice") {
+    html += `<div class="ex-options">`;
+    const shuffled = ex.options.slice().sort(() => Math.random() - 0.5);
+    shuffled.forEach(o => {
+      html += `<button class="ex-option" data-val="${escapeAttr(o)}">${escapeHtml(o)}</button>`;
+    });
+    html += `</div>`;
+  } else if (ex.type === "order") {
+    html += `<div class="word-built" id="word-built"><span class="word-built-empty">Click pe cuvinte ca sa le adaugi aici</span></div>`;
+    html += `<div class="word-pool" id="word-pool"></div>`;
+  }
+
+  html += `<div class="ex-feedback" id="ex-feedback"></div></div>`;
+  content.innerHTML = html;
+
+  // Wire up
+  if (ex.type === "fill" || ex.type === "transform" || ex.type === "translate") {
+    setTimeout(() => {
+      const inp = document.getElementById("ex-input");
+      inp.focus();
+      inp.addEventListener("keydown", (e) => { if (e.key === "Enter") checkAnswer(); });
+    }, 50);
+  } else if (ex.type === "choice") {
+    document.querySelectorAll(".ex-option").forEach(b => b.addEventListener("click", () => handleChoice(b)));
+  } else if (ex.type === "order") {
+    setupOrderExercise(ex);
+  }
+
+  // Buttons
+  if (ex.type !== "choice") {
+    controls.innerHTML = `
+      <button class="btn btn-primary" onclick="checkAnswer()">Verifica</button>
+      ${ex.hint ? `<button class="btn btn-warning" onclick="showHint()">Indiciu</button>` : ""}
+      <button class="btn btn-secondary" onclick="revealAnswer()">Arata</button>
+      <button class="btn btn-secondary" onclick="skipExercise()">Sari</button>
+    `;
+  } else {
+    controls.innerHTML = `<button class="btn btn-secondary" onclick="skipExercise()">Sari peste</button>`;
+  }
+
+  updateExStats();
+}
+
+let orderState = null;
+
+function setupOrderExercise(ex) {
+  // Words from "answer" (split by space) - shuffled, user must rebuild
+  const words = ex.answer.split(/\s+/);
+  const shuffled = words.slice().sort(() => Math.random() - 0.5);
+  orderState = { words, built: [], pool: shuffled.map((w, i) => ({ id: i, text: w })) };
+  renderOrderState();
+}
+
+function renderOrderState() {
+  const pool = document.getElementById("word-pool");
+  const built = document.getElementById("word-built");
+  if (!pool || !built) return;
+  pool.innerHTML = "";
+  orderState.pool.forEach(w => {
+    if (orderState.built.find(b => b.id === w.id)) return;
+    const btn = document.createElement("button");
+    btn.className = "word-chip";
+    btn.textContent = w.text;
+    btn.addEventListener("click", () => {
+      orderState.built.push(w);
+      renderOrderState();
+    });
+    pool.appendChild(btn);
+  });
+  if (orderState.built.length === 0) {
+    built.innerHTML = '<span class="word-built-empty">Click pe cuvinte ca sa le adaugi aici</span>';
+  } else {
+    built.innerHTML = "";
+    orderState.built.forEach((w, i) => {
+      const btn = document.createElement("button");
+      btn.className = "word-chip placed";
+      btn.textContent = w.text;
+      btn.addEventListener("click", () => {
+        orderState.built.splice(i, 1);
+        renderOrderState();
+      });
+      built.appendChild(btn);
+    });
+  }
+}
+
+function handleChoice(btn) {
+  const ex = currentTopic.exercises[currentExIdx];
+  const isCorrect = btn.dataset.val === ex.answer;
+  document.querySelectorAll(".ex-option").forEach(x => {
+    x.classList.add("disabled");
+    if (x.dataset.val === ex.answer) x.classList.add("correct");
+    else if (x === btn && !isCorrect) x.classList.add("incorrect");
+  });
+  showFeedback(isCorrect, ex);
+  recordResult(isCorrect);
+}
+
+function normalizeAns(s) {
+  return (s || "").trim().toLowerCase()
+    .replace(/[ä]/g, "ae").replace(/[ö]/g, "oe").replace(/[ü]/g, "ue").replace(/[ß]/g, "ss")
+    .replace(/[âă]/g, "a").replace(/[î]/g, "i").replace(/[şș]/g, "s").replace(/[țţ]/g, "t")
+    .replace(/[.,!?;:]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function checkAnswer() {
+  const ex = currentTopic.exercises[currentExIdx];
+  let userAns;
+  if (ex.type === "order") {
+    userAns = orderState.built.map(w => w.text).join(" ");
+  } else {
+    const inp = document.getElementById("ex-input");
+    userAns = inp.value;
+    inp.classList.remove("correct", "incorrect");
+  }
+
+  // For "fill" exercises with placeholder pattern (e.g., "stehe ... auf"),
+  // we want to allow user to type just the parts separated by space or with "..."
+  let correctAns = ex.answer;
+  let isCorrect = normalizeAns(userAns) === normalizeAns(correctAns);
+  // Special handling: if answer contains "...", check that all parts are present
+  if (!isCorrect && correctAns.includes("...")) {
+    const parts = correctAns.split("...").map(p => normalizeAns(p)).filter(p => p);
+    const userN = normalizeAns(userAns);
+    isCorrect = parts.every(p => userN.includes(p));
+  }
+
+  if (ex.type !== "order") {
+    const inp = document.getElementById("ex-input");
+    inp.classList.add(isCorrect ? "correct" : "incorrect");
+  }
+  showFeedback(isCorrect, ex);
+  recordResult(isCorrect);
+}
+
+function showFeedback(isCorrect, ex) {
+  const fb = document.getElementById("ex-feedback");
+  fb.classList.add("show");
+  fb.classList.toggle("correct", isCorrect);
+  fb.classList.toggle("incorrect", !isCorrect);
+  let html = isCorrect ? "Corect!" : `Raspuns asteptat: <strong>${escapeHtml(ex.answer)}</strong>`;
+  if (ex.explanation) html += `<small>${escapeHtml(ex.explanation)}</small>`;
+  fb.innerHTML = html;
+
+  // Add "Next" button to controls
+  const controls = document.getElementById("ex-controls");
+  controls.innerHTML = `<button class="btn btn-success" onclick="nextExercise()" id="next-btn">Urmator &raquo;</button>`;
+  setTimeout(() => document.getElementById("next-btn").focus(), 50);
+}
+
+function showHint() {
+  const ex = currentTopic.exercises[currentExIdx];
+  const fb = document.getElementById("ex-feedback");
+  fb.classList.add("show");
+  fb.style.background = "#fef3c7";
+  fb.style.color = "#92400e";
+  fb.innerHTML = `Indiciu: <strong>${escapeHtml(ex.hint)}</strong>`;
+}
+
+function revealAnswer() {
+  const ex = currentTopic.exercises[currentExIdx];
+  const fb = document.getElementById("ex-feedback");
+  fb.classList.add("show", "incorrect");
+  fb.innerHTML = `Raspuns: <strong>${escapeHtml(ex.answer)}</strong>${ex.explanation ? `<small>${escapeHtml(ex.explanation)}</small>` : ""}`;
+  recordResult(false);
+  document.getElementById("ex-controls").innerHTML = `<button class="btn btn-success" onclick="nextExercise()">Urmator &raquo;</button>`;
+}
+
+function skipExercise() {
+  // Don't record result
+  const id = currentTopic.id;
+  progress[id] = progress[id] || {};
+  progress[id][currentExIdx] = "skipped";
+  saveJSON(STORAGE.progress, progress);
+  nextExercise();
+}
+
+function recordResult(isCorrect) {
+  const id = currentTopic.id;
+  // Only count first attempt for stats
+  const wasAlreadyDone = progress[id] && progress[id][currentExIdx];
+  progress[id] = progress[id] || {};
+  progress[id][currentExIdx] = isCorrect ? "correct" : "incorrect";
+  saveJSON(STORAGE.progress, progress);
+
+  if (!wasAlreadyDone) {
+    stats[id] = stats[id] || { correct: 0, total: 0 };
+    stats[id].total++;
+    if (isCorrect) stats[id].correct++;
+    saveJSON(STORAGE.stats, stats);
+  }
+  updateExStats();
+}
+
+function nextExercise() {
+  currentExIdx++;
+  renderExercise();
+}
+
+function showCompletionBanner() {
+  const id = currentTopic.id;
+  const s = stats[id] || { correct: 0, total: 0 };
+  const acc = s.total ? Math.round(100 * s.correct / s.total) : 0;
+  document.getElementById("ex-content").innerHTML = `
+    <div class="complete-banner">
+      <h3>Bravo! Ai terminat toate exercitiile!</h3>
+      <p>Acuratete: <strong>${acc}%</strong> (${s.correct} din ${s.total})</p>
+    </div>
+  `;
+  document.getElementById("ex-controls").innerHTML = `
+    <button class="btn btn-primary" onclick="restartExercises()">Reia toate exercitiile</button>
+    <button class="btn btn-secondary" onclick="goBackToList()">Inapoi la topicuri</button>
+  `;
+}
+
+function restartExercises() {
+  delete progress[currentTopic.id];
+  saveJSON(STORAGE.progress, progress);
+  currentExIdx = 0;
+  renderExercise();
+}
+
+// === UTILS ===
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// === BOOT ===
+populateCategorySelect();
+renderTopicList();
+</script>
+</body>
+</html>

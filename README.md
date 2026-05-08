@@ -10,9 +10,18 @@ Aplicatie web pentru invatarea vocabularului si frazelor de germana nivel A2 (Go
 |--------|-----------|
 | `index.html` | Aplicatia principala de vocabular: 1254 cuvinte A2 preincarcate, 4 moduri (flashcards, quiz alegere, quiz scriere, matching), import CSV/TXT, filtrare pe sectiuni, tracking progres |
 | `fraze.html` | Quiz pentru fraze A2 (14 fraze pe tema Person/Familie/Eigenschaften) cu explicatii gramaticale (weil, wenn, damit, obwohl, der/die/das, wo) |
+| `gramatica.html` | **Modul de gramatica nou:** 15 topicuri esentiale (5 A1 + 6 A2 + 4 B1) cu teorie in romana si 90 exercitii (fill-in, alegere, transformari, ordonare cuvinte). Filtrare pe nivel si categorie. |
 | `data/vocabular_a2.csv` | Vocabularul complet ca CSV editabil in Excel |
 | `descarcari/flashcards.xlsx` | Flashcards in Excel cu auto-color si formule de progres |
 | `descarcari/ghid-studiu.docx` | Ghid Word de 7 pagini cu fraze, gramatica detaliata si mnemonice |
+
+## Topicuri de gramatica acoperite
+
+**A1 (5):** Pronume personale, sein/haben, Verbe modale, Akkusativ, Dativ
+
+**A2 (6):** Perfekt (haben/sein), Verbe reflexive, Verbe separabile, Wechselpräpositionen, Subordonate (weil/dass/wenn/obwohl), Declinarea adjectivelor
+
+**B1 (4):** Präteritum, Konjunktiv 2, Pasiv (werden), Propozitii relative
 
 ## Cum se foloseste
 
