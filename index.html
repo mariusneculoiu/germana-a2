@@ -58,6 +58,77 @@
     border-radius: 16px;
     font-weight: 600;
   }
+  .streak-pill {
+    font-size: 13px;
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+  }
+  .streak-pill.active {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .btn-tts {
+    background: #8b5cf6;
+    color: white;
+  }
+  .btn-tts:hover { background: #7c3aed; }
+  .btn-shuffle {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b !important;
+    margin-left: auto;
+  }
+  .btn-shuffle:hover { background: #fde68a; }
+  /* Speed quiz */
+  .speed-prompt {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    padding: 30px 20px;
+    color: #1e3c72;
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+  .speed-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .speed-option {
+    background: white;
+    border: 2px solid #e5e7eb;
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: inherit;
+    transition: all 0.1s;
+    text-align: center;
+  }
+  .speed-option:hover { border-color: #2a5298; background: #f6f9fc; }
+  .speed-option.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+  .speed-option.incorrect { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+  .speed-end {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+    border-radius: 12px;
+  }
+  .speed-end h3 { color: #1e3c72; margin-bottom: 12px; }
+  .speed-end .big-score { font-size: 48px; font-weight: 700; color: #2a5298; margin: 12px 0; }
+  /* SRS empty state */
+  .srs-done {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border-radius: 12px;
+    color: #065f46;
+  }
+  .srs-done h3 { margin-bottom: 8px; font-size: 22px; }
 
   nav {
     display: flex;
@@ -540,12 +611,15 @@
     <select id="deck-select" onchange="switchDeck(this.value)"></select>
     <button class="btn-small" onclick="goTab('upload')">+ Adauga deck</button>
     <button class="btn-small" onclick="goTab('sections')">Filtreaza sectiuni</button>
+    <span class="streak-pill" id="streak-badge" title="Zile consecutive de studiu">Streak: 0</span>
     <span class="deck-info" id="deck-info">0 cuvinte active</span>
   </div>
 
   <nav>
     <button class="active" data-tab="flashcards">Flashcards</button>
+    <button data-tab="srs">Astazi (SRS)</button>
     <button data-tab="quiz">Quiz alegere</button>
+    <button data-tab="speed">Speed quiz</button>
     <button data-tab="type">Quiz scriere</button>
     <button data-tab="match">Matching</button>
     <button data-tab="sections">Sectiuni</button>
@@ -561,6 +635,10 @@
       <button class="active" data-direction="ro-de">RO &raquo; DE</button>
       <button data-direction="de-ro">DE &raquo; RO</button>
       <button data-direction="random">Aleator</button>
+      <span style="margin-left:14px;">Ordine:</span>
+      <button class="active" data-order-fc="sequential">Originala</button>
+      <button data-order-fc="shuffle">Amestecata</button>
+      <button class="btn-shuffle" onclick="reshuffleFlashcards()" title="Re-amesteca acum">Re-shuffle</button>
     </div>
     <div class="flashcard-area">
       <div class="flashcard" id="flashcard">
@@ -586,10 +664,44 @@
         <button class="btn btn-warning" onclick="markCard('medium')">Mediu</button>
         <button class="btn btn-success" onclick="markCard('easy')">Stiu!</button>
         <button class="btn btn-primary" onclick="nextCard()">Urmator &raquo;</button>
+        <button class="btn btn-tts" onclick="speakCurrent()" title="Asculta pronuntia germana">[Audio]</button>
       </div>
       <div style="font-size:12px; color:#666; text-align:center;">
-        SPACE = flip | Sageti = navigare | 1/2/3 = greu/mediu/usor
+        SPACE = flip | Sageti = navigare | 1/2/3 = greu/mediu/usor | A = audio
       </div>
+    </div>
+  </div>
+
+  <!-- SRS / ASTAZI -->
+  <div class="panel" id="panel-srs" style="display:none;">
+    <div class="toggle-row" style="margin-bottom:8px;">
+      <span>Directie:</span>
+      <button class="active" data-srs-direction="ro-de">RO &raquo; DE</button>
+      <button data-srs-direction="de-ro">DE &raquo; RO</button>
+      <span class="deck-info" id="srs-info" style="margin-left:auto;">0 cuvinte de revizuit</span>
+    </div>
+    <div class="info-box" style="margin-bottom:14px;">
+      Algoritm Anki: cuvintele apar la intervale care cresc cand le stii (3, 7, 17, 40+ zile). Greu = repeti maine. Mediu = 2-4 zile. Stiu = 3-7+ zile.
+    </div>
+    <div class="flashcard-area" id="srs-area"></div>
+  </div>
+
+  <!-- SPEED QUIZ -->
+  <div class="panel" id="panel-speed" style="display:none;">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="speed-time">60</div><div class="stat-label">Secunde</div></div>
+      <div class="stat-card"><div class="stat-value" id="speed-score">0</div><div class="stat-label">Scor</div></div>
+      <div class="stat-card"><div class="stat-value" id="speed-best">0</div><div class="stat-label">Record</div></div>
+    </div>
+    <div id="speed-content">
+      <div class="empty-state">
+        <div class="empty-state-icon">[!]</div>
+        Click pe Start pentru o tura de 60 secunde. Vezi cate cuvinte poti recunoaste in 1 minut.
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="btn btn-primary" id="speed-start-btn" onclick="speedStart()">Start (60s)</button>
+      <button class="btn btn-secondary" onclick="speedReset()">Reseteaza recordul</button>
     </div>
   </div>
 
@@ -669,12 +781,19 @@
       <input type="text" id="list-search" placeholder="Cauta cuvant..." style="width:100%; padding:10px 14px; border:2px solid #d1d5db; border-radius:8px; font-size:14px; font-family:inherit;" oninput="renderList()">
     </div>
     <div class="toggle-row">
-      <span>Filtru:</span>
+      <span>Status:</span>
       <button class="active" data-list-filter="all">Toate</button>
       <button data-list-filter="hard">De repetat</button>
       <button data-list-filter="medium">Mediu</button>
       <button data-list-filter="easy">Stiu</button>
       <button data-list-filter="untouched">Neincepute</button>
+    </div>
+    <div class="toggle-row" style="margin-bottom:10px;">
+      <span>Categorie:</span>
+      <select id="list-cat-filter" onchange="renderList()" style="padding:6px 12px; border:1px solid #d1d5db; border-radius:14px; font-family:inherit; font-size:12px;">
+        <option value="all">Toate categoriile</option>
+      </select>
+      <button class="btn-small btn-primary" onclick="practiceFilteredList()" style="margin-left:auto;">Studiaza filtrul curent (flashcards)</button>
     </div>
     <div id="list-content"></div>
   </div>
@@ -751,6 +870,9 @@ const STORAGE = {
   sections: "vocab_a2_sections_v1",
   progress: "vocab_a2_progress_v1",
   stats: "vocab_a2_stats_v1",
+  srs: "vocab_a2_srs_v1",          // {entryKey: {interval, reps, ease, due, lastReviewed}}
+  streak: "vocab_a2_streak_v1",    // {count, lastStudyDate}
+  speedBest: "vocab_a2_speed_best_v1",
 };
 
 function loadJSON(key, fallback) {
@@ -774,6 +896,111 @@ let stats = loadJSON(STORAGE.stats, {
   type: { correct: 0, total: 0 },
   match: { rounds: 0, pairs: 0, mistakes: 0 }
 });
+let srs = loadJSON(STORAGE.srs, {});
+let streakData = loadJSON(STORAGE.streak, { count: 0, lastStudyDate: null });
+
+// === SRS (Anki-style spaced repetition) ===
+function todayDayNum() {
+  // Days since epoch (timezone-local)
+  const now = new Date();
+  return Math.floor((now - now.getTimezoneOffset() * 60000) / 86400000);
+}
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+function updateSRS(key, level) {
+  const today = todayDayNum();
+  const s = srs[key] || { interval: 0, reps: 0, ease: 2.5 };
+  let newInterval;
+  if (level === "hard") {
+    newInterval = 1;
+    s.reps = 0;
+    s.ease = Math.max(1.3, s.ease - 0.2);
+  } else if (level === "medium") {
+    if (s.reps === 0 || s.interval === 0) newInterval = 2;
+    else if (s.interval <= 3) newInterval = 4;
+    else newInterval = Math.round(s.interval * 1.5);
+    s.reps += 1;
+  } else if (level === "easy") {
+    if (s.reps === 0 || s.interval === 0) newInterval = 3;
+    else if (s.interval <= 4) newInterval = 7;
+    else newInterval = Math.round(s.interval * s.ease);
+    s.reps += 1;
+    s.ease = Math.min(3.0, s.ease + 0.1);
+  }
+  s.interval = newInterval;
+  s.due = today + newInterval;
+  s.lastReviewed = today;
+  srs[key] = s;
+  saveJSON(STORAGE.srs, srs);
+}
+function getDueEntries() {
+  const today = todayDayNum();
+  const all = decks[activeDeck] || [];
+  // Apply section filter as well (so SRS respects user's section choices)
+  const sf = sectionFilter[activeDeck] || {};
+  const anySelected = Object.values(sf).some(v => v);
+  return all.filter(e => {
+    if (anySelected && !sf[e.section_ro || "general"]) return false;
+    const s = srs[entryKey(e)];
+    if (!s) return true; // never reviewed = due now
+    return s.due <= today;
+  });
+}
+
+// === Daily streak ===
+function bumpStreak() {
+  const today = todayStr();
+  if (streakData.lastStudyDate === today) return; // already counted today
+  // Check if yesterday
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yest = yesterday.toISOString().slice(0, 10);
+  if (streakData.lastStudyDate === yest) {
+    streakData.count += 1;
+  } else {
+    streakData.count = 1;
+  }
+  streakData.lastStudyDate = today;
+  saveJSON(STORAGE.streak, streakData);
+  updateStreakBadge();
+}
+function updateStreakBadge() {
+  const el = document.getElementById("streak-badge");
+  if (el) {
+    const today = todayStr();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yest = yesterday.toISOString().slice(0, 10);
+    const active = streakData.lastStudyDate === today || streakData.lastStudyDate === yest;
+    el.textContent = `Streak: ${streakData.count} ${active ? "" : "(rupt)"}`;
+    el.className = "streak-pill " + (streakData.lastStudyDate === today ? "active" : "");
+  }
+}
+
+// === Text-to-Speech (browser-native German voice) ===
+let germanVoice = null;
+function pickGermanVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const de = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("de"));
+  return de || null;
+}
+function speakDe(text) {
+  if (!("speechSynthesis" in window)) return;
+  // Cancel anything in progress
+  window.speechSynthesis.cancel();
+  if (!germanVoice) germanVoice = pickGermanVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  if (germanVoice) u.voice = germanVoice;
+  u.lang = "de-DE";
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+if ("speechSynthesis" in window) {
+  // Voices may not be loaded yet on first call
+  window.speechSynthesis.onvoiceschanged = () => { germanVoice = pickGermanVoice(); };
+}
 
 // === HELPERS ===
 function entryKey(e) { return activeDeck + "::" + e.ro + "::" + e.de; }
@@ -893,10 +1120,14 @@ tabs.forEach(b => b.addEventListener("click", () => goTab(b.dataset.tab)));
 function goTab(name) {
   tabs.forEach(x => x.classList.toggle("active", x.dataset.tab === name));
   document.querySelectorAll(".panel").forEach(p => p.style.display = p.id === "panel-" + name ? "block" : "none");
+  srsMode = (name === "srs");
+  if (name === "flashcards") renderCard();
   if (name === "list") renderList();
   if (name === "progress") renderProgress();
   if (name === "sections") renderSections();
   if (name === "upload") renderDeckList();
+  if (name === "srs") openSrs();
+  if (name === "speed") openSpeed();
   if (name === "quiz") { if (!document.getElementById("quiz-content").innerHTML) newQuiz(); }
   if (name === "type") { if (!document.getElementById("type-content").innerHTML) newType(); }
   if (name === "match") { if (!document.getElementById("match-content").innerHTML) newMatch(); }
@@ -905,6 +1136,10 @@ function goTab(name) {
 // === FLASHCARDS ===
 let cardIdx = 0;
 let direction = "ro-de";
+let fcOrder = "sequential";  // "sequential" or "shuffle"
+let fcShuffled = [];           // shuffled array of entries when fcOrder='shuffle'
+let srsMode = false;
+let srsQueue = [];
 const card = document.getElementById("flashcard");
 card.addEventListener("click", () => card.classList.toggle("flipped"));
 
@@ -915,9 +1150,48 @@ document.querySelectorAll("[data-direction]").forEach(b => b.addEventListener("c
   renderCard();
 }));
 
+document.querySelectorAll("[data-order-fc]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-order-fc]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  fcOrder = b.dataset.orderFc;
+  if (fcOrder === "shuffle") {
+    fcShuffled = shuffle(getActiveEntries());
+  }
+  cardIdx = 0;
+  renderCard();
+}));
+
+function reshuffleFlashcards() {
+  // Switch to shuffle mode and re-shuffle now
+  fcOrder = "shuffle";
+  document.querySelectorAll("[data-order-fc]").forEach(b => {
+    b.classList.toggle("active", b.dataset.orderFc === "shuffle");
+  });
+  fcShuffled = shuffle(getActiveEntries());
+  cardIdx = 0;
+  renderCard();
+}
+
+function getFcEntries() {
+  return fcOrder === "shuffle" ? fcShuffled : getActiveEntries();
+}
+
+function getCurrentEntry() {
+  const entries = srsMode ? srsQueue : getFcEntries();
+  if (!entries.length || cardIdx < 0 || cardIdx >= entries.length) return null;
+  return entries[cardIdx];
+}
+
+function speakCurrent() {
+  const e = getCurrentEntry();
+  if (!e) return;
+  // Strip article from German word for cleaner TTS (der/die/das)
+  speakDe(e.de);
+}
+
 function renderCard() {
   card.classList.remove("flipped");
-  const entries = getActiveEntries();
+  const entries = getFcEntries();
   if (!entries.length) {
     document.getElementById("card-front-text").textContent = "Nicio sectiune activa";
     document.getElementById("card-back-text").textContent = "Activeaza sectiuni in tab-ul Sectiuni";
@@ -947,29 +1221,49 @@ function renderCard() {
   document.getElementById("card-back-hint").textContent = statusLabel ? `Status: ${statusLabel}` : "";
   document.getElementById("card-counter").textContent = (cardIdx + 1) + "/" + entries.length;
 }
-function nextCard() { cardIdx = (cardIdx + 1) % Math.max(getActiveEntries().length, 1); renderCard(); }
+function nextCard() { cardIdx = (cardIdx + 1) % Math.max(getFcEntries().length, 1); renderCard(); }
 function prevCard() {
-  const len = getActiveEntries().length;
+  const len = getFcEntries().length;
   cardIdx = (cardIdx - 1 + Math.max(len, 1)) % Math.max(len, 1);
   renderCard();
 }
 function markCard(level) {
-  const entries = getActiveEntries();
+  // entries: source depends on whether we're in SRS mode or normal flashcards
+  const entries = srsMode ? srsQueue : getActiveEntries();
   if (!entries.length) return;
-  progress[entryKey(entries[cardIdx])] = level;
+  const ent = entries[cardIdx];
+  const key = entryKey(ent);
+  progress[key] = level;
   saveJSON(STORAGE.progress, progress);
-  nextCard();
+  updateSRS(key, level);
+  bumpStreak();
+  if (srsMode) {
+    // In SRS mode, remove current card from queue and continue
+    srsQueue.splice(cardIdx, 1);
+    if (cardIdx >= srsQueue.length) cardIdx = 0;
+    renderSrsCard();
+  } else {
+    nextCard();
+  }
 }
 
 document.addEventListener("keydown", (e) => {
+  // Don't interfere with text inputs/textareas
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
   const fcVisible = document.getElementById("panel-flashcards").style.display !== "none";
-  if (!fcVisible) return;
-  if (e.code === "Space") { e.preventDefault(); card.classList.toggle("flipped"); }
-  else if (e.code === "ArrowRight") nextCard();
-  else if (e.code === "ArrowLeft") prevCard();
+  const srsVisible = document.getElementById("panel-srs").style.display !== "none";
+  if (!fcVisible && !srsVisible) return;
+  if (e.code === "Space") {
+    e.preventDefault();
+    const activeCard = srsVisible ? document.querySelector("#srs-area .flashcard") : card;
+    if (activeCard) activeCard.classList.toggle("flipped");
+  }
+  else if (e.code === "ArrowRight" && fcVisible) nextCard();
+  else if (e.code === "ArrowLeft" && fcVisible) prevCard();
   else if (e.key === "1") markCard("hard");
   else if (e.key === "2") markCard("medium");
   else if (e.key === "3") markCard("easy");
+  else if (e.key === "a" || e.key === "A") speakCurrent();
 });
 
 // === MULTIPLE CHOICE QUIZ ===
@@ -1035,6 +1329,7 @@ function newQuiz() {
       stats.quiz.total++;
       saveJSON(STORAGE.stats, stats);
       saveJSON(STORAGE.progress, progress);
+      bumpStreak();
       updateQuizStats();
     });
   });
@@ -1129,6 +1424,7 @@ function checkType() {
   stats.type.total++;
   saveJSON(STORAGE.stats, stats);
   saveJSON(STORAGE.progress, progress);
+  bumpStreak();
   updateTypeStats();
 }
 function hintType() {
@@ -1302,8 +1598,25 @@ document.querySelectorAll("[data-list-filter]").forEach(b => b.addEventListener(
   listFilter = b.dataset.listFilter;
   renderList();
 }));
-function renderList() {
+function populateListCategorySelect() {
+  const sel = document.getElementById("list-cat-filter");
+  if (!sel) return;
+  const all = decks[activeDeck] || [];
+  const cats = Array.from(new Set(all.map(e => e.section_ro || "general"))).sort();
+  const cur = sel.value;
+  sel.innerHTML = '<option value="all">Toate categoriile</option>';
+  cats.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  sel.value = cats.includes(cur) ? cur : "all";
+}
+
+function getFilteredListEntries() {
   const search = (document.getElementById("list-search").value || "").toLowerCase();
+  const catFilter = (document.getElementById("list-cat-filter") || {}).value || "all";
   const all = decks[activeDeck] || [];
   let filtered = all;
   if (listFilter !== "all") {
@@ -1313,9 +1626,35 @@ function renderList() {
       return s === listFilter;
     });
   }
+  if (catFilter !== "all") {
+    filtered = filtered.filter(e => (e.section_ro || "general") === catFilter);
+  }
   if (search) {
     filtered = filtered.filter(e => e.ro.toLowerCase().includes(search) || e.de.toLowerCase().includes(search));
   }
+  return filtered;
+}
+
+function practiceFilteredList() {
+  const filtered = getFilteredListEntries();
+  if (!filtered.length) {
+    showToast("Niciun cuvant in filtrul curent", "error");
+    return;
+  }
+  // Inject the filtered entries as the shuffle queue and switch to flashcards
+  fcShuffled = shuffle(filtered.slice());
+  fcOrder = "shuffle";
+  document.querySelectorAll("[data-order-fc]").forEach(b => {
+    b.classList.toggle("active", b.dataset.orderFc === "shuffle");
+  });
+  cardIdx = 0;
+  showToast(`Studiezi ${filtered.length} cuvinte filtrate`, "success");
+  goTab("flashcards");
+}
+
+function renderList() {
+  populateListCategorySelect();
+  const filtered = getFilteredListEntries();
   // Group by section
   const groups = {};
   filtered.forEach(e => {
@@ -1500,6 +1839,165 @@ function exportDeck(name) {
 }
 function exportCurrentDeck() { exportDeck(activeDeck); }
 
+// === SRS PANEL ("Astazi") ===
+let srsDirection = "ro-de";
+document.querySelectorAll("[data-srs-direction]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-srs-direction]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  srsDirection = b.dataset.srsDirection;
+  renderSrsCard();
+}));
+
+function openSrs() {
+  srsQueue = getDueEntries();
+  cardIdx = 0;
+  document.getElementById("srs-info").textContent = `${srsQueue.length} cuvinte de revizuit`;
+  renderSrsCard();
+}
+
+function renderSrsCard() {
+  const area = document.getElementById("srs-area");
+  document.getElementById("srs-info").textContent = `${srsQueue.length} cuvinte de revizuit`;
+  if (!srsQueue.length) {
+    area.innerHTML = `
+      <div class="srs-done">
+        <h3>Toate cuvintele de azi sunt facute!</h3>
+        <p>Revino maine pentru urmatoarea sesiune SRS. Pana atunci, poti folosi tab-urile normale.</p>
+      </div>
+    `;
+    return;
+  }
+  if (cardIdx >= srsQueue.length) cardIdx = 0;
+  const e = srsQueue[cardIdx];
+  const useDir = srsDirection;
+  const front = useDir === "ro-de" ? e.ro : e.de;
+  const back = useDir === "ro-de" ? e.de : e.ro;
+  const labelFront = useDir === "ro-de" ? "Romana" : "Germana";
+  const labelBack = useDir === "ro-de" ? "Germana" : "Romana";
+  const s = srs[entryKey(e)];
+  const srsHint = s ? `Repetare #${s.reps} - urmatorul: ${s.interval} zile` : "Cuvant nou";
+  area.innerHTML = `
+    <div class="flashcard" id="srs-flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="card-counter">${cardIdx + 1}/${srsQueue.length}</div>
+          <div class="card-category">${escapeHtml(e.section_ro || "")}</div>
+          <div class="card-label">${labelFront}</div>
+          <div class="card-text">${escapeHtml(front)}</div>
+          <div class="card-hint">Click pentru raspuns - SPACE flip</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="card-category">${escapeHtml(e.section_ro || "")}</div>
+          <div class="card-label">${labelBack}</div>
+          <div class="card-text">${escapeHtml(back)}</div>
+          <div class="card-hint">${srsHint}</div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn btn-danger" onclick="markCard('hard')">Greu (1 zi)</button>
+      <button class="btn btn-warning" onclick="markCard('medium')">Mediu</button>
+      <button class="btn btn-success" onclick="markCard('easy')">Stiu!</button>
+      <button class="btn btn-tts" onclick="speakDe(${JSON.stringify(e.de)})">[Audio]</button>
+    </div>
+    <div style="font-size:12px; color:#666; text-align:center;">
+      SPACE = flip | 1/2/3 = greu/mediu/usor | A = audio
+    </div>
+  `;
+  const fc = document.getElementById("srs-flashcard");
+  if (fc) fc.addEventListener("click", () => fc.classList.toggle("flipped"));
+}
+
+// === SPEED QUIZ ===
+let speedState = { active: false, score: 0, time: 60, timer: null, current: null };
+
+function openSpeed() {
+  const best = parseInt(localStorage.getItem(STORAGE.speedBest) || "0", 10);
+  document.getElementById("speed-best").textContent = best;
+  document.getElementById("speed-score").textContent = "0";
+  document.getElementById("speed-time").textContent = "60";
+}
+
+function speedStart() {
+  const entries = getActiveEntries();
+  if (entries.length < 4) { showToast("Ai nevoie de minim 4 cuvinte active", "error"); return; }
+  if (speedState.timer) clearInterval(speedState.timer);
+  speedState = { active: true, score: 0, time: 60, current: null };
+  document.getElementById("speed-score").textContent = "0";
+  document.getElementById("speed-time").textContent = "60";
+  document.getElementById("speed-start-btn").textContent = "In curs...";
+  document.getElementById("speed-start-btn").disabled = true;
+  speedNextQ();
+  speedState.timer = setInterval(() => {
+    speedState.time--;
+    document.getElementById("speed-time").textContent = speedState.time;
+    if (speedState.time <= 0) speedEnd();
+  }, 1000);
+  bumpStreak();
+}
+
+function speedNextQ() {
+  const entries = getActiveEntries();
+  const correct = entries[Math.floor(Math.random() * entries.length)];
+  const wrongPool = entries.filter(e => e.de !== correct.de);
+  const wrongs = shuffle(wrongPool).slice(0, 3);
+  const options = shuffle([correct, ...wrongs]);
+  speedState.current = correct;
+  let html = `<div class="speed-prompt">${escapeHtml(correct.ro)}</div>`;
+  html += '<div class="speed-options">';
+  options.forEach(o => {
+    html += `<button class="speed-option" data-correct="${o.de === correct.de}">${escapeHtml(o.de)}</button>`;
+  });
+  html += "</div>";
+  document.getElementById("speed-content").innerHTML = html;
+  document.querySelectorAll(".speed-option").forEach(b => b.addEventListener("click", () => speedAnswer(b)));
+}
+
+function speedAnswer(btn) {
+  const isCorrect = btn.dataset.correct === "true";
+  btn.classList.add(isCorrect ? "correct" : "incorrect");
+  if (!isCorrect) {
+    document.querySelectorAll(".speed-option").forEach(b => {
+      if (b.dataset.correct === "true") b.classList.add("correct");
+    });
+  }
+  if (isCorrect) {
+    speedState.score++;
+    document.getElementById("speed-score").textContent = speedState.score;
+  }
+  // Speak the correct word briefly
+  speakDe(speedState.current.de);
+  // Next question after short delay
+  setTimeout(() => {
+    if (speedState.active) speedNextQ();
+  }, isCorrect ? 300 : 700);
+}
+
+function speedEnd() {
+  if (speedState.timer) clearInterval(speedState.timer);
+  speedState.active = false;
+  const best = parseInt(localStorage.getItem(STORAGE.speedBest) || "0", 10);
+  const isNewBest = speedState.score > best;
+  if (isNewBest) localStorage.setItem(STORAGE.speedBest, String(speedState.score));
+  document.getElementById("speed-best").textContent = Math.max(best, speedState.score);
+  document.getElementById("speed-content").innerHTML = `
+    <div class="speed-end">
+      <h3>Gata! Timpul a expirat.</h3>
+      <div class="big-score">${speedState.score}</div>
+      <p style="color:#555;">cuvinte corecte in 60 secunde</p>
+      ${isNewBest ? '<p style="color:#10b981; font-weight:600; margin-top:8px;">Record nou!</p>' : ''}
+    </div>
+  `;
+  document.getElementById("speed-start-btn").textContent = "Start (60s)";
+  document.getElementById("speed-start-btn").disabled = false;
+}
+
+function speedReset() {
+  if (!confirm("Resetezi recordul?")) return;
+  localStorage.setItem(STORAGE.speedBest, "0");
+  document.getElementById("speed-best").textContent = "0";
+}
+
 // === UTILS ===
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -1510,6 +2008,7 @@ refreshUI();
 updateQuizStats();
 updateTypeStats();
 updateMatchStats();
+updateStreakBadge();
 </script>
 </body>
 </html>
