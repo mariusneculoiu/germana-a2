@@ -379,17 +379,30 @@
     <button class="active" data-tab="flashcards">Flashcards</button>
     <button data-tab="quiz">Quiz</button>
     <button data-tab="fillblank">Completeaza</button>
+    <button data-tab="satzbau">Satzbau</button>
+    <button data-tab="diktat">Diktat (audio)</button>
+    <button data-tab="translate">Traducere</button>
     <button data-tab="grammar">Gramatica</button>
     <button data-tab="list">Toate frazele</button>
     <button data-tab="progress">Progres</button>
   </nav>
 
   <div class="panel" id="panel-flashcards">
+    <div class="toggle-row" style="margin-bottom:8px;">
+      <span style="align-self:center; margin-right:8px; font-size:13px; color:#666;">Categorie:</span>
+      <select id="cat-filter" onchange="onCatChange(this.value)" style="padding:6px 12px; border-radius:14px; border:1px solid #d1d5db; font-family:inherit; font-size:13px;">
+        <option value="all">Toate categoriile</option>
+      </select>
+      <span id="phrase-count" style="margin-left:auto; font-size:12px; color:#666;">0 fraze</span>
+    </div>
     <div class="toggle-row">
       <span style="align-self:center; margin-right:8px; font-size:13px; color:#666;">Directia:</span>
       <button class="active" data-direction="de-ro">DE -&gt; RO</button>
       <button data-direction="ro-de">RO -&gt; DE</button>
       <button data-direction="random">Aleator</button>
+      <span style="margin-left:14px; font-size:13px; color:#666;">Ordine:</span>
+      <button class="active" data-fc-order="seq">Originala</button>
+      <button data-fc-order="shuffle">Amestecata</button>
     </div>
     <div class="flashcard-area">
       <div class="flashcard" id="flashcard">
@@ -415,9 +428,10 @@
         <button class="btn btn-warning" onclick="markCard('medium')">Mediu</button>
         <button class="btn btn-success" onclick="markCard('easy')">Stiu!</button>
         <button class="btn btn-primary" onclick="nextCard()">Urmator &raquo;</button>
+        <button class="btn" style="background:#8b5cf6; color:white;" onclick="speakCurrent()" title="Asculta pronuntia germana">[Audio]</button>
       </div>
       <div style="font-size:13px; color:#666; text-align:center; margin-top:10px;">
-        Tasta SPACE pentru flip - sageti pentru navigare
+        SPACE = flip | Sageti = navigare | 1/2/3 = greu/mediu/usor | A = audio
       </div>
     </div>
   </div>
@@ -459,6 +473,55 @@
     <div style="text-align:center; margin-top:16px;">
       <button class="btn btn-primary" onclick="newFib()">Exercitiu nou</button>
       <button class="btn btn-secondary" onclick="resetFib()">Reseteaza</button>
+    </div>
+  </div>
+
+  <!-- SATZBAU - reorder words -->
+  <div class="panel" id="panel-satzbau" style="display:none;">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="sb-correct">0</div><div class="stat-label">Corecte</div></div>
+      <div class="stat-card"><div class="stat-value" id="sb-total">0</div><div class="stat-label">Total</div></div>
+    </div>
+    <div id="sb-content"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="newSatzbau()">Fraza noua</button>
+      <button class="btn btn-secondary" onclick="resetSb()">Reseteaza</button>
+    </div>
+    <div class="info-box" style="margin-top:16px; background:#fef3c7; padding:12px; border-radius:8px; border-left:4px solid #f59e0b; font-size:13px; color:#78350f;">
+      Click pe cuvinte ca sa le adaugi in ordinea corecta. Click pe un cuvant adaugat ca sa-l scoti inapoi.
+    </div>
+  </div>
+
+  <!-- DIKTAT - listen and type -->
+  <div class="panel" id="panel-diktat" style="display:none;">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="dk-correct">0</div><div class="stat-label">Corecte</div></div>
+      <div class="stat-card"><div class="stat-value" id="dk-total">0</div><div class="stat-label">Total</div></div>
+    </div>
+    <div id="dk-content"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="newDiktat()">Fraza noua</button>
+      <button class="btn btn-secondary" onclick="resetDk()">Reseteaza</button>
+    </div>
+    <div class="info-box" style="margin-top:16px; background:#fef3c7; padding:12px; border-radius:8px; border-left:4px solid #f59e0b; font-size:13px; color:#78350f;">
+      Asculta fraza in germana (apesi butonul Audio), apoi scrie ce ai auzit. Comparatia accepta a=ä, o=ö, u=ü, ss=ß.
+    </div>
+  </div>
+
+  <!-- TRADUCERE COMPLETA - full translation -->
+  <div class="panel" id="panel-translate" style="display:none;">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value" id="tr-correct">0</div><div class="stat-label">Corecte</div></div>
+      <div class="stat-card"><div class="stat-value" id="tr-total">0</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-value" id="tr-acc">0%</div><div class="stat-label">Acuratete</div></div>
+    </div>
+    <div id="tr-content"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="newTranslate()">Fraza noua</button>
+      <button class="btn btn-secondary" onclick="resetTr()">Reseteaza</button>
+    </div>
+    <div class="info-box" style="margin-top:16px; background:#fef3c7; padding:12px; border-radius:8px; border-left:4px solid #f59e0b; font-size:13px; color:#78350f;">
+      Citeste fraza in romana, scrie traducerea completa in germana. Cel mai dificil exercitiu, dar cel mai eficient pentru memorare pe termen lung.
     </div>
   </div>
 
@@ -568,22 +631,52 @@
 </div>
 
 <script>
-const phrases = [
-  { id: 1, cat: "Nume", de: "Ich heisse Maria und ich komme aus Rumanien, weil ich dort geboren bin.", ro: "Ma numesc Maria si vin din Romania deoarece m-am nascut acolo.", grammar: "weil (deoarece) -> verbul 'bin' la sfarsit" },
-  { id: 2, cat: "Nume", de: "Wie heissen Sie und woher kommen Sie?", ro: "Cum va numiti si de unde veniti?", grammar: "intrebare formala -- Sie (forma de politete)" },
-  { id: 3, cat: "Documente", de: "Ich muss meine Daten angeben, wenn ich ein Formular ausfulle.", ro: "Trebuie sa imi dau datele atunci cand completez un formular.", grammar: "wenn (cand/daca) -> verbul 'ausfulle' la sfarsit" },
-  { id: 4, cat: "Documente", de: "Ich brauche meinen Ausweis, damit ich mich identifizieren kann.", ro: "Am nevoie de buletin/pasaport pentru a ma putea identifica.", grammar: "damit (ca sa) -> verbul modal 'kann' la sfarsit" },
-  { id: 5, cat: "Persoana", de: "Ich bin 30 Jahre alt und arbeite als Arzt, weil ich Menschen helfen mochte.", ro: "Am 30 de ani si lucrez ca medic deoarece vreau sa ajut oamenii.", grammar: "weil + verb modal 'mochte' la sfarsit" },
-  { id: 6, cat: "Persoana", de: "Ich wohne in einer Stadt, die sehr ruhig ist.", ro: "Locuiesc intr-un oras care este foarte linistit.", grammar: "die = pronume relativ (Stadt e feminin in germana!)" },
-  { id: 7, cat: "Familie", de: "Ich habe eine kleine Familie, weil wir nur zu dritt sind.", ro: "Am o familie mica deoarece suntem doar trei persoane.", grammar: "weil + 'zu dritt' = in trei" },
-  { id: 8, cat: "Familie", de: "Am Wochenende besuchen wir unsere Eltern, wenn wir Zeit haben.", ro: "In weekend ne vizitam parintii daca avem timp.", grammar: "Am Wochenende = la sfarsit de saptamana; wenn = daca" },
-  { id: 9, cat: "Rude", de: "Meine Eltern wohnen auf dem Land, wo es sehr ruhig ist.", ro: "Parintii mei locuiesc la tara unde este foarte liniste.", grammar: "wo = unde (loc); auf dem Land = la tara" },
-  { id: 10, cat: "Rude", de: "Ich habe einen Bruder, der in Deutschland arbeitet.", ro: "Am un frate care lucreaza in Germania.", grammar: "der = pronume relativ masculin nominativ" },
-  { id: 11, cat: "Aspect", de: "Er ist gross und hat dunkle Haare, die sehr kurz sind.", ro: "El este inalt si are par inchis la culoare care este foarte scurt.", grammar: "die = pronume relativ plural (Haare e plural)" },
-  { id: 12, cat: "Aspect", de: "Sie tragt oft elegante Kleidung, weil sie im Buro arbeitet.", ro: "Ea poarta des haine elegante deoarece lucreaza la birou.", grammar: "tragen (a purta) -- 3rd p. sg.: tragt; im Buro = la birou" },
-  { id: 13, cat: "Caracter", de: "Er ist freundlich, obwohl er manchmal sehr ruhig ist.", ro: "El este prietenos, desi uneori este foarte tacut.", grammar: "obwohl (desi) -> verbul 'ist' la sfarsit" },
-  { id: 14, cat: "Caracter", de: "Ich mag Menschen, die ehrlich und hilfsbereit sind.", ro: "Imi plac oamenii care sunt sinceri si saritori.", grammar: "die = pronume relativ plural (Menschen e plural)" }
-];
+const phrases = [{"id":1,"cat":"Salutari & Politete","de":"Hallo!","ro":"Salut!","grammar":""},{"id":2,"cat":"Salutari & Politete","de":"Guten Morgen!","ro":"Bună dimineața!","grammar":""},{"id":3,"cat":"Salutari & Politete","de":"Guten Tag!","ro":"Bună ziua!","grammar":""},{"id":4,"cat":"Salutari & Politete","de":"Guten Abend!","ro":"Bună seara!","grammar":""},{"id":5,"cat":"Salutari & Politete","de":"Tschüss!","ro":"Pa! / Salut!","grammar":""},{"id":6,"cat":"Salutari & Politete","de":"Auf Wiedersehen!","ro":"La revedere!","grammar":""},{"id":7,"cat":"Timp","de":"Bis später!","ro":"Pe mai târziu!","grammar":""},{"id":8,"cat":"Salutari & Politete","de":"Bis morgen!","ro":"Pe mâine!","grammar":""},{"id":9,"cat":"Salutari & Politete","de":"Wie geht's?","ro":"Ce mai faci?","grammar":""},{"id":10,"cat":"Salutari & Politete","de":"Gut, danke. Und dir?","ro":"Bine, mulțumesc. Și tu?","grammar":""},{"id":11,"cat":"Salutari & Politete","de":"Sehr gut, danke.","ro":"Foarte bine, mulțumesc.","grammar":""},{"id":12,"cat":"Timp","de":"Nicht so gut heute.","ro":"Nu prea bine astăzi.","grammar":""},{"id":13,"cat":"Salutari & Politete","de":"Bitte.","ro":"Te rog / Cu plăcere.","grammar":""},{"id":14,"cat":"Salutari & Politete","de":"Danke.","ro":"Mulțumesc.","grammar":""},{"id":15,"cat":"Salutari & Politete","de":"Vielen Dank.","ro":"Mulțumesc mult.","grammar":""},{"id":16,"cat":"Salutari & Politete","de":"Entschuldigung.","ro":"Scuzați-mă / Iertați-mă.","grammar":""},{"id":17,"cat":"Salutari & Politete","de":"Kein Problem.","ro":"Nicio problemă.","grammar":""},{"id":18,"cat":"Salutari & Politete","de":"Alles klar.","ro":"În regulă / Am înțeles.","grammar":""},{"id":19,"cat":"Salutari & Politete","de":"Gerne.","ro":"Cu plăcere.","grammar":""},{"id":20,"cat":"Salutari & Politete","de":"Schön, dich kennenzulernen.","ro":"Încântat de cunoștință.","grammar":""},{"id":21,"cat":"Prezentare","de":"Ich heiße ...","ro":"Mă numesc...","grammar":""},{"id":22,"cat":"Prezentare","de":"Mein Name ist ...","ro":"Numele meu este...","grammar":""},{"id":23,"cat":"Prezentare","de":"Ich komme aus ...","ro":"Vin din...","grammar":""},{"id":24,"cat":"Prezentare","de":"Ich wohne in ...","ro":"Locuiesc în...","grammar":""},{"id":25,"cat":"Prezentare","de":"Ich lebe seit ... in Deutschland.","ro":"Locuiesc de... în Germania.","grammar":""},{"id":26,"cat":"Prezentare","de":"Ich lerne Deutsch.","ro":"Învăț germana.","grammar":""},{"id":27,"cat":"Prezentare","de":"Ich spreche ein bisschen Deutsch.","ro":"Vorbesc puțin germana.","grammar":""},{"id":28,"cat":"Prezentare","de":"Ich verstehe Deutsch, aber ich spreche langsam.","ro":"Înțeleg germana, dar vorbesc rar.","grammar":""},{"id":29,"cat":"Prezentare","de":"Ich arbeite als ...","ro":"Lucrez ca...","grammar":""},{"id":30,"cat":"Prezentare","de":"Ich bin neu hier.","ro":"Sunt nou aici.","grammar":""},{"id":31,"cat":"Prezentare","de":"Ich bin heute zum ersten Mal hier.","ro":"Sunt aici pentru prima dată astăzi.","grammar":""},{"id":32,"cat":"Prezentare","de":"Ich suche ...","ro":"Caut...","grammar":""},{"id":33,"cat":"Prezentare","de":"Ich brauche ...","ro":"Am nevoie de...","grammar":""},{"id":34,"cat":"Diverse","de":"Ich habe eine Frage.","ro":"Am o întrebare.","grammar":""},{"id":35,"cat":"Diverse","de":"Darf ich etwas fragen?","ro":"Pot să întreb ceva?","grammar":""},{"id":36,"cat":"Diverse","de":"Können Sie mir helfen?","ro":"Mă puteți ajuta?","grammar":""},{"id":37,"cat":"Comunicare","de":"Ich weiß es nicht.","ro":"Nu știu.","grammar":""},{"id":38,"cat":"Comunicare","de":"Keine Ahnung.","ro":"Habar n-am.","grammar":""},{"id":39,"cat":"Diverse","de":"Einen Moment, bitte.","ro":"Un moment, vă rog.","grammar":""},{"id":40,"cat":"Diverse","de":"Ich bin gleich da.","ro":"Vin imediat.","grammar":""},{"id":41,"cat":"Comunicare","de":"Ich verstehe.","ro":"Înțeleg.","grammar":""},{"id":42,"cat":"Comunicare","de":"Ich verstehe nicht.","ro":"Nu înțeleg.","grammar":""},{"id":43,"cat":"Comunicare","de":"Können Sie das bitte wiederholen?","ro":"Puteți să repetați, vă rog?","grammar":""},{"id":44,"cat":"Comunicare","de":"Langsamer, bitte.","ro":"Mai rar, vă rog.","grammar":""},{"id":45,"cat":"Comunicare","de":"Können Sie das bitte erklären?","ro":"Puteți să explicați asta, vă rog?","grammar":""},{"id":46,"cat":"Comunicare","de":"Was bedeutet das?","ro":"Ce înseamnă asta?","grammar":""},{"id":47,"cat":"Comunicare","de":"Wie bitte?","ro":"Poftim? / Cum ați spus?","grammar":""},{"id":48,"cat":"Diverse","de":"Noch einmal, bitte.","ro":"Încă o dată, vă rog.","grammar":""},{"id":49,"cat":"Comunicare","de":"Können Sie das aufschreiben?","ro":"Puteți să notați asta?","grammar":""},{"id":50,"cat":"Comunicare","de":"Können Sie mir das zeigen?","ro":"Puteți să-mi arătați asta?","grammar":""},{"id":51,"cat":"Comunicare","de":"Wie sagt man das auf Deutsch?","ro":"Cum se spune asta în germană?","grammar":""},{"id":52,"cat":"Comunicare","de":"Was heißt das auf Deutsch?","ro":"Ce înseamnă asta în germană?","grammar":""},{"id":53,"cat":"Comunicare","de":"Sprechen Sie Englisch?","ro":"Vorbiți engleză?","grammar":""},{"id":54,"cat":"Diverse","de":"Ich habe das nicht verstanden.","ro":"Nu am înțeles asta.","grammar":""},{"id":55,"cat":"Comunicare","de":"Jetzt verstehe ich.","ro":"Acum înțeleg.","grammar":""},{"id":56,"cat":"Diverse","de":"Ah, okay.","ro":"Ah, okay.","grammar":""},{"id":57,"cat":"Salutari & Politete","de":"Alles klar, danke.","ro":"În regulă, mulțumesc.","grammar":""},{"id":58,"cat":"Comunicare","de":"Ist das richtig?","ro":"Este corect?","grammar":""},{"id":59,"cat":"Comunicare","de":"Meinen Sie das hier?","ro":"Vă referiți la acesta?","grammar":""},{"id":60,"cat":"Comunicare","de":"So?","ro":"Așa?","grammar":""},{"id":61,"cat":"Directii","de":"Wo ist die Toilette?","ro":"Unde este toaleta?","grammar":""},{"id":62,"cat":"Directii","de":"Wo ist der Bahnhof?","ro":"Unde este gara?","grammar":""},{"id":63,"cat":"Directii","de":"Wo ist die Bushaltestelle?","ro":"Unde este stația de autobuz?","grammar":""},{"id":64,"cat":"Directii","de":"Wie komme ich zum Bahnhof?","ro":"Cum ajung la gară?","grammar":""},{"id":65,"cat":"Directii","de":"Wie komme ich zur Apotheke?","ro":"Cum ajung la farmacie?","grammar":""},{"id":66,"cat":"Directii","de":"Ist das weit von hier?","ro":"Este departe de aici?","grammar":""},{"id":67,"cat":"Directii","de":"Rechts.","ro":"La dreapta.","grammar":""},{"id":68,"cat":"Directii","de":"Links.","ro":"La stânga.","grammar":""},{"id":69,"cat":"Directii","de":"Geradeaus.","ro":"Tot înainte.","grammar":""},{"id":70,"cat":"Directii","de":"Hier.","ro":"Aici.","grammar":""},{"id":71,"cat":"Directii","de":"Dort.","ro":"Acolo.","grammar":""},{"id":72,"cat":"Directii","de":"In der Nähe.","ro":"În apropiere.","grammar":""},{"id":73,"cat":"Directii","de":"Ich habe mich verlaufen.","ro":"M-am rătăcit.","grammar":""},{"id":74,"cat":"Comunicare","de":"Können Sie mir den Weg zeigen?","ro":"Puteți să-mi arătați drumul?","grammar":""},{"id":75,"cat":"Comunicare","de":"Können Sie mir das auf der Karte zeigen?","ro":"Puteți să-mi arătați pe hartă?","grammar":""},{"id":76,"cat":"Directii","de":"Welche Linie brauche ich?","ro":"De ce linie am nevoie?","grammar":""},{"id":77,"cat":"Directii","de":"Wo muss ich aussteigen?","ro":"Unde trebuie să cobor?","grammar":""},{"id":78,"cat":"Directii","de":"Ist das die richtige Richtung?","ro":"Este direcția corectă?","grammar":""},{"id":79,"cat":"Salutari & Politete","de":"Danke für die Hilfe.","ro":"Mulțumesc pentru ajutor.","grammar":""},{"id":80,"cat":"Salutari & Politete","de":"Perfekt, danke.","ro":"Perfect, mulțumesc.","grammar":""},{"id":81,"cat":"Cumparaturi","de":"Was kostet das?","ro":"Cât costă asta?","grammar":""},{"id":82,"cat":"Cumparaturi","de":"Wie viel kostet das?","ro":"Cât costă asta? (alternativ)","grammar":""},{"id":83,"cat":"Restaurant","de":"Ich hätte gern das hier.","ro":"Aș dori asta.","grammar":""},{"id":84,"cat":"Cumparaturi","de":"Ich nehme das.","ro":"O iau pe aceasta.","grammar":""},{"id":85,"cat":"Diverse","de":"Haben Sie das größer/kleiner?","ro":"Aveți asta mai mare/mai mică?","grammar":""},{"id":86,"cat":"Cumparaturi avansate","de":"Haben Sie das in einer anderen Farbe?","ro":"Aveți asta pe altă culoare?","grammar":""},{"id":87,"cat":"Salutari & Politete","de":"Nur schauen, danke.","ro":"Doar mă uit, mulțumesc.","grammar":""},{"id":88,"cat":"Cumparaturi","de":"Das ist zu teuer.","ro":"Este prea scump.","grammar":""},{"id":89,"cat":"Cumparaturi","de":"Haben Sie etwas Günstigeres?","ro":"Aveți ceva mai ieftin?","grammar":""},{"id":90,"cat":"Cumparaturi","de":"Kann ich mit Karte bezahlen?","ro":"Pot plăti cu cardul?","grammar":""},{"id":91,"cat":"Cumparaturi","de":"Bar oder mit Karte?","ro":"Cash sau cu cardul?","grammar":""},{"id":92,"cat":"Cumparaturi","de":"Die Rechnung, bitte.","ro":"Nota de plată, vă rog.","grammar":""},{"id":93,"cat":"Cumparaturi","de":"Zusammen oder getrennt?","ro":"Împreună sau separat?","grammar":""},{"id":94,"cat":"Cumparaturi","de":"Stimmt so.","ro":"E bine așa (păstrați restul).","grammar":""},{"id":95,"cat":"Cumparaturi","de":"Brauche ich eine Tüte?","ro":"Am nevoie de o pungă?","grammar":""},{"id":96,"cat":"Cumparaturi","de":"Zwei Stück, bitte.","ro":"Două bucăți, vă rog.","grammar":""},{"id":97,"cat":"Cumparaturi","de":"Ein Kilo, bitte.","ro":"Un kilogram, vă rog.","grammar":""},{"id":98,"cat":"Cumparaturi","de":"Haben Sie Wechselgeld?","ro":"Aveți rest?","grammar":""},{"id":99,"cat":"Salutari & Politete","de":"Das passt so, danke.","ro":"E în regulă așa, mulțumesc.","grammar":""},{"id":100,"cat":"Cumparaturi","de":"Einen Kassenbon, bitte.","ro":"Un bon fiscal, vă rog.","grammar":""},{"id":101,"cat":"Restaurant","de":"Ich habe Hunger.","ro":"Mi-e foame.","grammar":""},{"id":102,"cat":"Restaurant","de":"Ich habe Durst.","ro":"Mi-e sete.","grammar":""},{"id":103,"cat":"Restaurant","de":"Ich möchte bitte ...","ro":"Aș dori vă rog...","grammar":""},{"id":104,"cat":"Restaurant","de":"Für mich bitte ...","ro":"Pentru mine, vă rog...","grammar":""},{"id":105,"cat":"Restaurant","de":"Ohne ... bitte.","ro":"Fără..., vă rog.","grammar":""},{"id":106,"cat":"Diverse","de":"Mit ... bitte.","ro":"Cu..., vă rog.","grammar":""},{"id":107,"cat":"Restaurant","de":"Noch ein Wasser, bitte.","ro":"Încă o apă, vă rog.","grammar":""},{"id":108,"cat":"Restaurant","de":"Zum Mitnehmen, bitte.","ro":"La pachet, vă rog.","grammar":""},{"id":109,"cat":"Restaurant","de":"Hier essen, bitte.","ro":"Pentru a mânca aici, vă rog.","grammar":""},{"id":110,"cat":"Restaurant","de":"Sehr lecker!","ro":"Foarte gustos!","grammar":""},{"id":111,"cat":"Restaurant","de":"Können wir bitte zahlen?","ro":"Putem să plătim, vă rog?","grammar":""},{"id":112,"cat":"Restaurant","de":"Getrennt, bitte.","ro":"Separat, vă rog.","grammar":""},{"id":113,"cat":"Diverse","de":"Stimmt so.","ro":"E bine așa (restul e ciubuc).","grammar":""},{"id":114,"cat":"Salutari & Politete","de":"Vielen Dank, es war sehr gut.","ro":"Mulțumesc mult, a fost foarte bun.","grammar":""},{"id":115,"cat":"Diverse","de":"Einen schönen Tag noch.","ro":"O zi frumoasă în continuare.","grammar":""},{"id":116,"cat":"Timp","de":"Wie spät ist es?","ro":"Cât este ceasul?","grammar":""},{"id":117,"cat":"Timp","de":"Es ist ein Uhr.","ro":"Este ora unu.","grammar":""},{"id":118,"cat":"Timp","de":"Es ist halb zwei.","ro":"Este ora unu și jumătate.","grammar":""},{"id":119,"cat":"Timp","de":"Es ist Viertel nach drei.","ro":"Este ora trei și un sfert.","grammar":""},{"id":120,"cat":"Restaurant","de":"Es ist Viertel vor vier.","ro":"Este ora patru fără un sfert.","grammar":""},{"id":121,"cat":"Timp","de":"Heute.","ro":"Astăzi.","grammar":""},{"id":122,"cat":"Timp","de":"Morgen.","ro":"Mâine.","grammar":""},{"id":123,"cat":"Timp","de":"Übermorgen.","ro":"Poimâine.","grammar":""},{"id":124,"cat":"Timp","de":"Gestern.","ro":"Ieri.","grammar":""},{"id":125,"cat":"Timp","de":"Am Montag.","ro":"Luni.","grammar":""},{"id":126,"cat":"Timp","de":"Um 14 Uhr.","ro":"La ora 14.","grammar":""},{"id":127,"cat":"Timp","de":"Ich habe einen Termin.","ro":"Am o programare.","grammar":""},{"id":128,"cat":"Timp","de":"Ich komme später.","ro":"Vin mai târziu.","grammar":""},{"id":129,"cat":"Timp","de":"Ich bin pünktlich.","ro":"Sunt punctual.","grammar":""},{"id":130,"cat":"Timp","de":"Ich bin zu spät.","ro":"Am întârziat.","grammar":""},{"id":131,"cat":"Telefon & Documente","de":"Wie ist Ihre Telefonnummer?","ro":"Care este numărul dumneavoastră de telefon?","grammar":""},{"id":132,"cat":"Telefon & Documente","de":"Meine Nummer ist ...","ro":"Numărul meu este...","grammar":""},{"id":133,"cat":"Comunicare","de":"Können Sie das bitte buchstabieren?","ro":"Puteți să silabisiți asta, vă rog?","grammar":""},{"id":134,"cat":"Telefon & Documente","de":"Meine Adresse ist ...","ro":"Adresa mea este...","grammar":""},{"id":135,"cat":"Telefon & Documente","de":"Ich muss ein Formular ausfüllen.","ro":"Trebuie să completez un formular.","grammar":""},{"id":136,"cat":"Telefon & Documente","de":"Wo muss ich unterschreiben?","ro":"Unde trebuie să semnez?","grammar":""},{"id":137,"cat":"Diverse","de":"Können Sie mir dabei helfen?","ro":"Mă puteți ajuta cu asta?","grammar":""},{"id":138,"cat":"Timp","de":"Ich habe einen Termin vereinbart.","ro":"Am stabilit o programare.","grammar":""},{"id":139,"cat":"Timp","de":"Ich rufe später zurück.","ro":"Sun înapoi mai târziu.","grammar":""},{"id":140,"cat":"Comunicare","de":"Können Sie mir eine E-Mail schicken?","ro":"Puteți să-mi trimiteți un e-mail?","grammar":""},{"id":141,"cat":"Urgenta","de":"Ich brauche Hilfe.","ro":"Am nevoie de ajutor.","grammar":""},{"id":142,"cat":"Sanatate","de":"Mir ist schlecht.","ro":"Mi-e rău.","grammar":""},{"id":143,"cat":"Directii","de":"Ich habe Schmerzen hier.","ro":"Am dureri aici.","grammar":""},{"id":144,"cat":"Sanatate","de":"Ich brauche einen Arzt.","ro":"Am nevoie de un medic.","grammar":""},{"id":145,"cat":"Directii","de":"Wo ist die nächste Apotheke?","ro":"Unde este cea mai apropiată farmacie?","grammar":""},{"id":146,"cat":"Sanatate","de":"Können Sie einen Krankenwagen rufen?","ro":"Puteți chema o ambulanță?","grammar":""},{"id":147,"cat":"Diverse","de":"Ich fühle mich nicht gut.","ro":"Nu mă simt bine.","grammar":""},{"id":148,"cat":"Urgenta","de":"Ich habe meine Tasche verloren.","ro":"Mi-am pierdut geanta.","grammar":""},{"id":149,"cat":"Telefon & Documente","de":"Ich habe mein Handy verloren.","ro":"Mi-am pierdut telefonul.","grammar":""},{"id":150,"cat":"Urgenta","de":"Bitte helfen Sie mir.","ro":"Vă rog, ajutați-mă.","grammar":""},{"id":151,"cat":"Numere & Bani","de":"Das kostet 5 Euro.","ro":"Asta costă 5 euro.","grammar":""},{"id":152,"cat":"Numere & Bani","de":"Das kostet 12 Euro.","ro":"Asta costă 12 euro.","grammar":""},{"id":153,"cat":"Numere & Bani","de":"Das kostet 20 Euro.","ro":"Asta costă 20 euro.","grammar":""},{"id":154,"cat":"Numere & Bani","de":"Das kostet 35 Euro.","ro":"Asta costă 35 euro.","grammar":""},{"id":155,"cat":"Numere & Bani","de":"Das kostet 50 Euro.","ro":"Asta costă 50 euro.","grammar":""},{"id":156,"cat":"Numere & Bani","de":"Ich habe nur 10 Euro.","ro":"Am doar 10 euro.","grammar":""},{"id":157,"cat":"Cumparaturi","de":"Haben Sie 2 Euro Wechselgeld?","ro":"Aveți 2 euro rest?","grammar":""},{"id":158,"cat":"Timp","de":"Es ist 1 Uhr.","ro":"Este ora 1.","grammar":""},{"id":159,"cat":"Timp","de":"Es ist 2 Uhr.","ro":"Este ora 2.","grammar":""},{"id":160,"cat":"Timp","de":"Es ist halb 3.","ro":"Este ora 2 și jumătate.","grammar":""},{"id":161,"cat":"Timp","de":"Es ist Viertel nach 4.","ro":"Este ora 4 și un sfert.","grammar":""},{"id":162,"cat":"Timp","de":"Es ist Viertel vor 5.","ro":"Este ora 5 fără un sfert.","grammar":""},{"id":163,"cat":"Timp","de":"Mein Termin ist um 14 Uhr.","ro":"Programarea mea este la ora 14.","grammar":""},{"id":164,"cat":"Timp","de":"Mein Termin ist um 9 Uhr.","ro":"Programarea mea este la ora 9.","grammar":""},{"id":165,"cat":"Cumparaturi","de":"Ich hätte gern 2 Stück.","ro":"Aș dori 2 bucăți.","grammar":""},{"id":166,"cat":"Cumparaturi","de":"Ich brauche 3 Stück.","ro":"Am nevoie de 3 bucăți.","grammar":""},{"id":167,"cat":"Numere & Bani","de":"Ein Tisch für 2 Personen.","ro":"O masă pentru 2 persoane.","grammar":""},{"id":168,"cat":"Numere & Bani","de":"Wir sind 4 Personen.","ro":"Suntem 4 persoane.","grammar":""},{"id":169,"cat":"Cumparaturi","de":"Ich brauche 1 Kilo.","ro":"Am nevoie de 1 kilogram.","grammar":""},{"id":170,"cat":"Timp","de":"Heute ist der 5. Mai.","ro":"Astăzi este 5 mai.","grammar":""},{"id":171,"cat":"Timp","de":"Heute ist der 12. Oktober.","ro":"Astăzi este 12 octombrie.","grammar":""},{"id":172,"cat":"Timp","de":"Der Termin ist am 20. Juni.","ro":"Programarea este pe 20 iunie.","grammar":""},{"id":173,"cat":"Telefon & Documente","de":"Meine Nummer ist 0176 3456789.","ro":"Numărul meu este 0176 3456789.","grammar":""},{"id":174,"cat":"Telefon & Documente","de":"Meine Nummer ist 0151 2345678.","ro":"Numărul meu este 0151 2345678.","grammar":""},{"id":175,"cat":"Telefon & Documente","de":"Die Nummer ist 030 123456.","ro":"Numărul este 030 123456.","grammar":""},{"id":176,"cat":"Diverse","de":"Ich wohne in der Musterstraße 12.","ro":"Locuiesc pe Musterstraße 12.","grammar":""},{"id":177,"cat":"Diverse","de":"Ich wohne im dritten Stock.","ro":"Locuiesc la etajul trei.","grammar":""},{"id":178,"cat":"Telefon & Documente","de":"Die Hausnummer ist 8.","ro":"Numărul casei este 8.","grammar":""},{"id":179,"cat":"Numere & Bani","de":"Ich komme in 10 Minuten.","ro":"Vin în 10 minute.","grammar":""},{"id":180,"cat":"Numere & Bani","de":"Ich warte seit 5 Minuten.","ro":"Aștept de 5 minute.","grammar":""},{"id":181,"cat":"Comunicare","de":"Echt jetzt?","ro":"Chiar așa?","grammar":""},{"id":182,"cat":"Opinii & Reactii","de":"Interessant.","ro":"Interesant.","grammar":""},{"id":183,"cat":"Opinii & Reactii","de":"Du hast recht.","ro":"Ai dreptate.","grammar":""},{"id":184,"cat":"Opinii & Reactii","de":"Ich bin einverstanden.","ro":"Sunt de acord.","grammar":""},{"id":185,"cat":"Opinii & Reactii","de":"Ich bin nicht einverstanden.","ro":"Nu sunt de acord.","grammar":""},{"id":186,"cat":"Opinii & Reactii","de":"Das kommt darauf an.","ro":"Depinde.","grammar":""},{"id":187,"cat":"Opinii & Reactii","de":"Genau!","ro":"Exact!","grammar":""},{"id":188,"cat":"Opinii & Reactii","de":"Absolut!","ro":"Absolut!","grammar":""},{"id":189,"cat":"Opinii & Reactii","de":"Vielleicht.","ro":"Poate.","grammar":""},{"id":190,"cat":"Opinii & Reactii","de":"Wahrscheinlich.","ro":"Probabil.","grammar":""},{"id":191,"cat":"Opinii & Reactii","de":"Sicherlich.","ro":"Cu siguranță.","grammar":""},{"id":192,"cat":"Opinii & Reactii","de":"Leider nicht.","ro":"Din păcate nu.","grammar":""},{"id":193,"cat":"Opinii & Reactii","de":"Glücklicherweise.","ro":"Din fericire.","grammar":""},{"id":194,"cat":"Opinii & Reactii","de":"Einerseits...","ro":"Pe de o parte...","grammar":""},{"id":195,"cat":"Opinii & Reactii","de":"Andererseits...","ro":"Pe de altă parte...","grammar":""},{"id":196,"cat":"Opinii & Reactii","de":"Eigentlich...","ro":"De fapt...","grammar":""},{"id":197,"cat":"Opinii & Reactii","de":"Auf jeden Fall.","ro":"În orice caz.","grammar":""},{"id":198,"cat":"Opinii & Reactii","de":"Auf keinen Fall.","ro":"În niciun caz.","grammar":""},{"id":199,"cat":"Diverse","de":"Das ist alles.","ro":"Asta e tot.","grammar":""},{"id":200,"cat":"Diverse","de":"Übrigens...","ro":"Apropo...","grammar":""},{"id":201,"cat":"Opinii & Reactii","de":"Das macht nichts.","ro":"Nu contează.","grammar":""},{"id":202,"cat":"Opinii & Reactii","de":"Wie schade!","ro":"Ce păcat!","grammar":""},{"id":203,"cat":"Opinii & Reactii","de":"Viel Spaß!","ro":"Distracție plăcută!","grammar":""},{"id":204,"cat":"Opinii & Reactii","de":"Viel Erfolg!","ro":"Mult succes!","grammar":""},{"id":205,"cat":"Opinii & Reactii","de":"Gesundheit!","ro":"Sănătate! (la strănut)","grammar":""},{"id":206,"cat":"Opinii & Reactii","de":"Einen schönen Abend noch!","ro":"Să aveți o seară frumoasă!","grammar":""},{"id":207,"cat":"Opinii & Reactii","de":"Gleichfalls!","ro":"La fel!","grammar":""},{"id":208,"cat":"Diverse","de":"Was gibt es Neues?","ro":"Ce mai e nou?","grammar":""},{"id":209,"cat":"Opinii & Reactii","de":"Nichts Besonderes.","ro":"Nimic deosebit.","grammar":""},{"id":210,"cat":"Conjuctii","de":"Ich lerne Deutsch, weil ich hier arbeiten möchte.","ro":"Învăț germana pentru că vreau să lucrez aici.","grammar":""},{"id":211,"cat":"Directii","de":"Können Sie mir sagen, wo die nächste Bank ist?","ro":"Îmi puteți spune unde este cea mai apropiată bancă?","grammar":""},{"id":212,"cat":"Diverse","de":"Wenn ich Zeit habe, gehe ich gerne spazieren.","ro":"Când am timp, îmi place să merg la plimbare.","grammar":""},{"id":213,"cat":"Timp","de":"Ich möchte reservieren, und zwar für morgen Abend.","ro":"Aș dori să fac o rezervare pentru mâine seară.","grammar":""},{"id":214,"cat":"Diverse","de":"Ich freue mich, dich wiederzusehen.","ro":"Mă bucur că te văd din nou.","grammar":""},{"id":215,"cat":"Opinii & Reactii","de":"Leider habe ich vergessen, Brot zu kaufen.","ro":"Din păcate, am uitat să cumpăr pâine.","grammar":""},{"id":216,"cat":"Diverse","de":"Kannst du mir erklären, wie das funktioniert?","ro":"Poți să-mi explici cum funcționează asta?","grammar":""},{"id":217,"cat":"Conjuctii","de":"Ich glaube, dass das Wetter am Wochenende schön wird.","ro":"Cred că vremea va fi frumoasă în weekend.","grammar":""},{"id":218,"cat":"Conjuctii","de":"Gestern war ich beim Arzt, weil ich erkältet war.","ro":"Ieri am fost la medic pentru că am fost răcit.","grammar":""},{"id":219,"cat":"Cumparaturi","de":"Ich wüsste gerne, wie viel die Fahrkarte kostet.","ro":"Aș vrea să știu cât costă biletul de tren.","grammar":""},{"id":220,"cat":"Diverse","de":"Früher habe ich in einer kleineren Stadt gewohnt.","ro":"Înainte locuiam într-un oraș mai mic.","grammar":""},{"id":221,"cat":"Telefon & Documente","de":"Könnten Sie mir helfen, dieses Formular auszufüllen?","ro":"Mă puteți ajuta să completez acest formular?","grammar":""},{"id":222,"cat":"Conjuctii","de":"Ich hoffe, dass alles gut wird.","ro":"Sper că totul va fi bine.","grammar":""},{"id":223,"cat":"Sanatate","de":"Es tut mir leid, aber ich habe nicht verstanden, was Sie gesagt haben.","ro":"Îmi pare rău, dar nu am înțeles ce ați spus.","grammar":""},{"id":224,"cat":"Diverse","de":"Ich habe mich entschieden, mehr Sport zu machen.","ro":"M-am decis să fac mai mult sport.","grammar":""},{"id":225,"cat":"Timp","de":"Normalerweise stehe ich um sieben Uhr morgens auf.","ro":"De obicei mă trezesc la ora șapte dimineața.","grammar":""},{"id":226,"cat":"Salutari & Politete","de":"Kannst du mich bitte später anrufen?","ro":"Poți să mă suni mai târziu, te rog?","grammar":""},{"id":227,"cat":"Diverse","de":"Ich würde gerne nächsten Sommer Berlin besuchen.","ro":"Mi-ar plăcea să vizitez Berlinul vara viitoare.","grammar":""},{"id":228,"cat":"Conjuctii","de":"Obwohl es regnet, gehe ich im Park joggen.","ro":"Deși plouă, merg să alerg în parc.","grammar":""},{"id":229,"cat":"Conjuctii","de":"Ich mag diese Stadt, weil es hier viele nette Leute gibt.","ro":"Îmi place acest oraș deoarece sunt mulți oameni drăguți.","grammar":""},{"id":230,"cat":"Diverse","de":"Ich muss im Supermarkt einkaufen gehen.","ro":"Trebuie să merg la supermarket să fac cumpărături.","grammar":""},{"id":231,"cat":"Salutari & Politete","de":"Kannst du mir bitte einen Kugelschreiber leihen?","ro":"Poți să-mi împrumuți te rog un pix?","grammar":""},{"id":232,"cat":"Calatorie & Hotel","de":"Ich habe ein Flugticket für nächste Woche.","ro":"Am un bilet de avion pentru săptămâna viitoare.","grammar":""},{"id":233,"cat":"Diverse","de":"Was ist deine Meinung zu diesem Thema?","ro":"Care este părerea ta despre acest subiect?","grammar":""},{"id":234,"cat":"Diverse","de":"In meiner Freizeit lese ich am liebsten ein Buch.","ro":"În timpul liber prefer să citesc o carte.","grammar":""},{"id":235,"cat":"Opinii & Reactii","de":"Ich bin mit deinem Vorschlag einverstanden.","ro":"Sunt de acord cu propunerea ta.","grammar":""},{"id":236,"cat":"Opinii & Reactii","de":"Leider kann ich am Samstag nicht zur Party kommen.","ro":"Din păcate, nu pot veni la petrecere sâmbătă.","grammar":""},{"id":237,"cat":"Sanatate","de":"Wo finde ich eine Apotheke, die rund um die Uhr geöffnet ist?","ro":"Unde pot găsi o farmacie care este deschisă non-stop?","grammar":""},{"id":238,"cat":"Directii","de":"Ich habe mich verlaufen, können Sie mir helfen, den Weg zum Zentrum zu finden?","ro":"M-am rătăcit, mă puteți ajuta să găsesc drumul spre centru?","grammar":""},{"id":239,"cat":"Studiu limbi","de":"Ich bereite mich auf die Deutschprüfung vor.","ro":"Mă pregătesc pentru examenul de limba germană.","grammar":""},{"id":240,"cat":"Munca","de":"Wo arbeitest du zurzeit?","ro":"Unde lucrezi în prezent?","grammar":""},{"id":241,"cat":"Munca","de":"Ich bin als Elektriker bei einer Baufirma angestellt.","ro":"Sunt angajat ca electrician la o firmă de construcții.","grammar":""},{"id":242,"cat":"Munca","de":"Wie sieht dein Arbeitsplan aus?","ro":"Care este programul tău de lucru?","grammar":""},{"id":243,"cat":"Timp","de":"Normalerweise beginne ich um acht Uhr und mache um siebzehn Uhr Feierabend.","ro":"De obicei încep munca la ora opt și termin la ora șaptesprezece.","grammar":""},{"id":244,"cat":"Munca","de":"Ich muss diese Woche Überstunden machen.","ro":"Trebuie să fac ore suplimentare săptămâna aceasta.","grammar":""},{"id":245,"cat":"Munca","de":"Ich habe eine Mittagspause von dreißig Minuten.","ro":"Am o pauză de prânz de treizeci de minute.","grammar":""},{"id":246,"cat":"Munca","de":"Ich bin auf der Suche nach einer neuen Stelle.","ro":"Sunt în căutarea unui nou loc de muncă.","grammar":""},{"id":247,"cat":"Conjuctii","de":"Ich mag meinen Job, weil das Team sehr nett ist.","ro":"Îmi place locul meu de muncă pentru că echipa este foarte drăguță.","grammar":""},{"id":248,"cat":"Timp","de":"Was sind meine Hauptaufgaben für heute?","ro":"Care sunt sarcinile mele principale pentru astăzi?","grammar":""},{"id":249,"cat":"Timp","de":"Ich muss diese E-Mail bis zum Mittagessen abschicken.","ro":"Trebuie să trimit acest e-mail până la ora prânzului.","grammar":""},{"id":250,"cat":"Munca","de":"Mein Chef ist mit meiner Arbeit zufrieden.","ro":"Șeful meu este mulțumit de munca mea.","grammar":""},{"id":251,"cat":"Munca","de":"Wie hoch ist das Bruttogehalt in diesem Bereich?","ro":"Cât de mare este salariul brut în acest domeniu?","grammar":""},{"id":252,"cat":"Timp","de":"Ich habe um zehn Uhr einen wichtigen Termin mit einem Kunden.","ro":"Am o întâlnire importantă cu un client la ora zece.","grammar":""},{"id":253,"cat":"Timp","de":"Leider bin ich krank und kann heute nicht zur Arbeit kommen.","ro":"Din păcate, sunt bolnav și nu pot veni astăzi la muncă.","grammar":""},{"id":254,"cat":"Munca","de":"Ich muss den Urlaubsantrag für August einreichen.","ro":"Trebuie să depun cererea de concediu pentru luna august.","grammar":""},{"id":255,"cat":"Munca","de":"Haben Sie meine Stellenbeschreibung erhalten?","ro":"Ați primit fișa mea de post?","grammar":""},{"id":256,"cat":"Munca","de":"Ich möchte neue Dinge lernen und mich beruflich weiterentwickeln.","ro":"Aș dori să învăț lucruri noi și să mă dezvolt profesional.","grammar":""},{"id":257,"cat":"Munca","de":"In welchem Bereich hast du Berufserfahrung?","ro":"În ce domeniu ai experiență profesională?","grammar":""},{"id":258,"cat":"Munca","de":"Ich arbeite in Schichten: eine Woche morgens, eine Woche nachmittags.","ro":"Lucrez în schimburi: o săptămână dimineața, o săptămână după-amiaza.","grammar":""},{"id":259,"cat":"Munca","de":"Wie viele Kollegen sind in Ihrer Abteilung?","ro":"Câți colegi sunt în departamentul dumneavoastră?","grammar":""},{"id":260,"cat":"Timp","de":"Ich möchte einen Termin beim Hausarzt vereinbaren.","ro":"Aș dori să fac o programare la medicul de familie.","grammar":""},{"id":261,"cat":"Sanatate","de":"Wo genau haben Sie Schmerzen?","ro":"Unde vă doare mai exact?","grammar":""},{"id":262,"cat":"Timp","de":"Ich habe Kopfschmerzen und seit gestern Fieber.","ro":"Mă doare capul și am febră de ieri.","grammar":""},{"id":263,"cat":"Sanatate","de":"Ich bin erkältet und brauche eine Krankschreibung für die Arbeit.","ro":"Sunt răcit și am nevoie de o adeverință medicală pentru serviciu.","grammar":""},{"id":264,"cat":"Sanatate","de":"Sie müssen diese Medizin dreimal täglich einnehmen.","ro":"Trebuie să luați acest medicament de trei ori pe zi.","grammar":""},{"id":265,"cat":"Sanatate","de":"Sind Sie gegen irgendwelche Medikamente allergisch?","ro":"Sunteți alergic la vreun medicament?","grammar":""},{"id":266,"cat":"Sanatate","de":"Ich habe schreckliche Rückenschmerzen.","ro":"Am dureri de spate groaznice.","grammar":""},{"id":267,"cat":"Sanatate","de":"Ich muss zur Apotheke gehen, um das Rezept abzuholen.","ro":"Trebuie să merg la farmacie să ridic rețeta.","grammar":""},{"id":268,"cat":"Sanatate","de":"Ich fühle mich sehr müde und schwach.","ro":"Mă simt foarte obosit și slăbit.","grammar":""},{"id":269,"cat":"Sanatate","de":"Sind Sie in Deutschland krankenversichert?","ro":"Aveți asigurare medicală în Germania?","grammar":""},{"id":270,"cat":"Sanatate","de":"Wir müssen eine Blutuntersuchung machen.","ro":"Trebuie să facem o analiză de sânge.","grammar":""},{"id":271,"cat":"Sanatate","de":"Mein Husten wird gar nicht besser.","ro":"Tusea mea nu se îmbunătățește deloc.","grammar":""},{"id":272,"cat":"Diverse","de":"Bitte atmen Sie tief ein und husten Sie.","ro":"Vă rog să respirați adânc și să tușiți.","grammar":""},{"id":273,"cat":"Timp","de":"Ich habe einen Termin um halb elf.","ro":"Am o programare la ora zece și jumătate.","grammar":""},{"id":274,"cat":"Sanatate","de":"Wie lange muss ich krankgeschrieben bleiben?","ro":"Cât timp trebuie să stau în concediu medical?","grammar":""},{"id":275,"cat":"Sanatate","de":"Meine Nase läuft und meine Augen tun weh.","ro":"Îmi curge nasul și mă dor ochii.","grammar":""},{"id":276,"cat":"Sanatate","de":"Hatten Sie diese Symptome schon früher?","ro":"Ați mai avut aceste simptome înainte?","grammar":""},{"id":277,"cat":"Diverse","de":"Sie müssen viel Wasser trinken und sich ausruhen.","ro":"Trebuie să beți multă apă și să vă odihniți.","grammar":""},{"id":278,"cat":"Directii","de":"Wo ist die nächste Notapotheke?","ro":"Unde este cea mai apropiată farmacie de gardă?","grammar":""},{"id":279,"cat":"Conjuctii","de":"Mein Magen tut weh, nachdem ich gegessen habe.","ro":"Mă doare stomacul după ce mănânc.","grammar":""},{"id":280,"cat":"Locuinta","de":"Ich suche eine Zweizimmerwohnung im Zentrum.","ro":"Caut un apartament cu două camere în centru.","grammar":""},{"id":281,"cat":"Diverse","de":"Wie hoch ist die Monatsmiete inklusive Nebenkosten?","ro":"Cât este chiria pe lună, inclusiv utilitățile?","grammar":""},{"id":282,"cat":"Locuinta","de":"Hat die Wohnung einen Balkon oder eine Terrasse?","ro":"Apartamentul are balcon sau terasă?","grammar":""},{"id":283,"cat":"Timp","de":"Ich muss eine Kaution von drei Monatsmieten bezahlen.","ro":"Trebuie să plătesc o garanție de trei luni.","grammar":""},{"id":284,"cat":"Locuinta","de":"Meine Wohnung ist hell und hat eine moderne Küche.","ro":"Locuința mea este luminoasă și are o bucătărie modernă.","grammar":""},{"id":285,"cat":"Locuinta","de":"Wo kann ich den Müll und das Papier entsorgen?","ro":"Unde pot să duc gunoiul și hârtia?","grammar":""},{"id":286,"cat":"Locuinta","de":"Meine Nachbarn sind sehr ruhig und freundlich.","ro":"Vecinii mei sunt foarte liniștiți și prietenoși.","grammar":""},{"id":287,"cat":"Locuinta","de":"Ist die Waschmaschine im Bad oder im Keller?","ro":"Mașina de spălat este în baie sau în pivniță?","grammar":""},{"id":288,"cat":"Locuinta","de":"Wir müssen den Wasserhahn in der Küche reparieren.","ro":"Trebuie să reparăm robinetul din bucătărie.","grammar":""},{"id":289,"cat":"Locuinta","de":"Ich sitze gerne im Wohnzimmer und sehe fern.","ro":"Îmi place să stau în camera de zi și să mă uit la televizor.","grammar":""},{"id":290,"cat":"Locuinta","de":"Ist die Wohnung möbliert oder unmöbliert?","ro":"Apartamentul este mobilat sau nemobilat?","grammar":""},{"id":291,"cat":"Diverse","de":"Sind Haustiere in diesem Haus erlaubt?","ro":"Sunt permise animalele de companie în acest bloc?","grammar":""},{"id":292,"cat":"Locuinta","de":"Der Flur ist klein, aber das Schlafzimmer ist sehr groß.","ro":"Holul este mic, dar dormitorul este foarte mare.","grammar":""},{"id":293,"cat":"Locuinta","de":"Wir müssen das Zimmer jeden Morgen lüften.","ro":"Trebuie să aerisim camera în fiecare dimineață.","grammar":""},{"id":294,"cat":"Directii","de":"Wo ist die Bushaltestelle, die am nächsten zum Haus liegt?","ro":"Unde este stația de autobuz cea mai apropiată de casă?","grammar":""},{"id":295,"cat":"Locuinta","de":"Ich suche einen Mitbewohner für eine Wohngemeinschaft.","ro":"Îmi caut un coleg de apartament pentru o locuință comună.","grammar":""},{"id":296,"cat":"Locuinta","de":"Die Heizung funktioniert nicht, ich muss den Vermieter anrufen.","ro":"Încălzirea nu funcționează, trebuie să sun la proprietar.","grammar":""},{"id":297,"cat":"Directii","de":"Unser Garten ist klein, aber im Sommer grillen wir dort.","ro":"Grădina noastră este mică, dar vara facem grătar acolo.","grammar":""},{"id":298,"cat":"Locuinta","de":"Ich brauche einen neuen Schlüssel für die Haustür","ro":"Am nevoie de o cheie nouă pentru ușa de la intrare.","grammar":""},{"id":299,"cat":"Calatorie & Hotel","de":"Ich hätte gerne eine Rückfahrkarte nach München, bitte.","ro":"Aș dori un bilet dus-întors către München, vă rog.","grammar":""},{"id":300,"cat":"Calatorie & Hotel","de":"Hat der Zug Verspätung oder kommt er pünktlich an?","ro":"Trenul are întârziere sau ajunge la timp?","grammar":""},{"id":301,"cat":"Calatorie & Hotel","de":"Muss ich umsteigen oder ist das eine direkte Verbindung?","ro":"Trebuie să schimb trenul sau este legătură directă?","grammar":""},{"id":302,"cat":"Calatorie & Hotel","de":"Von welchem Gleis fährt der Zug nach Berlin ab?","ro":"De la ce peron pleacă trenul spre Berlin?","grammar":""},{"id":303,"cat":"Calatorie & Hotel","de":"Ich habe ein Doppelzimmer auf den Namen Ionescu reserviert.","ro":"Am rezervat o cameră dublă pe numele Ionescu.","grammar":""},{"id":304,"cat":"Calatorie & Hotel","de":"Ist das Frühstück im Zimmerpreis enthalten?","ro":"Micul dejun este inclus în prețul camerei?","grammar":""},{"id":305,"cat":"Sanatate","de":"Es tut mir leid, aber die Klimaanlage im Zimmer funktioniert nicht.","ro":"Îmi pare rău, dar aerul condiționat din cameră nu funcționează.","grammar":""},{"id":306,"cat":"Comunicare","de":"Können Sie mir ein gutes Restaurant in der Nähe empfehlen?","ro":"Puteți să-mi recomandați un restaurant bun în apropiere?","grammar":""},{"id":307,"cat":"Directii","de":"Wie lange dauert die Fahrt zum Flughafen mit dem Taxi?","ro":"Cât durează drumul până la aeroport cu taxiul?","grammar":""},{"id":308,"cat":"Locuinta","de":"Ich möchte für drei Tage ein Auto mieten.","ro":"Aș dori să închiriez o mașină pentru trei zile.","grammar":""},{"id":309,"cat":"Directii","de":"Wo kann ich einen Stadtplan finden?","ro":"Unde pot găsi o hartă a orașului?","grammar":""},{"id":310,"cat":"Calatorie & Hotel","de":"Ist es gefährlich, hier nachts allein zu Fuß zu gehen?","ro":"Este periculos să merg singur pe jos noaptea aici?","grammar":""},{"id":311,"cat":"Calatorie & Hotel","de":"Ich habe den Bus verpasst, wann kommt der nächste?","ro":"Am pierdut autobuzul, când vine următorul?","grammar":""},{"id":312,"cat":"Calatorie & Hotel","de":"Liegt das Hotel in der Nähe vom Zentrum?","ro":"Hotelul este situat aproape de centru?","grammar":""},{"id":313,"cat":"Calatorie & Hotel","de":"Ich möchte meine Reservierung für Samstag stornieren.","ro":"Aș dori să anulez rezervarea mea pentru sâmbătă.","grammar":""},{"id":314,"cat":"Comunicare","de":"Können Sie mich morgen früh um sieben Uhr wecken?","ro":"Puteți să mă treziți mâine dimineață la ora șapte?","grammar":""},{"id":315,"cat":"Telefon & Documente","de":"Das Bad ist schmutzig, können Sie jemanden zum Putzen schicken?","ro":"Baia este murdară, puteți trimite pe cineva să facă curat?","grammar":""},{"id":316,"cat":"Directii","de":"Wo ist der nächste Geldautomat?","ro":"Unde este cel mai apropiat bancomat?","grammar":""},{"id":317,"cat":"Calatorie & Hotel","de":"Gibt es am Hotel einen kostenlosen Parkplatz?","ro":"Există un loc de parcare gratuit la hotel?","grammar":""},{"id":318,"cat":"Calatorie & Hotel","de":"Der Urlaub war schön, aber das Wetter war ziemlich schlecht.","ro":"Vacanța a fost frumoasă, dar vremea a fost cam rea.","grammar":""},{"id":319,"cat":"Cumparaturi avansate","de":"Ich möchte dieses Hemd zurückgeben und das Geld zurückbekommen.","ro":"Aș dori să returnez această cămașă și să primesc banii înapoi.","grammar":""},{"id":320,"cat":"Cumparaturi avansate","de":"Haben Sie dieses Modell auch in einer anderen Größe oder Farbe?","ro":"Aveți acest model și pe altă mărime sau culoare?","grammar":""},{"id":321,"cat":"Cumparaturi avansate","de":"Wo sind bitte die Umkleidekabinen?","ro":"Unde sunt cabinele de probă, vă rog?","grammar":""},{"id":322,"cat":"Sanatate","de":"Es tut mir leid, dieses Produkt ist kaputt.","ro":"Îmi pare rău, acest produs este defect.","grammar":""},{"id":323,"cat":"Cumparaturi avansate","de":"Ich möchte dieses Paket nach Rumänien schicken.","ro":"Aș dori să trimit acest pachet în România.","grammar":""},{"id":324,"cat":"Cumparaturi","de":"Wie viel kostet das Porto für einen Einschreibebrief?","ro":"Cât costă taxele poștale pentru o scrisoare recomandată?","grammar":""},{"id":325,"cat":"Telefon & Documente","de":"Ich muss ein Formular für dieses Paket ausfüllen.","ro":"Trebuie să completez un formular pentru acest colet.","grammar":""},{"id":326,"cat":"Cumparaturi avansate","de":"Ich möchte ein Girokonto bei Ihrer Bank eröffnen.","ro":"Aș dori să deschid un cont curent la banca dumneavoastră.","grammar":""},{"id":327,"cat":"Diverse","de":"Ich habe meine PIN vergessen, können Sie mir helfen?","ro":"Am uitat codul PIN, mă puteți ajuta?","grammar":""},{"id":328,"cat":"Cumparaturi","de":"Meine Bankkarte funktioniert nicht mehr.","ro":"Cardul meu bancar nu mai funcționează.","grammar":""},{"id":329,"cat":"Cumparaturi avansate","de":"Bis wie viel Uhr ist das Geschäft am Samstag geöffnet?","ro":"Până la ce oră este deschis magazinul sâmbăta?","grammar":""},{"id":330,"cat":"Cumparaturi avansate","de":"Gibt es einen Rabatt auf diesen Artikel?","ro":"Există o reducere pentru acest articol?","grammar":""},{"id":331,"cat":"Cumparaturi","de":"Kann ich mit Kreditkarte bezahlen oder nur mit Girokarte?","ro":"Pot să plătesc cu cardul de credit sau doar cu cel de debit?","grammar":""},{"id":332,"cat":"Calatorie & Hotel","de":"Ich möchte etwas Geld am Geldautomaten abheben.","ro":"Aș dori să retrag niște bani de la bancomat.","grammar":""},{"id":333,"cat":"Cumparaturi avansate","de":"Wo finde ich die Abteilung für Milchprodukte?","ro":"Unde pot găsi raionul de produse lactate?","grammar":""},{"id":334,"cat":"Cumparaturi avansate","de":"Brauchen Sie eine Plastiktüte oder haben Sie Ihre eigene Tasche dabei?","ro":"Aveți nevoie de punga de plastic sau aveți sacoșa dumneavoastră?","grammar":""},{"id":335,"cat":"Comunicare","de":"Können Sie das bitte als Geschenk einpacken?","ro":"Puteți să-mi împachetați asta ca un cadou?","grammar":""},{"id":336,"cat":"Cumparaturi avansate","de":"Dieser Preis ist falsch, am Regal stand zehn Euro.","ro":"Acest preț este greșit, la raft scria zece euro.","grammar":""},{"id":337,"cat":"Telefon & Documente","de":"Muss ich hier für den Empfang des Pakets unterschreiben?","ro":"Trebuie să semnez aici pentru primirea coletului?","grammar":""},{"id":338,"cat":"Cumparaturi avansate","de":"Ich möchte dieses Geld in Euro umtauschen.","ro":"Aș dori să schimb acești bani în euro.","grammar":""},{"id":339,"cat":"Studiu limbi","de":"Seit wann lernst du Deutsch?","ro":"De cât timp înveți limba germană?","grammar":""},{"id":340,"cat":"Diverse","de":"Ich lerne Deutsch seit sechs Monaten an einer Sprachschule.","ro":"Învăț germana de șase luni la o școală de limbi străine.","grammar":""},{"id":341,"cat":"Studiu limbi","de":"Was ist für dich am schwierigsten an der deutschen Sprache?","ro":"Care este cel mai greu lucru pentru tine în limba germană?","grammar":""},{"id":342,"cat":"Opinii & Reactii","de":"Die Grammatik ist schwer, aber der Wortschatz ist sehr interessant.","ro":"Gramatica este grea, dar vocabularul este foarte interesant.","grammar":""},{"id":343,"cat":"Studiu limbi","de":"Ich muss mich auf die A2-Prüfung vorbereiten.","ro":"Trebuie să mă pregătesc pentru examenul de nivel A2.","grammar":""},{"id":344,"cat":"Diverse","de":"Ich habe das Gymnasium in Rumänien abgeschlossen und dann Ingenieurwesen studiert.","ro":"Am terminat liceul în România și apoi am studiat ingineria.","grammar":""},{"id":345,"cat":"Studiu limbi","de":"Kannst du mir diese Grammatikregel noch einmal erklären?","ro":"Poți să-mi explici încă o dată această regulă gramaticală?","grammar":""},{"id":346,"cat":"Diverse","de":"Ich möchte eine Fortbildung für meinen Job machen.","ro":"Vreau să fac un curs de perfecționare pentru jobul meu.","grammar":""},{"id":347,"cat":"Diverse","de":"In meinem Land habe ich zehn Jahre im Verkauf gearbeitet.","ro":"În țara mea am lucrat zece ani în domeniul vânzărilor.","grammar":""},{"id":348,"cat":"Studiu limbi","de":"Ich versuche, Filme auf Deutsch ohne Untertitel zu schauen.","ro":"Încerc să mă uit la filme în germană fără subtitrare.","grammar":""},{"id":349,"cat":"Studiu limbi","de":"Ich brauche ein gutes Wörterbuch für diesen Text.","ro":"Am nevoie de un dicționar bun pentru acest text.","grammar":""},{"id":350,"cat":"Studiu limbi","de":"Was ist deine Muttersprache?","ro":"Care este limba ta maternă?","grammar":""},{"id":351,"cat":"Studiu limbi","de":"Ich spreche fließend Englisch und ein bisschen Deutsch.","ro":"Vorbesc fluent limba engleză și puțină germană.","grammar":""},{"id":352,"cat":"Munca","de":"Es hilft mir sehr, mit meinen Arbeitskollegen zu sprechen.","ro":"Mă ajută foarte mult să vorbesc cu colegii mei de muncă.","grammar":""},{"id":353,"cat":"Salutari & Politete","de":"Ich habe einen Fehler gemacht, bitte korrigiere mich.","ro":"Am făcut o greșeală, te rog să mă corectezi.","grammar":""},{"id":354,"cat":"Social & Invitatii","de":"Wie lange dauert der Integrationskurs?","ro":"Cât durează cursul de integrare?","grammar":""},{"id":355,"cat":"Studiu limbi","de":"Ich möchte mein Diplom in Deutschland anerkennen lassen.","ro":"Aș dori să îmi echivalez diploma de studii în Germania.","grammar":""},{"id":356,"cat":"Studiu limbi","de":"Es ist schwer, in meinem Alter eine Fremdsprache zu lernen.","ro":"Este greu să înveți o limbă străină la vârsta mea.","grammar":""},{"id":357,"cat":"Conjuctii","de":"Ich bin stolz, dass ich schon die Nachrichten im Radio verstehen kann.","ro":"Sunt mândru că pot înțelege deja știrile la radio.","grammar":""},{"id":358,"cat":"Studiu limbi","de":"Ich möchte ein Sprachzertifikat machen, um einen besseren Job zu finden.","ro":"Vreau să obțin un certificat de limbă pentru a găsi un job mai bun.","grammar":""},{"id":359,"cat":"Social & Invitatii","de":"Hast du Zeit und Lust, am Samstag einen Kaffee trinken zu gehen?","ro":"Ai timp și chef să mergem la o cafea sâmbătă?","grammar":""},{"id":360,"cat":"Salutari & Politete","de":"Danke für die Einladung, ich komme sehr gerne!","ro":"Mulțumesc pentru invitație, vin cu mare plăcere!","grammar":""},{"id":361,"cat":"Conjuctii","de":"Leider kann ich nicht kommen, weil ich schon etwas anderes vorhabe.","ro":"Din păcate nu pot veni, pentru că am deja altceva programat.","grammar":""},{"id":362,"cat":"Social & Invitatii","de":"Was ist deine Meinung zum neuen Film im Kino?","ro":"Ce părere ai despre noul film de la cinema?","grammar":""},{"id":363,"cat":"Conjuctii","de":"Ich glaube, dass du recht hast, aber die Situation ist kompliziert.","ro":"Eu cred că ai dreptate, dar situația este complicată.","grammar":""},{"id":364,"cat":"Social & Invitatii","de":"Wollen wir meinen Geburtstag zusammen feiern?","ro":"Vrei să sărbătorim împreună ziua mea de naștere?","grammar":""},{"id":365,"cat":"Conjuctii","de":"Es tut mir leid, dass ich zu spät bin, ich habe den Bus verpasst.","ro":"Îmi pare rău că am întârziat, am pierdut autobuzul.","grammar":""},{"id":366,"cat":"Social & Invitatii","de":"Ich bin anderer Meinung, ich sehe das anders.","ro":"Sunt de altă părere, eu văd lucrurile diferit.","grammar":""},{"id":367,"cat":"Social & Invitatii","de":"Was machst du am kommenden Wochenende?","ro":"Ce faci în weekendul care vine?","grammar":""},{"id":368,"cat":"Social & Invitatii","de":"Ich möchte dich zum Abendessen zu mir nach Hause einladen.","ro":"Aș dori să te invit la cină la mine acasă.","grammar":""},{"id":369,"cat":"Salutari & Politete","de":"Das war ein sehr schöner Abend, danke für alles!","ro":"A fost o seară foarte plăcută, mulțumesc pentru tot!","grammar":""},{"id":370,"cat":"Timp","de":"Können wir uns etwas später treffen, zum Beispiel um acht Uhr?","ro":"Putem să ne întâlnim puțin mai târziu, de exemplu la ora opt?","grammar":""},{"id":371,"cat":"Social & Invitatii","de":"Um ehrlich zu sein, hat mir das Essen im Restaurant nicht geschmeckt.","ro":"Sincer să fiu, nu mi-a plăcut mâncarea de la restaurant.","grammar":""},{"id":372,"cat":"Opinii & Reactii","de":"Ich freue mich sehr über deinen Erfolg!","ro":"Mă bucur foarte mult pentru succesul tău!","grammar":""},{"id":373,"cat":"Conjuctii","de":"Ich hoffe, dass wir uns bald wiedersehen.","ro":"Sper să ne revedem curând.","grammar":""},{"id":374,"cat":"Social & Invitatii","de":"Was für ein Geschenk hast du Mark zur Hochzeit gekauft?","ro":"Ce cadou i-ai cumpărat lui Mark pentru nuntă?","grammar":""},{"id":375,"cat":"Social & Invitatii","de":"Ich interessiere mich sehr für die deutsche Kultur.","ro":"Mă interesează foarte mult cultura germană.","grammar":""},{"id":376,"cat":"Social & Invitatii","de":"Kannst du mir einen Rat zu diesem Problem geben?","ro":"Poți să-mi dai un sfat în legătură cu această problemă?","grammar":""},{"id":377,"cat":"Timp","de":"Leider muss ich unser Treffen für morgen absagen.","ro":"Din păcate, trebuie să anulez întâlnirea noastră de mâine.","grammar":""},{"id":378,"cat":"Telefon & Documente","de":"Lass uns in den nächsten Tagen telefonieren!","ro":"Să ne auzim la telefon în zilele următoare!","grammar":""},{"id":379,"cat":"Conjuctii","de":"Ich kann nicht kommen, weil ich müde bin.","ro":"Nu pot veni pentru ca sunt obosit.","grammar":""},{"id":380,"cat":"Conjuctii","de":"Ich bleibe zu Hause, weil es regnet.","ro":"Stau acasa pentru ca ploua.","grammar":""},{"id":381,"cat":"Conjuctii","de":"Ich lerne Deutsch, weil ich hier arbeiten möchte.","ro":"Invat germana pentru ca vreau sa lucrez aici.","grammar":""},{"id":382,"cat":"Conjuctii","de":"Wenn ich Zeit habe, lese ich ein Buch.","ro":"Daca am timp, citesc o carte.","grammar":""},{"id":383,"cat":"Conjuctii","de":"Ich rufe dich an, wenn ich nach Hause komme.","ro":"Te sun cand ajung acasa.","grammar":""},{"id":384,"cat":"Conjuctii","de":"Wenn es morgen regnet, bleibe ich zu Hause.","ro":"Daca ploua maine, raman acasa.","grammar":""},{"id":385,"cat":"Conjuctii","de":"Ich glaube, dass du Recht hast.","ro":"Cred ca ai dreptate.","grammar":""},{"id":386,"cat":"Conjuctii","de":"Sie sagt, dass sie krank ist.","ro":"Ea spune ca este bolnava.","grammar":""},{"id":387,"cat":"Conjuctii","de":"Ich hoffe, dass alles gut wird.","ro":"Sper ca totul va fi bine.","grammar":""},{"id":388,"cat":"Conjuctii","de":"Obwohl es regnet, gehe ich joggen.","ro":"Desi ploua, merg sa alerg.","grammar":""},{"id":389,"cat":"Conjuctii","de":"Sie kommt, obwohl sie müde ist.","ro":"Vine, desi este obosita.","grammar":""},{"id":390,"cat":"Conjuctii","de":"Es regnet, deshalb bleibe ich zu Hause.","ro":"Ploua, de aceea raman acasa.","grammar":""},{"id":391,"cat":"Conjuctii","de":"Er ist krank, deswegen kommt er nicht.","ro":"Este bolnav, din aceasta cauza nu vine.","grammar":""},{"id":392,"cat":"Conjuctii","de":"Wir gehen ins Bett, denn wir sind müde.","ro":"Mergem la culcare, fiindca suntem obositi.","grammar":""},{"id":393,"cat":"Conjuctii","de":"Das ist nicht meine Tasche, sondern deine.","ro":"Asta nu este geanta mea, ci a ta.","grammar":""},{"id":394,"cat":"Conjuctii","de":"Ich trinke keinen Kaffee, sondern Tee.","ro":"Nu beau cafea, ci ceai.","grammar":""},{"id":395,"cat":"Conjuctii","de":"Ich bin müde, aber ich muss arbeiten.","ro":"Sunt obosit, dar trebuie sa muncesc.","grammar":""},{"id":396,"cat":"Conjuctii","de":"Möchtest du Tee oder Kaffee?","ro":"Vrei ceai sau cafea?","grammar":""},{"id":397,"cat":"Conjuctii","de":"Es regnet, trotzdem gehe ich spazieren.","ro":"Ploua, totusi merg la plimbare.","grammar":""},{"id":398,"cat":"Conjuctii","de":"Ich lerne Deutsch, damit ich in Deutschland arbeiten kann.","ro":"Invat germana ca sa pot lucra in Germania.","grammar":""},{"id":399,"cat":"Conjuctii","de":"Ich spreche langsam, damit du verstehst.","ro":"Vorbesc rar ca sa intelegi.","grammar":""},{"id":400,"cat":"Conjuctii","de":"Falls es regnet, nehme ich einen Schirm mit.","ro":"In caz ca ploua, iau o umbrela.","grammar":""},{"id":401,"cat":"Conjuctii","de":"Ich rufe dich an, sobald ich Zeit habe.","ro":"Te sun de indata ce am timp.","grammar":""},{"id":402,"cat":"Conjuctii","de":"Während ich kochte, hörte ich Musik.","ro":"In timp ce gateam, ascultam muzica.","grammar":""},{"id":403,"cat":"Conjuctii","de":"Nachdem ich gegessen hatte, ging ich spazieren.","ro":"Dupa ce am mancat, am plecat la plimbare.","grammar":""},{"id":404,"cat":"Conjuctii","de":"Bevor ich schlafe, lese ich ein Buch.","ro":"Inainte sa dorm, citesc o carte.","grammar":""},{"id":405,"cat":"Conjuctii","de":"Seitdem ich in Deutschland lebe, lerne ich Deutsch.","ro":"De cand traiesc in Germania, invat germana.","grammar":""},{"id":406,"cat":"Conjuctii","de":"Als ich ein Kind war, wohnte ich in Rumänien.","ro":"Cand eram copil, locuiam in Romania.","grammar":""},{"id":407,"cat":"Conjuctii","de":"Ich weiß nicht, ob er kommt.","ro":"Nu stiu daca vine.","grammar":""},{"id":408,"cat":"Conjuctii","de":"Ich frage mich, ob es wahr ist.","ro":"Ma intreb daca este adevarat.","grammar":""},{"id":409,"cat":"Conjuctii","de":"Entweder gehen wir ins Kino oder ins Theater.","ro":"Fie mergem la cinema, fie la teatru.","grammar":""},{"id":410,"cat":"Conjuctii","de":"Je mehr ich lerne, desto besser verstehe ich.","ro":"Cu cat invat mai mult, cu atat inteleg mai bine.","grammar":""},{"id":411,"cat":"Conjuctii","de":"Ich spreche sowohl Englisch als auch ein bisschen Deutsch.","ro":"Vorbesc atat engleza, cat si putin germana.","grammar":""},{"id":412,"cat":"Conjuctii","de":"Ich habe weder Zeit noch Geld.","ro":"Nu am nici timp, nici bani.","grammar":""},{"id":413,"cat":"Conjuctii","de":"Es ist zwar kalt, aber sonnig.","ro":"E drept ca este frig, dar este insorit.","grammar":""},{"id":414,"cat":"Gramatica detaliata","de":"Ich heisse Maria und ich komme aus Rumanien, weil ich dort geboren bin.","ro":"Ma numesc Maria si vin din Romania deoarece m-am nascut acolo.","grammar":"weil (deoarece) -> verbul 'bin' la sfarsit"},{"id":415,"cat":"Gramatica detaliata","de":"Wie heissen Sie und woher kommen Sie?","ro":"Cum va numiti si de unde veniti?","grammar":"intrebare formala -- Sie (forma de politete)"},{"id":416,"cat":"Gramatica detaliata","de":"Ich muss meine Daten angeben, wenn ich ein Formular ausfulle.","ro":"Trebuie sa imi dau datele atunci cand completez un formular.","grammar":"wenn (cand/daca) -> verbul 'ausfulle' la sfarsit"},{"id":417,"cat":"Gramatica detaliata","de":"Ich brauche meinen Ausweis, damit ich mich identifizieren kann.","ro":"Am nevoie de buletin/pasaport pentru a ma putea identifica.","grammar":"damit (ca sa) -> verbul modal 'kann' la sfarsit"},{"id":418,"cat":"Gramatica detaliata","de":"Ich bin 30 Jahre alt und arbeite als Arzt, weil ich Menschen helfen mochte.","ro":"Am 30 de ani si lucrez ca medic deoarece vreau sa ajut oamenii.","grammar":"weil + verb modal 'mochte' la sfarsit"},{"id":419,"cat":"Gramatica detaliata","de":"Ich wohne in einer Stadt, die sehr ruhig ist.","ro":"Locuiesc intr-un oras care este foarte linistit.","grammar":"die = pronume relativ (Stadt e feminin in germana!)"},{"id":420,"cat":"Gramatica detaliata","de":"Ich habe eine kleine Familie, weil wir nur zu dritt sind.","ro":"Am o familie mica deoarece suntem doar trei persoane.","grammar":"weil + 'zu dritt' = in trei"},{"id":421,"cat":"Gramatica detaliata","de":"Am Wochenende besuchen wir unsere Eltern, wenn wir Zeit haben.","ro":"In weekend ne vizitam parintii daca avem timp.","grammar":"Am Wochenende = la sfarsit de saptamana; wenn = daca"},{"id":422,"cat":"Gramatica detaliata","de":"Meine Eltern wohnen auf dem Land, wo es sehr ruhig ist.","ro":"Parintii mei locuiesc la tara unde este foarte liniste.","grammar":"wo = unde (loc); auf dem Land = la tara"},{"id":423,"cat":"Gramatica detaliata","de":"Ich habe einen Bruder, der in Deutschland arbeitet.","ro":"Am un frate care lucreaza in Germania.","grammar":"der = pronume relativ masculin nominativ"},{"id":424,"cat":"Gramatica detaliata","de":"Er ist gross und hat dunkle Haare, die sehr kurz sind.","ro":"El este inalt si are par inchis la culoare care este foarte scurt.","grammar":"die = pronume relativ plural (Haare e plural)"},{"id":425,"cat":"Gramatica detaliata","de":"Sie tragt oft elegante Kleidung, weil sie im Buro arbeitet.","ro":"Ea poarta des haine elegante deoarece lucreaza la birou.","grammar":"tragen (a purta) -- 3rd p. sg.: tragt; im Buro = la birou"},{"id":426,"cat":"Gramatica detaliata","de":"Er ist freundlich, obwohl er manchmal sehr ruhig ist.","ro":"El este prietenos, desi uneori este foarte tacut.","grammar":"obwohl (desi) -> verbul 'ist' la sfarsit"},{"id":427,"cat":"Gramatica detaliata","de":"Ich mag Menschen, die ehrlich und hilfsbereit sind.","ro":"Imi plac oamenii care sunt sinceri si saritori.","grammar":"die = pronume relativ plural (Menschen e plural)"}];
+// Filter state
+let activeCat = "all";
+
+// Browser TTS (German voice)
+let germanVoice = null;
+function pickGermanVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith("de")) || null;
+}
+function speakDe(text) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  if (!germanVoice) germanVoice = pickGermanVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  if (germanVoice) u.voice = germanVoice;
+  u.lang = "de-DE";
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+if ("speechSynthesis" in window) {
+  window.speechSynthesis.onvoiceschanged = () => { germanVoice = pickGermanVoice(); };
+}
+
+function getFilteredPhrases() {
+  if (activeCat === "all") return phrases;
+  return phrases.filter(p => p.cat === activeCat);
+}
+function getCategories() {
+  return Array.from(new Set(phrases.map(p => p.cat))).sort();
+}
+function shuffleArray(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+let useShuffle = false;
+let shuffledOrder = [];
+function getActivePhrases() {
+  const filt = getFilteredPhrases();
+  if (!useShuffle) return filt;
+  if (shuffledOrder.length !== filt.length) shuffledOrder = shuffleArray(filt);
+  return shuffledOrder;
+}
+function speakCurrent() {
+  const list = getActivePhrases();
+  if (!list.length) return;
+  speakDe(list[cardIdx].de);
+}
 
 // State persistence
 const STORAGE_KEY = "germana_a2_progress_v1";
@@ -596,6 +689,9 @@ let state = loadState();
 state.cards = state.cards || {};
 state.quiz = state.quiz || { correct: 0, total: 0 };
 state.fib = state.fib || { correct: 0, total: 0 };
+state.sb = state.sb || { correct: 0, total: 0 };
+state.dk = state.dk || { correct: 0, total: 0 };
+state.tr = state.tr || { correct: 0, total: 0 };
 
 // Tabs
 const tabs = document.querySelectorAll("nav button");
@@ -608,6 +704,9 @@ tabs.forEach(b => b.addEventListener("click", () => {
   if (b.dataset.tab === "progress") renderProgress();
   if (b.dataset.tab === "quiz" && !document.getElementById("quiz-content").innerHTML) newQuiz();
   if (b.dataset.tab === "fillblank" && !document.getElementById("fib-content").innerHTML) newFib();
+  if (b.dataset.tab === "satzbau" && !document.getElementById("sb-content").innerHTML) newSatzbau();
+  if (b.dataset.tab === "diktat" && !document.getElementById("dk-content").innerHTML) newDiktat();
+  if (b.dataset.tab === "translate" && !document.getElementById("tr-content").innerHTML) newTranslate();
 }));
 
 // Flashcards
@@ -625,7 +724,17 @@ document.querySelectorAll("[data-direction]").forEach(b => b.addEventListener("c
 
 function renderCard() {
   card.classList.remove("flipped");
-  const p = phrases[cardIdx];
+  const list = getActivePhrases();
+  if (!list.length) {
+    document.getElementById("card-front-text").textContent = "Nicio fraza in categoria asta";
+    document.getElementById("card-back-text").textContent = "Alege alta categorie";
+    document.getElementById("card-counter").textContent = "0/0";
+    document.getElementById("phrase-count").textContent = "0 fraze";
+    return;
+  }
+  if (cardIdx >= list.length) cardIdx = 0;
+  if (cardIdx < 0) cardIdx = list.length - 1;
+  const p = list[cardIdx];
   let useDir = direction;
   if (direction === "random") useDir = Math.random() < 0.5 ? "de-ro" : "ro-de";
   if (useDir === "de-ro") {
@@ -635,32 +744,75 @@ function renderCard() {
     document.getElementById("card-front-text").textContent = p.ro;
     document.getElementById("card-back-text").textContent = p.de;
   }
-  document.getElementById("card-category-front").textContent = p.cat;
-  document.getElementById("card-category-back").textContent = p.cat;
-  document.getElementById("card-grammar-hint").textContent = p.grammar;
-  document.getElementById("card-counter").textContent = (cardIdx + 1) + "/" + phrases.length;
+  document.getElementById("card-category-front").textContent = p.cat || "";
+  document.getElementById("card-category-back").textContent = p.cat || "";
+  document.getElementById("card-grammar-hint").textContent = p.grammar || "";
+  document.getElementById("card-counter").textContent = (cardIdx + 1) + "/" + list.length;
+  document.getElementById("phrase-count").textContent = list.length + " fraze";
 }
-function nextCard() { cardIdx = (cardIdx + 1) % phrases.length; renderCard(); }
-function prevCard() { cardIdx = (cardIdx - 1 + phrases.length) % phrases.length; renderCard(); }
+function nextCard() { const len = getActivePhrases().length; if (len) cardIdx = (cardIdx + 1) % len; renderCard(); }
+function prevCard() { const len = getActivePhrases().length; if (len) cardIdx = (cardIdx - 1 + len) % len; renderCard(); }
 function markCard(level) {
-  state.cards[phrases[cardIdx].id] = level;
+  const list = getActivePhrases();
+  if (!list.length) return;
+  state.cards[list[cardIdx].id] = level;
   saveState(state);
   nextCard();
 }
+function onCatChange(val) {
+  activeCat = val;
+  cardIdx = 0;
+  shuffledOrder = [];
+  renderCard();
+  if (document.getElementById("panel-list").style.display !== "none") renderList();
+}
+function populateCategorySelect() {
+  const sel = document.getElementById("cat-filter");
+  if (!sel) return;
+  const cats = getCategories();
+  sel.innerHTML = '<option value="all">Toate categoriile</option>';
+  cats.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c + " (" + phrases.filter(p => p.cat === c).length + ")";
+    sel.appendChild(opt);
+  });
+  sel.value = activeCat;
+}
+// Wire up shuffle toggle
+document.querySelectorAll("[data-fc-order]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("[data-fc-order]").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  useShuffle = b.dataset.fcOrder === "shuffle";
+  if (useShuffle) shuffledOrder = shuffleArray(getFilteredPhrases());
+  cardIdx = 0;
+  renderCard();
+}));
 document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
   if (document.getElementById("panel-flashcards").style.display === "none") return;
   if (e.code === "Space") { e.preventDefault(); card.classList.toggle("flipped"); }
   if (e.code === "ArrowRight") nextCard();
   if (e.code === "ArrowLeft") prevCard();
+  if (e.key === "1") markCard("hard");
+  if (e.key === "2") markCard("medium");
+  if (e.key === "3") markCard("easy");
+  if (e.key === "a" || e.key === "A") speakCurrent();
 });
+populateCategorySelect();
 renderCard();
 
 // Quiz
 function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
 function newQuiz() {
-  const correct = phrases[Math.floor(Math.random() * phrases.length)];
+  const pool = getFilteredPhrases();
+  if (pool.length < 4) {
+    document.getElementById("quiz-content").innerHTML = '<div class="empty-state"><div class="empty-state-icon">[!]</div>Ai nevoie de minim 4 fraze. Alege "Toate categoriile" sau o categorie mai mare.</div>';
+    return;
+  }
+  const correct = pool[Math.floor(Math.random() * pool.length)];
   const askDe = Math.random() < 0.5;
-  const wrongs = shuffle(phrases.filter(p => p.id !== correct.id)).slice(0, 3);
+  const wrongs = shuffle(pool.filter(p => p.id !== correct.id)).slice(0, 3);
   const options = shuffle([correct, ...wrongs]);
   const promptText = askDe ? correct.de : correct.ro;
   const promptLabel = askDe ? "Tradu in romana:" : "Tradu in germana:";
@@ -716,70 +868,210 @@ function resetQuiz() {
 }
 updateQuizStats();
 
-// Fill in the blank
-let fibCurrent = null;
-function newFib() {
-  const p = phrases[Math.floor(Math.random() * phrases.length)];
-  // Pick a key word from the German sentence to blank out
-  // Prioritize conjunctions/relative pronouns for grammar practice
-  const targets = ["weil", "wenn", "damit", "obwohl", "die", "der", "das", "wo"];
-  let blank = null;
-  for (const t of targets) {
-    const re = new RegExp("\\b" + t + "\\b");
-    if (re.test(p.de)) { blank = t; break; }
-  }
-  if (!blank) {
-    // Fallback: blank a random meaningful word
-    const words = p.de.split(/\s+/).filter(w => w.length > 3);
-    blank = words[Math.floor(Math.random() * words.length)].replace(/[.,!?;]/g, "");
-  }
-  fibCurrent = { phrase: p, blank: blank };
+// ===== Fill in the blank (multi-blank) =====
+let fibCurrent = null;  // { phrase, blanks: [{word, indexInTokens}], tokens: [] }
 
-  const escaped = blank.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const sentence = p.de.replace(new RegExp("\\b" + escaped + "\\b"), '<input class="fib-input" id="fib-input" autocomplete="off" />');
+// Pool of "high priority" words that we want to test
+const FIB_CONNECTORS = new Set([
+  "weil", "wenn", "dass", "obwohl", "denn", "deshalb", "deswegen", "damit", "falls",
+  "sobald", "während", "nachdem", "bevor", "seitdem", "als", "ob", "sondern",
+  "trotzdem", "aber", "oder", "und", "sowohl", "weder", "noch", "zwar",
+  "der", "die", "das", "dem", "den", "des", "denen", "dessen", "deren",
+  "ein", "eine", "einer", "einen", "einem", "eines",
+  "mein", "meine", "meiner", "meinen", "meinem", "meines",
+  "kein", "keine", "keiner", "keinen", "keinem",
+  "ich", "du", "er", "sie", "es", "wir", "ihr",
+  "mich", "dich", "ihn", "uns", "euch",
+  "mir", "dir", "ihm", "ihnen",
+  "an", "auf", "in", "von", "zu", "bei", "mit", "nach", "für", "um", "über",
+  "ist", "sind", "bin", "bist", "seid", "war", "waren",
+  "habe", "hast", "hat", "haben", "habt", "hatte", "hatten",
+  "kann", "kannst", "können", "könnt", "muss", "musst", "müssen", "müsst",
+  "will", "willst", "wollen", "wollt", "möchte", "möchtest", "möchten",
+  "wo", "wann", "wer", "was", "wie", "warum", "welche", "welcher", "welches"
+]);
+
+function stripPunct(w) { return w.replace(/[.,!?;:"„"'()]/g, ""); }
+
+function tokenizeDe(s) {
+  // Split into tokens preserving punctuation as separate tokens for reconstruction
+  // We'll tokenize by spaces, keeping punctuation attached for display
+  return s.split(/(\s+)/).filter(t => t.length > 0);
+}
+
+function pickFibBlanks(phrase) {
+  // Returns list of {tokenIndex, word, normalized}
+  const tokens = tokenizeDe(phrase.de);
+  const candidates = [];
+  tokens.forEach((tok, i) => {
+    if (/\s+/.test(tok)) return;
+    const clean = stripPunct(tok);
+    if (clean.length < 2) return;
+    if (/^\d+$/.test(clean)) return; // skip pure numbers
+    const lower = clean.toLowerCase();
+    let priority = 1;
+    if (FIB_CONNECTORS.has(lower)) priority = 3;
+    else if (clean.length >= 6) priority = 2;
+    candidates.push({ tokenIndex: i, word: clean, priority });
+  });
+  if (!candidates.length) return { tokens, blanks: [] };
+
+  // Decide how many blanks based on phrase length
+  const wordCount = candidates.length;
+  let targetCount;
+  if (wordCount <= 4) targetCount = 1;
+  else if (wordCount <= 7) targetCount = 2;
+  else if (wordCount <= 12) targetCount = 3;
+  else targetCount = 4;
+
+  // Pick: take all priority 3 first, then 2, then 1, up to targetCount
+  // With slight randomization within each priority
+  const sorted = candidates.slice().sort((a, b) => {
+    if (b.priority !== a.priority) return b.priority - a.priority;
+    return Math.random() - 0.5;
+  });
+  const picked = sorted.slice(0, targetCount);
+  // Sort picked by position (left to right)
+  picked.sort((a, b) => a.tokenIndex - b.tokenIndex);
+  return { tokens, blanks: picked };
+}
+
+function newFib() {
+  const pool = getFilteredPhrases();
+  if (!pool.length) {
+    document.getElementById("fib-content").innerHTML = '<div class="empty-state">Nicio fraza in aceasta categorie.</div>';
+    return;
+  }
+  const p = pool[Math.floor(Math.random() * pool.length)];
+  const { tokens, blanks } = pickFibBlanks(p);
+  fibCurrent = { phrase: p, tokens, blanks };
+
+  // Build display: replace blank tokens with inputs
+  let display = "";
+  let blankIdx = 0;
+  tokens.forEach((tok, i) => {
+    const bl = blanks.find(b => b.tokenIndex === i);
+    if (bl) {
+      // Use width based on word length plus a bit
+      const w = Math.max(50, bl.word.length * 12 + 30);
+      // Preserve trailing punctuation
+      const tail = tok.length > bl.word.length ? tok.substring(bl.word.length) : "";
+      display += `<input class="fib-input" data-blank-idx="${blankIdx}" autocomplete="off" style="min-width:${w}px;" /> ${tail.trim()}`;
+      blankIdx++;
+    } else {
+      display += tok;
+    }
+  });
 
   let html = '<div class="quiz-question">';
-  html += '<div class="quiz-prompt-label">Completeaza in germana (' + p.cat + ')</div>';
-  html += '<div class="quiz-prompt" style="font-size:14px; font-style:italic; color:#666;">Hint romana: ' + p.ro + '</div>';
+  html += '<div class="quiz-prompt-label">Completeaza in germana (' + p.cat + ') - ' + blanks.length + ' spatii</div>';
+  html += '<div class="quiz-prompt" style="font-size:14px; font-style:italic; color:#666;">Hint romana: ' + escapeHtml(p.ro) + '</div>';
   html += '</div>';
-  html += '<div class="fib-sentence">' + sentence + '</div>';
-  html += '<div style="text-align:center;">';
+  html += '<div class="fib-sentence" style="line-height:2.4;">' + display + '</div>';
+  html += '<div style="text-align:center; margin-top:14px;">';
   html += '<button class="btn btn-primary" onclick="checkFib()">Verifica</button>';
   html += '<button class="btn btn-secondary" onclick="showFibHint()">Indiciu</button>';
+  html += '<button class="btn" style="background:#8b5cf6; color:white;" onclick="speakDe(' + JSON.stringify(p.de).replace(/"/g, "&quot;") + ')">[Audio]</button>';
+  html += '<button class="btn btn-warning" onclick="revealFib()">Arata raspunsul</button>';
   html += '</div>';
   html += '<div class="quiz-feedback" id="fib-feedback" style="margin-top:16px;"></div>';
   document.getElementById("fib-content").innerHTML = html;
-  setTimeout(() => document.getElementById("fib-input").focus(), 50);
 
-  const inp = document.getElementById("fib-input");
-  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") checkFib(); });
+  const inputs = document.querySelectorAll(".fib-input");
+  if (inputs.length) {
+    setTimeout(() => inputs[0].focus(), 50);
+    inputs.forEach((inp, i) => {
+      inp.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          // If not last input, move to next; if last, check
+          if (i < inputs.length - 1) {
+            inputs[i + 1].focus();
+            e.preventDefault();
+          } else {
+            checkFib();
+            e.preventDefault();
+          }
+        }
+      });
+    });
+  }
 }
+
+function normalizeFib(s) {
+  return (s || "").trim().toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
+}
+
 function checkFib() {
-  const inp = document.getElementById("fib-input");
+  if (!fibCurrent) return;
+  const inputs = document.querySelectorAll(".fib-input");
   const fb = document.getElementById("fib-feedback");
-  const userAns = (inp.value || "").trim().toLowerCase();
-  const correct = fibCurrent.blank.toLowerCase();
+  let allCorrect = true;
+  const results = [];
+  inputs.forEach((inp, i) => {
+    inp.classList.remove("correct", "incorrect");
+    const expected = fibCurrent.blanks[i].word;
+    const user = inp.value;
+    const ok = normalizeFib(user) === normalizeFib(expected);
+    if (ok) {
+      inp.classList.add("correct");
+    } else {
+      inp.classList.add("incorrect");
+      allCorrect = false;
+    }
+    results.push({ ok, expected, user });
+  });
+
   fb.classList.add("show");
-  if (userAns === correct) {
-    inp.classList.add("correct");
+  if (allCorrect) {
     fb.classList.add("correct"); fb.classList.remove("incorrect");
-    fb.innerHTML = "Corect! <br><small><strong>Gramatica:</strong> " + fibCurrent.phrase.grammar + "</small>";
+    fb.style.background = ""; fb.style.color = "";
+    let msg = "Corect tot! <br><strong>Fraza completa:</strong> " + escapeHtml(fibCurrent.phrase.de);
+    if (fibCurrent.phrase.grammar) msg += "<br><small><strong>Gramatica:</strong> " + escapeHtml(fibCurrent.phrase.grammar) + "</small>";
+    fb.innerHTML = msg;
     state.fib.correct++;
   } else {
-    inp.classList.add("incorrect");
     fb.classList.add("incorrect"); fb.classList.remove("correct");
-    fb.innerHTML = "Raspunsul corect: <strong>" + fibCurrent.blank + "</strong><br><small><strong>Gramatica:</strong> " + fibCurrent.phrase.grammar + "</small>";
+    fb.style.background = ""; fb.style.color = "";
+    let msg = "Mai incearca! Raspunsuri corecte:<br>";
+    msg += "<ul style='margin-top:6px; padding-left:20px;'>";
+    results.forEach((r, i) => {
+      msg += "<li>" + (r.ok ? "[corect]" : "[gresit]") + " <strong>" + escapeHtml(r.expected) + "</strong>";
+      if (!r.ok && r.user) msg += " (ai scris: " + escapeHtml(r.user) + ")";
+      msg += "</li>";
+    });
+    msg += "</ul>";
+    msg += "<br><strong>Fraza completa:</strong> " + escapeHtml(fibCurrent.phrase.de);
+    if (fibCurrent.phrase.grammar) msg += "<br><small><strong>Gramatica:</strong> " + escapeHtml(fibCurrent.phrase.grammar) + "</small>";
+    fb.innerHTML = msg;
   }
   state.fib.total++;
   saveState(state);
   updateFibStats();
 }
+
 function showFibHint() {
+  if (!fibCurrent) return;
   const fb = document.getElementById("fib-feedback");
   fb.classList.add("show");
   fb.style.background = "#fef3c7";
   fb.style.color = "#92400e";
-  fb.innerHTML = "Prima litera: <strong>" + fibCurrent.blank[0] + "</strong> (" + fibCurrent.blank.length + " litere)";
+  let msg = "Indicii (prima litera): ";
+  msg += fibCurrent.blanks.map(b => "<strong>" + b.word[0] + "</strong>(" + b.word.length + ")").join(" / ");
+  fb.innerHTML = msg;
+}
+
+function revealFib() {
+  if (!fibCurrent) return;
+  const inputs = document.querySelectorAll(".fib-input");
+  inputs.forEach((inp, i) => {
+    inp.value = fibCurrent.blanks[i].word;
+    inp.classList.add("correct");
+  });
+  const fb = document.getElementById("fib-feedback");
+  fb.classList.add("show", "incorrect");
+  fb.style.background = ""; fb.style.color = "";
+  fb.innerHTML = "Raspunsuri afisate. Fraza completa: <strong>" + escapeHtml(fibCurrent.phrase.de) + "</strong>";
 }
 function updateFibStats() {
   document.getElementById("fib-correct").textContent = state.fib.correct;
@@ -793,28 +1085,405 @@ function resetFib() {
 }
 updateFibStats();
 
+// ===== SATZBAU (word order) =====
+let sbCurrent = null; // { phrase, words, built: [{idx, text}] }
+
+function tokenizeForSatzbau(s) {
+  // Split by whitespace, strip pure punctuation tokens, keep words+attached punct as is
+  return s.split(/\s+/).filter(w => w.length > 0);
+}
+
+function newSatzbau() {
+  const pool = getFilteredPhrases();
+  if (!pool.length) {
+    document.getElementById("sb-content").innerHTML = '<div class="empty-state">Nicio fraza in aceasta categorie.</div>';
+    return;
+  }
+  // Prefer phrases between 4 and 12 words for reasonable difficulty
+  const filtered = pool.filter(p => {
+    const n = tokenizeForSatzbau(p.de).length;
+    return n >= 4 && n <= 14;
+  });
+  const usedPool = filtered.length ? filtered : pool;
+  const p = usedPool[Math.floor(Math.random() * usedPool.length)];
+  const words = tokenizeForSatzbau(p.de);
+  // Create indexed list and shuffle
+  const indexed = words.map((w, i) => ({ idx: i, text: w }));
+  const shuffled = indexed.slice().sort(() => Math.random() - 0.5);
+  sbCurrent = { phrase: p, words, built: [], pool: shuffled };
+  renderSatzbauState();
+}
+
+function renderSatzbauState() {
+  if (!sbCurrent) return;
+  const p = sbCurrent.phrase;
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">Ordoneaza cuvintele (' + p.cat + ')</div>';
+  html += '<div class="quiz-prompt" style="font-size:14px; font-style:italic; color:#666;">Hint romana: ' + escapeHtml(p.ro) + '</div>';
+  html += '</div>';
+  // Built area
+  html += '<div id="sb-built" style="background:#eff6ff; border:2px solid #2a5298; min-height:60px; padding:12px; border-radius:10px; margin-top:14px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;">';
+  if (!sbCurrent.built.length) {
+    html += '<span style="color:#9ca3af; font-style:italic; font-size:13px;">Click pe cuvinte pentru a forma fraza aici</span>';
+  } else {
+    sbCurrent.built.forEach((w, i) => {
+      html += '<button class="sb-chip sb-placed" data-pos="' + i + '" style="background:#10b981; color:white; border:none; border-radius:18px; padding:8px 14px; cursor:pointer; font-size:14px; font-family:inherit;">' + escapeHtml(w.text) + '</button>';
+    });
+  }
+  html += '</div>';
+  // Pool area
+  html += '<div id="sb-pool" style="background:white; border:2px dashed #d1d5db; min-height:60px; padding:12px; border-radius:10px; margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">';
+  const builtIdx = new Set(sbCurrent.built.map(b => b.idx));
+  sbCurrent.pool.forEach(w => {
+    if (builtIdx.has(w.idx)) return;
+    html += '<button class="sb-chip" data-idx="' + w.idx + '" style="background:#2a5298; color:white; border:none; border-radius:18px; padding:8px 14px; cursor:pointer; font-size:14px; font-family:inherit;">' + escapeHtml(w.text) + '</button>';
+  });
+  html += '</div>';
+  html += '<div style="text-align:center; margin-top:14px;">';
+  html += '<button class="btn btn-primary" onclick="checkSatzbau()">Verifica</button>';
+  html += '<button class="btn btn-secondary" onclick="resetSatzbauBuild()">Sterge ce ai pus</button>';
+  html += '<button class="btn" style="background:#8b5cf6; color:white;" onclick="speakDe(' + JSON.stringify(p.de).replace(/"/g, "&quot;") + ')">[Audio]</button>';
+  html += '<button class="btn btn-warning" onclick="revealSatzbau()">Arata raspunsul</button>';
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="sb-feedback" style="margin-top:14px;"></div>';
+  document.getElementById("sb-content").innerHTML = html;
+  // Wire events
+  document.querySelectorAll("#sb-pool .sb-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const w = sbCurrent.pool.find(x => x.idx === idx);
+      sbCurrent.built.push(w);
+      renderSatzbauState();
+    });
+  });
+  document.querySelectorAll("#sb-built .sb-placed").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const pos = parseInt(btn.dataset.pos, 10);
+      sbCurrent.built.splice(pos, 1);
+      renderSatzbauState();
+    });
+  });
+}
+
+function checkSatzbau() {
+  if (!sbCurrent) return;
+  const userText = sbCurrent.built.map(w => w.text).join(" ");
+  const correctText = sbCurrent.phrase.de;
+  const fb = document.getElementById("sb-feedback");
+  fb.classList.add("show");
+  fb.style.background = ""; fb.style.color = "";
+  // Normalize for comparison
+  const norm = s => s.trim().toLowerCase().replace(/\s+/g, " ");
+  const isCorrect = norm(userText) === norm(correctText);
+  if (isCorrect) {
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Corect! Fraza este: <strong>" + escapeHtml(correctText) + "</strong>";
+    state.sb.correct++;
+  } else {
+    fb.classList.add("incorrect"); fb.classList.remove("correct");
+    fb.innerHTML = "Aproape! Corect: <strong>" + escapeHtml(correctText) + "</strong><br>Tu ai scris: " + escapeHtml(userText);
+  }
+  state.sb.total++;
+  saveState(state);
+  updateSbStats();
+}
+
+function resetSatzbauBuild() {
+  if (!sbCurrent) return;
+  sbCurrent.built = [];
+  renderSatzbauState();
+}
+
+function revealSatzbau() {
+  if (!sbCurrent) return;
+  // Auto-build correct order
+  sbCurrent.built = sbCurrent.words.map((w, i) => ({ idx: i, text: w }));
+  renderSatzbauState();
+  const fb = document.getElementById("sb-feedback");
+  fb.classList.add("show", "incorrect");
+  fb.innerHTML = "Raspuns: <strong>" + escapeHtml(sbCurrent.phrase.de) + "</strong>";
+}
+
+function updateSbStats() {
+  document.getElementById("sb-correct").textContent = state.sb.correct;
+  document.getElementById("sb-total").textContent = state.sb.total;
+}
+function resetSb() {
+  state.sb = { correct: 0, total: 0 };
+  saveState(state);
+  updateSbStats();
+  newSatzbau();
+}
+updateSbStats();
+
+// ===== DIKTAT (audio dictation) =====
+let dkCurrent = null;
+
+function newDiktat() {
+  const pool = getFilteredPhrases();
+  if (!pool.length) {
+    document.getElementById("dk-content").innerHTML = '<div class="empty-state">Nicio fraza in aceasta categorie.</div>';
+    return;
+  }
+  // Prefer shorter phrases for dictation (easier to remember)
+  const filtered = pool.filter(p => {
+    const n = tokenizeForSatzbau(p.de).length;
+    return n <= 12;
+  });
+  const usedPool = filtered.length ? filtered : pool;
+  const p = usedPool[Math.floor(Math.random() * usedPool.length)];
+  dkCurrent = { phrase: p, revealed: false };
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">Asculta si scrie (' + p.cat + ')</div>';
+  html += '<div class="quiz-prompt" style="font-size:14px; color:#666;">Apasa Audio, asculta atent, scrie ce auzi in germana.</div>';
+  html += '</div>';
+  html += '<div style="text-align:center; margin:14px 0;">';
+  html += '<button class="btn" style="background:#8b5cf6; color:white; font-size:16px; padding:14px 28px;" onclick="speakDe(' + JSON.stringify(p.de).replace(/"/g, "&quot;") + ')">[Audio] Asculta din nou</button>';
+  html += '</div>';
+  html += '<textarea id="dk-input" placeholder="Scrie aici fraza in germana..." style="width:100%; min-height:80px; padding:12px; border:2px solid #d1d5db; border-radius:10px; font-family:inherit; font-size:15px; resize:vertical;"></textarea>';
+  html += '<div style="text-align:center; margin-top:14px;">';
+  html += '<button class="btn btn-primary" onclick="checkDiktat()">Verifica</button>';
+  html += '<button class="btn btn-secondary" onclick="hintDiktat()">Indiciu (primele 2 cuvinte)</button>';
+  html += '<button class="btn btn-warning" onclick="revealDiktat()">Arata raspunsul</button>';
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="dk-feedback" style="margin-top:14px;"></div>';
+  document.getElementById("dk-content").innerHTML = html;
+  // Auto-play after small delay
+  setTimeout(() => speakDe(p.de), 300);
+  const ta = document.getElementById("dk-input");
+  ta.focus();
+  ta.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); checkDiktat(); }
+  });
+}
+
+function normalizeForCompare(s) {
+  return (s || "").trim().toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[.,!?;:"„"']/g, "")
+    .replace(/\s+/g, " ");
+}
+
+// Levenshtein-like word diff: returns array of {type: 'ok'|'wrong'|'missing', expected, user}
+function diffWords(expected, user) {
+  const exp = expected.split(/\s+/);
+  const usr = user.split(/\s+/);
+  const result = [];
+  const n = Math.max(exp.length, usr.length);
+  for (let i = 0; i < n; i++) {
+    const e = exp[i] || "";
+    const u = usr[i] || "";
+    if (normalizeForCompare(e) === normalizeForCompare(u)) {
+      result.push({ type: "ok", word: e });
+    } else if (!u) {
+      result.push({ type: "missing", expected: e });
+    } else if (!e) {
+      result.push({ type: "extra", user: u });
+    } else {
+      result.push({ type: "wrong", expected: e, user: u });
+    }
+  }
+  return result;
+}
+
+function checkDiktat() {
+  if (!dkCurrent) return;
+  const inp = document.getElementById("dk-input");
+  const fb = document.getElementById("dk-feedback");
+  const user = inp.value;
+  const correct = dkCurrent.phrase.de;
+  fb.classList.add("show");
+  fb.style.background = ""; fb.style.color = "";
+  if (normalizeForCompare(user) === normalizeForCompare(correct)) {
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Perfect! <strong>" + escapeHtml(correct) + "</strong>";
+    state.dk.correct++;
+  } else {
+    fb.classList.add("incorrect"); fb.classList.remove("correct");
+    const diff = diffWords(correct, user);
+    let msg = "<strong>Corect:</strong> " + escapeHtml(correct) + "<br><br><strong>Cuvinte:</strong> ";
+    msg += diff.map(d => {
+      if (d.type === "ok") return '<span style="color:#10b981;">' + escapeHtml(d.word) + '</span>';
+      if (d.type === "missing") return '<span style="color:#ef4444; text-decoration:underline;">' + escapeHtml(d.expected) + '</span>';
+      if (d.type === "extra") return '<span style="color:#f59e0b; text-decoration:line-through;">' + escapeHtml(d.user) + '</span>';
+      return '<span style="color:#ef4444;">' + escapeHtml(d.user) + '(' + escapeHtml(d.expected) + ')</span>';
+    }).join(" ");
+    fb.innerHTML = msg;
+  }
+  state.dk.total++;
+  saveState(state);
+  updateDkStats();
+}
+
+function hintDiktat() {
+  if (!dkCurrent) return;
+  const fb = document.getElementById("dk-feedback");
+  const words = dkCurrent.phrase.de.split(/\s+/);
+  const hint = words.slice(0, 2).join(" ");
+  fb.classList.add("show");
+  fb.style.background = "#fef3c7"; fb.style.color = "#92400e";
+  fb.innerHTML = "Primele 2 cuvinte: <strong>" + escapeHtml(hint) + "...</strong>";
+}
+
+function revealDiktat() {
+  if (!dkCurrent) return;
+  const fb = document.getElementById("dk-feedback");
+  fb.classList.add("show", "incorrect");
+  fb.style.background = ""; fb.style.color = "";
+  fb.innerHTML = "Raspuns: <strong>" + escapeHtml(dkCurrent.phrase.de) + "</strong>";
+  document.getElementById("dk-input").value = dkCurrent.phrase.de;
+}
+
+function updateDkStats() {
+  document.getElementById("dk-correct").textContent = state.dk.correct;
+  document.getElementById("dk-total").textContent = state.dk.total;
+}
+function resetDk() {
+  state.dk = { correct: 0, total: 0 };
+  saveState(state);
+  updateDkStats();
+  newDiktat();
+}
+updateDkStats();
+
+// ===== TRADUCERE COMPLETA (full translation RO -> DE) =====
+let trCurrent = null;
+
+function newTranslate() {
+  const pool = getFilteredPhrases();
+  if (!pool.length) {
+    document.getElementById("tr-content").innerHTML = '<div class="empty-state">Nicio fraza in aceasta categorie.</div>';
+    return;
+  }
+  const p = pool[Math.floor(Math.random() * pool.length)];
+  trCurrent = { phrase: p };
+  let html = '<div class="quiz-question">';
+  html += '<div class="quiz-prompt-label">Tradu in germana (' + p.cat + ')</div>';
+  html += '<div class="quiz-prompt" style="font-size:18px;">' + escapeHtml(p.ro) + '</div>';
+  html += '</div>';
+  html += '<textarea id="tr-input" placeholder="Scrie aici traducerea in germana..." style="width:100%; min-height:90px; padding:12px; border:2px solid #d1d5db; border-radius:10px; font-family:inherit; font-size:15px; resize:vertical; margin-top:10px;"></textarea>';
+  html += '<div style="text-align:center; margin-top:14px;">';
+  html += '<button class="btn btn-primary" onclick="checkTranslate()">Verifica</button>';
+  html += '<button class="btn btn-secondary" onclick="hintTranslate()">Indiciu (primul cuvant)</button>';
+  html += '<button class="btn btn-warning" onclick="revealTranslate()">Arata raspunsul</button>';
+  html += '</div>';
+  html += '<div class="quiz-feedback" id="tr-feedback" style="margin-top:14px;"></div>';
+  document.getElementById("tr-content").innerHTML = html;
+  const ta = document.getElementById("tr-input");
+  ta.focus();
+  ta.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); checkTranslate(); }
+  });
+  updateTrStats();
+}
+
+function similarityScore(a, b) {
+  // Word overlap ratio
+  const wa = normalizeForCompare(a).split(/\s+/).filter(w => w.length > 0);
+  const wb = normalizeForCompare(b).split(/\s+/).filter(w => w.length > 0);
+  if (!wa.length || !wb.length) return 0;
+  const setB = new Set(wb);
+  let matches = 0;
+  wa.forEach(w => { if (setB.has(w)) matches++; });
+  return matches / Math.max(wa.length, wb.length);
+}
+
+function checkTranslate() {
+  if (!trCurrent) return;
+  const inp = document.getElementById("tr-input");
+  const fb = document.getElementById("tr-feedback");
+  const user = inp.value;
+  const correct = trCurrent.phrase.de;
+  const exact = normalizeForCompare(user) === normalizeForCompare(correct);
+  const similarity = similarityScore(user, correct);
+  fb.classList.add("show");
+  fb.style.background = ""; fb.style.color = "";
+  if (exact) {
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Perfect! <strong>" + escapeHtml(correct) + "</strong>";
+    state.tr.correct++;
+  } else if (similarity >= 0.7) {
+    fb.classList.add("correct"); fb.classList.remove("incorrect");
+    fb.innerHTML = "Aproape perfect (similaritate " + Math.round(similarity * 100) + "%)<br><strong>Versiunea corecta:</strong> " + escapeHtml(correct) + "<br><strong>Tu:</strong> " + escapeHtml(user);
+    state.tr.correct++; // count as correct for high similarity
+  } else {
+    fb.classList.add("incorrect"); fb.classList.remove("correct");
+    const diff = diffWords(correct, user);
+    let msg = "<strong>Corect:</strong> " + escapeHtml(correct) + "<br><br>";
+    msg += "<strong>Comparatie:</strong> ";
+    msg += diff.map(d => {
+      if (d.type === "ok") return '<span style="color:#10b981;">' + escapeHtml(d.word) + '</span>';
+      if (d.type === "missing") return '<span style="color:#ef4444; text-decoration:underline;">' + escapeHtml(d.expected) + '</span>';
+      if (d.type === "extra") return '<span style="color:#f59e0b; text-decoration:line-through;">' + escapeHtml(d.user) + '</span>';
+      return '<span style="color:#ef4444;">' + escapeHtml(d.user) + '(' + escapeHtml(d.expected) + ')</span>';
+    }).join(" ");
+    fb.innerHTML = msg;
+  }
+  state.tr.total++;
+  saveState(state);
+  updateTrStats();
+}
+
+function hintTranslate() {
+  if (!trCurrent) return;
+  const fb = document.getElementById("tr-feedback");
+  const words = trCurrent.phrase.de.split(/\s+/);
+  fb.classList.add("show");
+  fb.style.background = "#fef3c7"; fb.style.color = "#92400e";
+  fb.innerHTML = "Primul cuvant: <strong>" + escapeHtml(words[0]) + "</strong> (" + words.length + " cuvinte in total)";
+}
+
+function revealTranslate() {
+  if (!trCurrent) return;
+  const fb = document.getElementById("tr-feedback");
+  fb.classList.add("show", "incorrect");
+  fb.style.background = ""; fb.style.color = "";
+  fb.innerHTML = "Raspuns: <strong>" + escapeHtml(trCurrent.phrase.de) + "</strong>";
+  document.getElementById("tr-input").value = trCurrent.phrase.de;
+}
+
+function updateTrStats() {
+  document.getElementById("tr-correct").textContent = state.tr.correct;
+  document.getElementById("tr-total").textContent = state.tr.total;
+  const acc = state.tr.total ? Math.round(100 * state.tr.correct / state.tr.total) : 0;
+  document.getElementById("tr-acc").textContent = acc + "%";
+}
+function resetTr() {
+  state.tr = { correct: 0, total: 0 };
+  saveState(state);
+  updateTrStats();
+  newTranslate();
+}
+updateTrStats();
+
 // List
 function renderList() {
+  const filtered = getFilteredPhrases();
   const cats = {};
-  phrases.forEach(p => { (cats[p.cat] = cats[p.cat] || []).push(p); });
+  filtered.forEach(p => { (cats[p.cat] = cats[p.cat] || []).push(p); });
   let html = "";
-  Object.keys(cats).forEach(cat => {
-    html += '<h3 style="margin:20px 0 10px; color:#1e3c72;">' + cat + '</h3>';
-    html += '<div class="phrases-list">';
-    cats[cat].forEach(p => {
-      const status = state.cards[p.id] || "untouched";
-      const statusEmoji = { easy: "[stiu]", medium: "[mediu]", hard: "[de repetat]", untouched: "" }[status];
-      const statusColor = { easy: "#10b981", medium: "#f59e0b", hard: "#ef4444", untouched: "#9ca3af" }[status];
-      html += '<div class="phrase-item">';
-      html += '<span class="phrase-category-tag">' + p.cat + ' #' + p.id + '</span>';
-      if (statusEmoji) html += '<span style="float:right; font-size:11px; color:' + statusColor + '; font-weight:600;">' + statusEmoji + '</span>';
-      html += '<div class="phrase-de">' + p.de + '</div>';
-      html += '<div class="phrase-ro">' + p.ro + '</div>';
-      html += '<div class="phrase-grammar"><strong>Gramatica:</strong> ' + p.grammar + '</div>';
+  if (!filtered.length) {
+    html = '<div class="empty-state">Nicio fraza in aceasta categorie.</div>';
+  } else {
+    Object.keys(cats).sort().forEach(cat => {
+      html += '<h3 style="margin:20px 0 10px; color:#1e3c72;">' + cat + ' <span style="font-weight:400; color:#9ca3af;">(' + cats[cat].length + ')</span></h3>';
+      html += '<div class="phrases-list">';
+      cats[cat].forEach(p => {
+        const status = state.cards[p.id] || "untouched";
+        const statusEmoji = { easy: "[stiu]", medium: "[mediu]", hard: "[de repetat]", untouched: "" }[status];
+        const statusColor = { easy: "#10b981", medium: "#f59e0b", hard: "#ef4444", untouched: "#9ca3af" }[status];
+        html += '<div class="phrase-item">';
+        html += '<span class="phrase-category-tag">' + p.cat + ' #' + p.id + '</span>';
+        if (statusEmoji) html += '<span style="float:right; font-size:11px; color:' + statusColor + '; font-weight:600;">' + statusEmoji + '</span>';
+        html += '<button onclick="event.stopPropagation(); speakDe(' + JSON.stringify(p.de).replace(/"/g, "&quot;") + ')" style="float:right; background:#8b5cf6; color:white; border:none; border-radius:12px; padding:3px 10px; font-size:11px; cursor:pointer; margin-right:6px;" title="Asculta pronuntia">Audio</button>';
+        html += '<div class="phrase-de">' + p.de + '</div>';
+        html += '<div class="phrase-ro">' + p.ro + '</div>';
+        if (p.grammar) html += '<div class="phrase-grammar"><strong>Gramatica:</strong> ' + p.grammar + '</div>';
+        html += '</div>';
+      });
       html += '</div>';
     });
-    html += '</div>';
-  });
+  }
   document.getElementById("phrases-list-content").innerHTML = html;
 }
 
